@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< Updated upstream
       <module fileurl="file://$PROJECT_DIR$/finance-tracker.iml" filepath="$PROJECT_DIR$/finance-tracker.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/EBU6304_project_group33.iml" filepath="$PROJECT_DIR$/.idea/EBU6304_project_group33.iml" />
+>>>>>>> Stashed changes
     </modules>
   </component>
 </project>

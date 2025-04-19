@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+<<<<<<< Updated upstream
     <annotationProcessing>
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -9,5 +10,10 @@
         <module name="finance-tracker" />
       </profile>
     </annotationProcessing>
+=======
+    <bytecodeTargetLevel>
+      <module name="finance-tracker" target="11" />
+    </bytecodeTargetLevel>
+>>>>>>> Stashed changes
   </component>
 </project>
