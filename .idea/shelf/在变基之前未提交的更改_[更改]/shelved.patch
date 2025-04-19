@@ -1,0 +1,22 @@
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\r\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n    <modelVersion>4.0.0</modelVersion>\r\n\r\n    <groupId>com.finance</groupId>\r\n    <artifactId>finance-tracker</artifactId>\r\n    <version>1.0-SNAPSHOT</version>\r\n    <packaging>jar</packaging>\r\n\r\n    <dependencies>\r\n        <!-- Jackson 依赖 -->\r\n        <dependency>\r\n            <groupId>com.fasterxml.jackson.core</groupId>\r\n            <artifactId>jackson-databind</artifactId>\r\n            <version>2.12.3</version>\r\n        </dependency>\r\n\r\n        <!-- JavaFX 依赖 -->\r\n        <dependency>\r\n            <groupId>org.openjfx</groupId>\r\n            <artifactId>javafx-controls</artifactId>\r\n            <version>24.0.1</version>\r\n        </dependency>\r\n    </dependencies>\r\n\r\n    <build>\r\n        <plugins>\r\n            <!-- 配置 Maven 编译插件 -->\r\n            <plugin>\r\n                <groupId>org.apache.maven.plugins</groupId>\r\n                <artifactId>maven-compiler-plugin</artifactId>\r\n                <version>3.8.1</version>\r\n                <configuration>\r\n                    <source>11</source>\r\n                    <target>11</target>\r\n                </configuration>\r\n            </plugin>\r\n        </plugins>\r\n    </build>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	(revision feeb3160f63713947b0629939e565402d3f05527)
++++ b/pom.xml	(date 1745125383528)
+@@ -16,6 +16,11 @@
+             <artifactId>jackson-databind</artifactId>
+             <version>2.12.3</version>
+         </dependency>
++        <dependency>
++            <groupId>com.fasterxml.jackson.core</groupId>
++            <artifactId>jackson-annotations</artifactId>
++            <version>2.12.3</version>
++        </dependency>
+ 
+         <!-- JavaFX 依赖 -->
+         <dependency>

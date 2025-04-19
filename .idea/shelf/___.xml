@@ -1,0 +1,9 @@
+<changelist name="在变基之前未提交的更改_[更改]" date="1745157068745" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/在变基之前未提交的更改_[更改]/shelved.patch" />
+  <option name="DESCRIPTION" value="在变基之前未提交的更改 [更改]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/finance-tracker-1.0-SNAPSHOT.jar" />
+    <option name="AFTER_PATH" value="target/finance-tracker-1.0-SNAPSHOT.jar" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在变基之前未提交的更改_[更改]/finance-tracker-1.0-SNAPSHOT.jar" />
+  </binary>
+</changelist>
