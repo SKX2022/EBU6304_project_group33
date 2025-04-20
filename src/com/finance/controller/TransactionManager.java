@@ -5,6 +5,8 @@ import com.finance.model.Transaction;
 import com.finance.model.User;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,19 +62,25 @@ public class TransactionManager {
         return transactions;
     }
 
-    // 计算本月总收入
-    public double getTotalIncome() {
+    // 修正后的计算本月总收入方法
+    public double getMonthlyIncome() {
         return transactions.stream()
-                .filter(t -> t.getType().equals("收入"))
+                .filter(t -> t.getType().equals("收入") && isCurrentMonth(t.getDate()))
                 .mapToDouble(Transaction::getAmount)
                 .sum();
     }
 
-    // 计算本月总支出
-    public double getTotalExpenditure() {
+    // 修正后的计算本月总支出方法
+    public double getMonthlyExpenditure() {
         return transactions.stream()
-                .filter(t -> t.getType().equals("支出"))
+                .filter(t -> t.getType().equals("支出") && isCurrentMonth(t.getDate()))
                 .mapToDouble(Transaction::getAmount)
                 .sum();
     }
-}
+
+    // 判断交易日期是否属于当前月份
+    private boolean isCurrentMonth(String date) {
+        LocalDate transactionDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDate now = LocalDate.now();
+        return transactionDate.getYear() == now.getYear() && transactionDate.getMonth() == now.getMonth();
+    }}

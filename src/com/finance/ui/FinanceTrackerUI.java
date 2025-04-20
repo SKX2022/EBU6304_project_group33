@@ -2,6 +2,7 @@ package com.finance.ui;
 
 import com.finance.controller.CategoryManager;
 import com.finance.controller.Register;
+import com.finance.controller.SummaryManager;
 import com.finance.controller.TransactionManager;
 import com.finance.model.*;
 import javafx.application.Application;
@@ -213,10 +214,17 @@ public class FinanceTrackerUI extends Application {
 
         Button addTransactionButton = new Button("添加交易");
 
+        SummaryManager summaryManager = new SummaryManager(transactionManager, categoryManager);
+
         // 本月收支汇总
-        Label totalIncomeLabel = new Label("总收入：¥" + transactionManager.getTotalIncome());
-        Label totalExpenditureLabel = new Label("总支出：¥" + transactionManager.getTotalExpenditure());
-        Label surplusLabel = new Label("剩余：¥" + (transactionManager.getTotalIncome() - transactionManager.getTotalExpenditure()));
+        Label monthlyIncomeLabel = new Label("本月总收入：¥" + transactionManager.getMonthlyIncome());
+        Label monthlyExpenditureLabel = new Label("本月总支出：¥" + transactionManager.getMonthlyExpenditure());
+        Label monthlySurplusLabel = new Label("本月剩余：¥" + (transactionManager.getMonthlyIncome() - transactionManager.getMonthlyExpenditure()));
+
+// 总收支汇总
+        Label totalIncomeLabel = new Label("总收入：¥" + summaryManager.getTotalIncome());
+        Label totalExpenditureLabel = new Label("总支出：¥" + summaryManager.getTotalExpenditure());
+        Label totalSurplusLabel = new Label("剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
 
         // 添加分类按钮
         Button addCategoryButton = new Button("添加分类");
@@ -241,13 +249,19 @@ public class FinanceTrackerUI extends Application {
                 showTransactionButton
         );
 
-        // 本月汇总和交易记录布局
-        VBox summaryAndRecordsBox = new VBox(10);
+        // 汇总布局
+        VBox monthlySummaryBox = new VBox(10);
+        monthlySummaryBox.setAlignment(Pos.CENTER);
+        monthlySummaryBox.getChildren().addAll(monthlyIncomeLabel, monthlyExpenditureLabel, monthlySurplusLabel);
+
+        VBox totalSummaryBox = new VBox(10);
+        totalSummaryBox.setAlignment(Pos.CENTER);
+        totalSummaryBox.getChildren().addAll(totalIncomeLabel, totalExpenditureLabel, totalSurplusLabel);
+
+// 主布局
+        VBox summaryAndRecordsBox = new VBox(20);
         summaryAndRecordsBox.setAlignment(Pos.CENTER);
-        summaryAndRecordsBox.setPadding(new Insets(20, 20, 20, 20));
-        summaryAndRecordsBox.getChildren().addAll(
-                totalIncomeLabel, totalExpenditureLabel, surplusLabel, transactionRecordList
-        );
+        summaryAndRecordsBox.getChildren().addAll(monthlySummaryBox, totalSummaryBox, transactionRecordList);
 
         // 主容器，使用一个垂直布局 (VBox) 来安排两个部分：交易输入部分和汇总部分
         VBox mainLayout = new VBox(20);
@@ -277,12 +291,16 @@ public class FinanceTrackerUI extends Application {
             transactionManager.addTransaction(type, category, amount, date);
             showTransactionRecord(type, category, amount, transactionRecordList);
 
-            // 更新总收入和总支出
-            totalIncomeLabel.setText("总收入：¥" + transactionManager.getTotalIncome());
-            totalExpenditureLabel.setText("总支出：¥" + transactionManager.getTotalExpenditure());
-            surplusLabel.setText("剩余：¥" + (transactionManager.getTotalIncome() - transactionManager.getTotalExpenditure()));
-        });
+            // 更新本月收支
+            monthlyIncomeLabel.setText("本月总收入：¥" + transactionManager.getMonthlyIncome());
+            monthlyExpenditureLabel.setText("本月总支出：¥" + transactionManager.getMonthlyExpenditure());
+            monthlySurplusLabel.setText("本月剩余：¥" + (transactionManager.getMonthlyIncome() - transactionManager.getMonthlyExpenditure()));
 
+            // 更新总收支
+            totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome());
+            totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
+            totalSurplusLabel.setText("总剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
+        });
         // 查看交易记录按钮
         showTransactionButton.setOnAction(e -> {
             loadTransactionRecords(transactionRecordList);
