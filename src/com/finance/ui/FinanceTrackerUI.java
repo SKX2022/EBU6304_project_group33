@@ -322,6 +322,13 @@ public class FinanceTrackerUI extends Application {
                     updatedCalculator.calculateRemaining()
             );
 
+
+
+            
+
+
+
+
         });
 
         // 查看交易记录按钮
@@ -437,6 +444,8 @@ public class FinanceTrackerUI extends Application {
             }
             return null;
         });
+
+
 
         dialog.showAndWait();
     }
