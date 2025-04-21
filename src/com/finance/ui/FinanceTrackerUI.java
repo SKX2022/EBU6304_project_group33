@@ -219,10 +219,13 @@ public class FinanceTrackerUI extends Application {
         Button addTransactionButton = new Button("添加交易");
 // 在类中声明
         SummaryManager summaryManager = new SummaryManager(transactionManager, categoryManager);
-        // 本月收支汇总
+        // 总收支汇总
         Label totalIncomeLabel = new Label("总收入：¥" + summaryManager.getTotalIncome());
         Label totalExpenditureLabel = new Label("总支出：¥" + summaryManager.getTotalExpenditure());
-        Label surplusLabel = new Label("剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
+        Label totalSurplusLabel = new Label("剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
+        Label monthlyIncomeLabel = new Label("月度收入：¥" + transactionManager.getMonthlyIncome());
+        Label monthlyExpenditureLabel = new Label("月度支出：¥" + transactionManager.getMonthlyExpenditure());
+        Label monthlySurplusLabel = new Label("月度剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
 
         // 添加分类按钮
         Button addCategoryButton = new Button("添加分类");
@@ -254,12 +257,12 @@ public class FinanceTrackerUI extends Application {
                 showDialogButton
         );
 
-        // 本月汇总和交易记录布局
+        // 总汇总和交易记录布局
         VBox summaryAndRecordsBox = new VBox(10);
         summaryAndRecordsBox.setAlignment(Pos.CENTER);
         summaryAndRecordsBox.setPadding(new Insets(20, 20, 20, 20));
         summaryAndRecordsBox.getChildren().addAll(
-                totalIncomeLabel, totalExpenditureLabel, surplusLabel, transactionRecordList
+                totalIncomeLabel, totalExpenditureLabel, totalSurplusLabel, transactionRecordList
         );
 
         // 主容器，使用一个垂直布局 (VBox) 来安排两个部分：交易输入部分和汇总部分
@@ -318,7 +321,7 @@ public class FinanceTrackerUI extends Application {
                     updatedCalculator.calculateTotalExpenditure(),
                     updatedCalculator.calculateRemaining()
             );
-main
+
         });
 
         // 查看交易记录按钮
