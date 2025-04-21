@@ -65,21 +65,22 @@ filetree
 
     ```bash
     mvn exec:java -Dexec.mainClass="com.finance.Main"
-    ```
-4. **提交更改**：
+ 
+   ```
+ 4. **clone仓库 拉取更新**：
+   - 先clone GitHub仓库，如果远程仓库有更新，点击右上角的 `Fetch origin` 按钮，然后点击 `Pull origin` 同步最新代码。
+   
+ 5. **创建分支**：
+   - 点击左上角的 `Current Branch`，选择 `New Branch`。
+   - 输入分支名称后，点击 `Create Branch`。   
+6. **提交更改**：
    - 在本地修改代码后，打开 GitHub Desktop。
    - 在 `Changes` 选项卡中查看已修改的文件。
    - 输入提交信息，点击 `Commit to main`。
 
-5. **推送更改**：
+7. **推送更改**：
    - 提交更改后，点击右上角的 `Push origin` 按钮，将更改推送到远程仓库。
 
-6. **拉取更新**：
-   - 如果远程仓库有更新，点击右上角的 `Fetch origin` 按钮，然后点击 `Pull origin` 同步最新代码。
-
-7. **创建分支**：
-   - 点击左上角的 `Current Branch`，选择 `New Branch`。
-   - 输入分支名称后，点击 `Create Branch`。
 
 8. **合并分支**：
    - 推送到GitHub后，在GitHub上创建Pull requests,查看差异并检查冲突后Merge到 main Branch。
