@@ -1,10 +1,9 @@
 package com.finance.ui;
 
-import com.finance.controller.CategoryManager;
-import com.finance.controller.Register;
-import com.finance.controller.SummaryManager;
-import com.finance.controller.TransactionManager;
+import com.finance.controller.*;
 import com.finance.model.*;
+import com.finance.service.ThresholdCalculator; // 新增服务类
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -281,6 +280,17 @@ public class FinanceTrackerUI extends Application {
             String selectedType = transactionTypeComboBox.getValue();
             updateCategoryComboBox(selectedType, categoryComboBox);
         });
+        // 1. 添加设置阈值按钮
+        Button settingsButton = new Button("⚙ 设置阈值");
+        styleButton(settingsButton);
+        transactionBox.getChildren().add(settingsButton); // 将按钮添加到交易输入区域
+
+// 2. 设置按钮点击事件
+        settingsButton.setOnAction(e -> {
+            // 加载当前用户的阈值配置
+            UserThreshold threshold = ThresholdManager.loadThreshold(loggedInUser.getUsername());
+            showThresholdSettingsDialog(threshold);
+        });
 
         // 添加交易按钮事件
         addTransactionButton.setOnAction(e -> {
@@ -297,14 +307,80 @@ public class FinanceTrackerUI extends Application {
             monthlySurplusLabel.setText("本月剩余：¥" + (transactionManager.getMonthlyIncome() - transactionManager.getMonthlyExpenditure()));
 
             // 更新总收支
+            ThresholdCalculator updatedCalculator = new ThresholdCalculator(transactionManager);
             totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome());
             totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
             totalSurplusLabel.setText("总剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
+            UserThreshold currentThreshold = ThresholdManager.loadThreshold(loggedInUser.getUsername());
+            checkThresholds(
+                    currentThreshold,
+                    updatedCalculator.calculateTotalExpenditure(),
+                    updatedCalculator.calculateRemaining()
+            );
         });
         // 查看交易记录按钮
         showTransactionButton.setOnAction(e -> {
             loadTransactionRecords(transactionRecordList);
         });
+    }
+    // 在 FinanceTrackerUI 类中添加以下方法
+    private void showThresholdSettingsDialog(UserThreshold threshold) {
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.setTitle("设置消费提醒阈值");
+
+        // 创建输入字段
+        TextField expenseField = new TextField();
+        TextField remainingField = new TextField();
+        expenseField.setPromptText("例：5000.0");
+        remainingField.setPromptText("例：1000.0");
+
+        // 显示当前值
+        if (threshold.getTotalExpenseThreshold() != null) {
+            expenseField.setText(String.valueOf(threshold.getTotalExpenseThreshold()));
+        }
+        if (threshold.getRemainingThreshold() != null) {
+            remainingField.setText(String.valueOf(threshold.getRemainingThreshold()));
+        }
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.addRow(0, new Label("月总支出警戒线:"), expenseField);
+        grid.addRow(1, new Label("最低余额警戒线:"), remainingField);
+        dialog.getDialogPane().setContent(grid);
+
+        // 添加按钮
+        ButtonType saveButtonType = new ButtonType("保存", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        // 保存处理
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == saveButtonType) {
+                try {
+                    threshold.setTotalExpenseThreshold(Double.parseDouble(expenseField.getText()));
+                    threshold.setRemainingThreshold(Double.parseDouble(remainingField.getText()));
+                    ThresholdManager.saveThreshold(threshold);
+                    return true;
+                } catch (NumberFormatException ex) {
+                    showAlert("输入错误", "请输入有效数字！");
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+    }
+    // 在 FinanceTrackerUI 类中添加以下方法
+    private void checkThresholds(UserThreshold threshold, double totalExpense, double remaining) {
+        if (threshold.getTotalExpenseThreshold() != null &&
+                totalExpense > threshold.getTotalExpenseThreshold()) {
+            showAlert("超额警告", "本月总支出已超过设定阈值！\n当前支出：" + totalExpense);
+        }
+
+        if (threshold.getRemainingThreshold() != null &&
+                remaining < threshold.getRemainingThreshold()) {
+            showAlert("余额不足", "️剩余金额低于安全线！\n当前余额：" + remaining);
+        }
     }
 
     // 获取当前系统时间
