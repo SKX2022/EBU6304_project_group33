@@ -1,10 +1,10 @@
 package com.finance.ui;
 
-import com.finance.controller.CategoryManager;
-import com.finance.controller.Register;
-import com.finance.controller.TransactionManager;
-import com.finance.findByDate.findByDateUI;
+import com.finance.controller.*;
 import com.finance.model.*;
+import com.finance.service.ThresholdCalculator; // 新增服务类
+improt com.finance.findByDate.*;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,15 +13,19 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class FinanceTrackerUI extends Application {
 
+    private SummaryManager summaryManager;
     private TransactionManager transactionManager;
     private CategoryManager categoryManager;
     private Register register = new Register();  // 使用 Register 对象
@@ -35,7 +39,7 @@ public class FinanceTrackerUI extends Application {
         primaryStage.setTitle("个人财务管理系统");
 
         // 创建根布局（使用 StackPane 来布局控件）
-         Pane root = new  Pane();
+        Pane root = new  Pane();
 
         // 设置背景图
         setBackgroundImage(root, "/Users/wangruizhi/Downloads/pexels-tirachard-kumtanom-112571-733852.jpg");
@@ -97,12 +101,13 @@ public class FinanceTrackerUI extends Application {
             }
 
             if (loggedInUser != null) {
-                showAlert("登录成功", "欢迎回来，" + username + "！");
+                showAlert(Alert.AlertType.INFORMATION, "登录成功", "欢迎回来，" + username + "！");
                 categoryManager = new CategoryManager(loggedInUser);  // 传递 loggedInUser 对象
                 transactionManager = new TransactionManager(loggedInUser);  // 传递 loggedInUser 对象
+
                 showFinancePage(root, loggedInUser);  // 登录成功后跳转到记账界面
             } else {
-                showAlert("登录失败", "用户名或密码错误！");
+                showAlert(Alert.AlertType.INFORMATION, "登录失败", "用户名或密码错误！");
             }
         });
 
@@ -113,11 +118,11 @@ public class FinanceTrackerUI extends Application {
 
             // 调用 registerUser 方法注册新用户
             if (register.registerUser(username, password)) {
-                showAlert("注册成功", "用户名：" + username + " 已注册！");
+                showAlert(Alert.AlertType.INFORMATION, "注册成功", "用户名：" + username + " 已注册！");
                 root.getChildren().clear();
                 root.getChildren().add(loginBox);  // 切换回登录界面
             } else {
-                showAlert("注册失败", "用户名已存在！");
+                showAlert(Alert.AlertType.INFORMATION, "注册失败", "用户名已存在！");
             }
         });
 
@@ -184,7 +189,7 @@ public class FinanceTrackerUI extends Application {
     }
 
     // 弹出提示框
-    private void showAlert(String title, String message) {
+    private void showAlert(Alert.AlertType information, String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -206,18 +211,22 @@ public class FinanceTrackerUI extends Application {
         // 交易记录输入框
         TextField transactionAmountField = new TextField();
         ComboBox<String> transactionTypeComboBox = new ComboBox<>();
-        transactionTypeComboBox.getItems().addAll("收入", "支出");
+        transactionTypeComboBox.getItems().addAll("请选择分类", "收入", "支出");
 
         // 分类选择框（初始为空）
         ComboBox<String> categoryComboBox = new ComboBox<>();
         categoryComboBox.getItems().add("请选择分类");
 
         Button addTransactionButton = new Button("添加交易");
-
-        // 本月收支汇总
-        Label totalIncomeLabel = new Label("总收入：¥" + transactionManager.getTotalIncome());
-        Label totalExpenditureLabel = new Label("总支出：¥" + transactionManager.getTotalExpenditure());
-        Label surplusLabel = new Label("剩余：¥" + (transactionManager.getTotalIncome() - transactionManager.getTotalExpenditure()));
+// 在类中声明
+        SummaryManager summaryManager = new SummaryManager(transactionManager, categoryManager);
+        // 总收支汇总
+        Label totalIncomeLabel = new Label("总收入：¥" + summaryManager.getTotalIncome());
+        Label totalExpenditureLabel = new Label("总支出：¥" + summaryManager.getTotalExpenditure());
+        Label totalSurplusLabel = new Label("剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
+        Label monthlyIncomeLabel = new Label("月度收入：¥" + transactionManager.getMonthlyIncome());
+        Label monthlyExpenditureLabel = new Label("月度支出：¥" + transactionManager.getMonthlyExpenditure());
+        Label monthlySurplusLabel = new Label("月度剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
 
         // 添加分类按钮
         Button addCategoryButton = new Button("添加分类");
@@ -227,7 +236,13 @@ public class FinanceTrackerUI extends Application {
         ListView<String> transactionRecordList = new ListView<>();
         transactionRecordList.setPrefWidth(400);   // 设置宽度为 400
         transactionRecordList.setPrefHeight(200);  // 设置高度为 200
+
+        ListView<String> transactionRecord2List = new ListView<>();
+        transactionRecord2List.setPrefWidth(400);   // 设置宽度为 400
+        transactionRecord2List.setPrefHeight(200);  // 设置高度为 200
+
         Button showTransactionButton = new Button("查看交易记录");
+        Button showDialogButton = new Button("查看类别交易记录");
 
         // 交易记录布局
         VBox transactionBox = new VBox(10);
@@ -239,15 +254,16 @@ public class FinanceTrackerUI extends Application {
                 new Label("选择类别："), categoryComboBox,
                 addTransactionButton,
                 addCategoryButton,
-                showTransactionButton
+                showTransactionButton,
+                showDialogButton
         );
 
-        // 本月汇总和交易记录布局
+        // 总汇总和交易记录布局
         VBox summaryAndRecordsBox = new VBox(10);
         summaryAndRecordsBox.setAlignment(Pos.CENTER);
         summaryAndRecordsBox.setPadding(new Insets(20, 20, 20, 20));
         summaryAndRecordsBox.getChildren().addAll(
-                totalIncomeLabel, totalExpenditureLabel, surplusLabel, transactionRecordList
+                totalIncomeLabel, totalExpenditureLabel, totalSurplusLabel, transactionRecordList
         );
 
         // 主容器，使用一个垂直布局 (VBox) 来安排两个部分：交易输入部分和汇总部分
@@ -268,6 +284,17 @@ public class FinanceTrackerUI extends Application {
             String selectedType = transactionTypeComboBox.getValue();
             updateCategoryComboBox(selectedType, categoryComboBox);
         });
+        // 1. 添加设置阈值按钮
+        Button settingsButton = new Button("⚙ 设置阈值");
+        styleButton(settingsButton);
+        transactionBox.getChildren().add(settingsButton); // 将按钮添加到交易输入区域
+
+// 2. 设置按钮点击事件
+        settingsButton.setOnAction(e -> {
+            // 加载当前用户的阈值配置
+            UserThreshold threshold = ThresholdManager.loadThreshold(loggedInUser.getUsername());
+            showThresholdSettingsDialog(threshold);
+        });
 
         // 添加交易按钮事件
         addTransactionButton.setOnAction(e -> {
@@ -278,18 +305,135 @@ public class FinanceTrackerUI extends Application {
             transactionManager.addTransaction(type, category, amount, date);
             showTransactionRecord(type, category, amount, transactionRecordList);
 
-            // 更新总收入和总支出
-            totalIncomeLabel.setText("总收入：¥" + transactionManager.getTotalIncome());
-            totalExpenditureLabel.setText("总支出：¥" + transactionManager.getTotalExpenditure());
-            surplusLabel.setText("剩余：¥" + (transactionManager.getTotalIncome() - transactionManager.getTotalExpenditure()));
+
+            // 更新本月收支
+            monthlyIncomeLabel.setText("本月总收入：¥" + transactionManager.getMonthlyIncome());
+            monthlyExpenditureLabel.setText("本月总支出：¥" + transactionManager.getMonthlyExpenditure());
+            monthlySurplusLabel.setText("本月剩余：¥" + (transactionManager.getMonthlyIncome() - transactionManager.getMonthlyExpenditure()));
+
+            // 更新总收支
+            ThresholdCalculator updatedCalculator = new ThresholdCalculator(transactionManager);
+            totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome());
+            totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
+            totalSurplusLabel.setText("总剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
+            UserThreshold currentThreshold = ThresholdManager.loadThreshold(loggedInUser.getUsername());
+            checkThresholds(
+                    currentThreshold,
+                    updatedCalculator.calculateTotalExpenditure(),
+                    updatedCalculator.calculateRemaining()
+            );
+
         });
 
         // 查看交易记录按钮
         showTransactionButton.setOnAction(e -> {
-            loadTransactionRecords(transactionRecordList);
+            String category = categoryComboBox.getValue();
+            List<Transaction> transactions = loadTransactionRecords(transactionRecordList, null);
+
+            if (transactions.size() >= 0 && category != null) {
+                double in = 0d;
+                double out = 0d;
+                for (int i = 0; i < transactions.size(); i++) {
+                    if ("收入".equals(transactions.get(i).getType())) {
+                        in += transactions.get(i).getAmount();
+                    }
+                    if ("支出".equals(transactions.get(i).getType())) {
+                        out += transactions.get(i).getAmount();
+                    }
+                }
+                if (in > 0) {
+                    totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome() + "  " + category + "收入：¥" + in);
+                } else {
+                    totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome());
+                }
+
+                if (out > 0) {
+                    totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure() + "  " + category + "支出：¥" + out);
+                } else {
+                    totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
+                }
+            } else {
+                totalIncomeLabel.setText("总收入：¥" +summaryManager.getTotalIncome());
+                totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
+            }
+
         });
 
-        //
+        showDialogButton.setOnAction(e -> {
+            String category = categoryComboBox.getValue();
+            List<Transaction> transactions = loadTransactionRecords(transactionRecord2List, category);
+
+            String inStr = "";
+            String outStr = "";
+
+            if (transactions.size() >= 0 && category != null) {
+                double in = 0d;
+                double out = 0d;
+                for (int i = 0; i < transactions.size(); i++) {
+                    if ("收入".equals(transactions.get(i).getType())) {
+                        in += transactions.get(i).getAmount();
+                    }
+                    if ("支出".equals(transactions.get(i).getType())) {
+                        out += transactions.get(i).getAmount();
+                    }
+                }
+                if (in > 0) {
+                    inStr = category + "收入：¥" + in;
+                }
+
+                if (out > 0) {
+                    outStr = category + "支出：¥" + out;
+                }
+            }
+
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.initModality(Modality.APPLICATION_MODAL); // 设置为模态对话框
+            dialog.setTitle(inStr + "   " + outStr);
+            dialog.getDialogPane().setContent(transactionRecord2List); // 设置内容为ListView
+            dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE); // 添加关闭按钮
+            dialog.showAndWait(); // 显示对话框并等待关闭
+        });
+
+
+        Button importExcelButton = new Button("📥 从Excel导入");
+        styleButton(importExcelButton);
+        transactionBox.getChildren().add(1, importExcelButton); // 插入到设置按钮上方
+
+// 2. 添加按钮点击事件
+        importExcelButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("选择Excel交易记录文件");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Excel文件", "*.xlsx")
+            );
+
+            File selectedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
+            if (selectedFile != null) {
+                try {
+                    // 调用Excel导入方法
+                    List<String> errors = ExcelImporter.importTransactions(
+                            loggedInUser,
+                            selectedFile.getAbsolutePath()
+                    );
+
+                    // 刷新数据
+
+
+                    // 显示结果
+                    if (errors.isEmpty()) {
+                        showAlert(Alert.AlertType.INFORMATION, "导入成功",
+                                "成功导入交易记录！");
+                    } else {
+                        showErrorDialog("导入完成（含错误）", errors);
+                    }
+
+                } catch (Exception ex) {
+                    showAlert(Alert.AlertType.ERROR, "导入失败",
+                            "错误信息: " + ex.getMessage());
+                }
+            }
+        });
+
         // **添加“按时间查询”按钮**
         Button findByDateButton = new Button("按日期查询");
 
@@ -302,6 +446,66 @@ public class FinanceTrackerUI extends Application {
 
 // **将“按时间查询”按钮添加到现有的主布局中**
         mainLayout.getChildren().add(findByDateButton);
+    }
+    }
+    // 在 FinanceTrackerUI 类中添加以下方法
+    private void showThresholdSettingsDialog(UserThreshold threshold) {
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.setTitle("设置消费提醒阈值");
+
+        // 创建输入字段
+        TextField expenseField = new TextField();
+        TextField remainingField = new TextField();
+        expenseField.setPromptText("例：5000.0");
+        remainingField.setPromptText("例：1000.0");
+
+        // 显示当前值
+        if (threshold.getTotalExpenseThreshold() != null) {
+            expenseField.setText(String.valueOf(threshold.getTotalExpenseThreshold()));
+        }
+        if (threshold.getRemainingThreshold() != null) {
+            remainingField.setText(String.valueOf(threshold.getRemainingThreshold()));
+        }
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.addRow(0, new Label("月总支出警戒线:"), expenseField);
+        grid.addRow(1, new Label("最低余额警戒线:"), remainingField);
+        dialog.getDialogPane().setContent(grid);
+
+        // 添加按钮
+        ButtonType saveButtonType = new ButtonType("保存", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        // 保存处理
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == saveButtonType) {
+                try {
+                    threshold.setTotalExpenseThreshold(Double.parseDouble(expenseField.getText()));
+                    threshold.setRemainingThreshold(Double.parseDouble(remainingField.getText()));
+                    ThresholdManager.saveThreshold(threshold);
+                    return true;
+                } catch (NumberFormatException ex) {
+                    showAlert(Alert.AlertType.INFORMATION, "输入错误", "请输入有效数字！");
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+    }
+    // 在 FinanceTrackerUI 类中添加以下方法
+    private void checkThresholds(UserThreshold threshold, double totalExpense, double remaining) {
+        if (threshold.getTotalExpenseThreshold() != null &&
+                totalExpense > threshold.getTotalExpenseThreshold()) {
+            showAlert(Alert.AlertType.INFORMATION, "超额警告", "本月总支出已超过设定阈值！\n当前支出：" + totalExpense);
+        }
+
+        if (threshold.getRemainingThreshold() != null &&
+                remaining < threshold.getRemainingThreshold()) {
+            showAlert(Alert.AlertType.INFORMATION, "余额不足", "️剩余金额低于安全线！\n当前余额：" + remaining);
+        }
     }
 
     // 获取当前系统时间
@@ -329,12 +533,25 @@ public class FinanceTrackerUI extends Application {
     }
 
     // 加载交易记录
-    private void loadTransactionRecords(ListView<String> transactionRecordList) {
+    private List<Transaction> loadTransactionRecords(ListView<String> transactionRecordList, String category) {
+        transactionRecordList.getItems().clear();
         List<Transaction> transactions = transactionManager.getAllTransactions();
+        List<Transaction> list = new ArrayList<>();
         for (Transaction transaction : transactions) {
-            String record = transaction.getType() + ": " + transaction.getCategory() + " ¥" + transaction.getAmount() + " 时间: " + transaction.getDate();
-            transactionRecordList.getItems().add(record);  // 加载所有交易记录
+
+            if ( category != null && transaction != null && !"".equals(category) && !"请选择分类".equals(category)
+                    && !category.equals(transaction.getCategory())) {
+                transaction = null;
+            }
+            if (transaction != null) {
+                String record = transaction.getType() + ": " + transaction.getCategory() + " ¥" + transaction.getAmount() + " 时间: " + transaction.getDate();
+                transactionRecordList.getItems().add(record);  // 加载所有交易记录
+                list.add(transaction);
+            }
+
         }
+
+        return list;
     }
 
     // 弹出提示框
@@ -354,5 +571,21 @@ public class FinanceTrackerUI extends Application {
             // 更新分类选择框
             updateCategoryComboBox(categoryType, categoryComboBox);
         });
+    }
+
+
+
+    private void showErrorDialog(String title, List<String> errors) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+
+        // 将错误信息转换为文本区域
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);
+        textArea.setText(String.join("\n", errors));
+
+        alert.getDialogPane().setExpandableContent(new VBox(textArea));
+        alert.showAndWait();
     }
 }
