@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29be6450-d526-4bb1-a46b-fdcecd8cc174" name="更改" comment="在UI中添加了‘按时间查询’按钮，并实现了其功能。">
-      <change afterPath="$PROJECT_DIR$/target/classes/com/finance/findByDate/findByDate.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/finance/findByDate/findByDateUI.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/finance/ui/FinanceTrackerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/finance/ui/FinanceTrackerUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
