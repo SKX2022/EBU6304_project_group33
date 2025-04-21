@@ -3,6 +3,7 @@ package com.finance.ui;
 import com.finance.controller.CategoryManager;
 import com.finance.controller.Register;
 import com.finance.controller.TransactionManager;
+import com.finance.findByDate.findByDateUI;
 import com.finance.model.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -287,6 +288,20 @@ public class FinanceTrackerUI extends Application {
         showTransactionButton.setOnAction(e -> {
             loadTransactionRecords(transactionRecordList);
         });
+
+        //
+        // **添加“按时间查询”按钮**
+        Button findByDateButton = new Button("按日期查询");
+
+// 设置按钮的点击事件
+        findByDateButton.setOnAction(e -> {
+            Stage findByDateStage = new Stage(); // 创建新窗口
+            findByDateUI findByDatePage = new findByDateUI(loggedInUser); // 创建 findByDateUI 对象并传入用户
+            findByDatePage.start(findByDateStage); // 启动 findByDateUI 界面
+        });
+
+// **将“按时间查询”按钮添加到现有的主布局中**
+        mainLayout.getChildren().add(findByDateButton);
     }
 
     // 获取当前系统时间

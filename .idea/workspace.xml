@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29be6450-d526-4bb1-a46b-fdcecd8cc174" name="更改" comment="Delete .idea directory" />
+    <list default="true" id="29be6450-d526-4bb1-a46b-fdcecd8cc174" name="更改" comment="Delete .idea directory">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/finance/ui/FinanceTrackerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/finance/ui/FinanceTrackerUI.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,24 +60,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.finance-tracker [clean].executor": "Run",
-    "Maven.finance-tracker [compile].executor": "Run",
-    "Maven.finance-tracker [install].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "branch3",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Homework/This_Semester/Software_Engineering/Project/branch1",
-    "project.structure.last.edited": "模块",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "editor.preferences.completion",
-    "应用程序.FinanceTracker.executor": "Run",
-    "应用程序.Main.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.finance-tracker [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.finance-tracker [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.finance-tracker [install].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;branch3&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Homework/This_Semester/Software_Engineering/Project/branch1&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.completion&quot;,
+    &quot;应用程序.FinanceTracker.executor&quot;: &quot;Run&quot;,
+    &quot;应用程序.Main.executor&quot;: &quot;Run&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="FinanceTracker" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="22" />
