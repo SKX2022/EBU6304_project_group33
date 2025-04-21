@@ -82,7 +82,7 @@ filetree
    - 输入分支名称后，点击 `Create Branch`。
 
 8. **合并分支**：
-   - 切换到主分支，点击 `Branch > Merge into Current Branch`。
-   - 选择要合并的分支，点击 `Merge`。
+   - 推送到GitHub后，在GitHub上创建Pull requests,查看差异并检查冲突后Merge到 main Branch。
+
 
 通过以上步骤，您可以使用 GitHub Desktop 轻松管理项目的版本控制。
