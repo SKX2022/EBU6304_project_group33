@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29be6450-d526-4bb1-a46b-fdcecd8cc174" name="更改" comment="Delete .idea directory">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/finance/ui/FinanceTrackerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/finance/ui/FinanceTrackerUI.java" afterDir="false" />
+    <list default="true" id="29be6450-d526-4bb1-a46b-fdcecd8cc174" name="更改" comment="在UI中添加了‘按时间查询’按钮，并实现了其功能。">
+      <change afterPath="$PROJECT_DIR$/target/classes/com/finance/findByDate/findByDate.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/finance/findByDate/findByDateUI.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,7 +119,23 @@
       <option name="project" value="LOCAL" />
       <updated>1745157521565</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="在UI中添加了‘按时间查询’按钮，并实现了其功能。">
+      <option name="closed" value="true" />
+      <created>1745249685101</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745249685101</updated>
+    </task>
+    <task id="LOCAL-00003" summary="在UI中添加了‘按时间查询’按钮，并实现了其功能。">
+      <option name="closed" value="true" />
+      <created>1745249776824</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1745249776824</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -149,8 +165,10 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="Merge remote-tracking branch 'origin/branch3' into branch3&#10;&#10;# Conflicts:&#10;#&#9;.idea/compiler.xml&#10;#&#9;.idea/workspace.xml" />
     <MESSAGE value="Delete .idea directory" />
-    <option name="LAST_COMMIT_MESSAGE" value="Delete .idea directory" />
+    <MESSAGE value="在UI中添加了‘按时间查询’按钮，并实现了其功能。" />
+    <option name="LAST_COMMIT_MESSAGE" value="在UI中添加了‘按时间查询’按钮，并实现了其功能。" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/code$FinanceTracker.ic" NAME="FinanceTracker 覆盖结果" MODIFIED="1745126692571" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
