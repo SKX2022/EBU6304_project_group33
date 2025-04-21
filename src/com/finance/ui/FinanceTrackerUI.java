@@ -13,15 +13,19 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 public class FinanceTrackerUI extends Application {
 
+
+    private SummaryManager summaryManager;
     private TransactionManager transactionManager;
     private CategoryManager categoryManager;
     private Register register = new Register();  // 使用 Register 对象
@@ -35,7 +39,7 @@ public class FinanceTrackerUI extends Application {
         primaryStage.setTitle("个人财务管理系统");
 
         // 创建根布局（使用 StackPane 来布局控件）
-         Pane root = new  Pane();
+        Pane root = new  Pane();
 
         // 设置背景图
         setBackgroundImage(root, "/Users/wangruizhi/Downloads/pexels-tirachard-kumtanom-112571-733852.jpg");
@@ -100,6 +104,7 @@ public class FinanceTrackerUI extends Application {
                 showAlert("登录成功", "欢迎回来，" + username + "！");
                 categoryManager = new CategoryManager(loggedInUser);  // 传递 loggedInUser 对象
                 transactionManager = new TransactionManager(loggedInUser);  // 传递 loggedInUser 对象
+
                 showFinancePage(root, loggedInUser);  // 登录成功后跳转到记账界面
             } else {
                 showAlert("登录失败", "用户名或密码错误！");
@@ -206,25 +211,19 @@ public class FinanceTrackerUI extends Application {
         // 交易记录输入框
         TextField transactionAmountField = new TextField();
         ComboBox<String> transactionTypeComboBox = new ComboBox<>();
-        transactionTypeComboBox.getItems().addAll("收入", "支出");
+        transactionTypeComboBox.getItems().addAll("请选择分类", "收入", "支出");
 
         // 分类选择框（初始为空）
         ComboBox<String> categoryComboBox = new ComboBox<>();
         categoryComboBox.getItems().add("请选择分类");
 
         Button addTransactionButton = new Button("添加交易");
-
+// 在类中声明
         SummaryManager summaryManager = new SummaryManager(transactionManager, categoryManager);
-
         // 本月收支汇总
-        Label monthlyIncomeLabel = new Label("本月总收入：¥" + transactionManager.getMonthlyIncome());
-        Label monthlyExpenditureLabel = new Label("本月总支出：¥" + transactionManager.getMonthlyExpenditure());
-        Label monthlySurplusLabel = new Label("本月剩余：¥" + (transactionManager.getMonthlyIncome() - transactionManager.getMonthlyExpenditure()));
-
-// 总收支汇总
         Label totalIncomeLabel = new Label("总收入：¥" + summaryManager.getTotalIncome());
         Label totalExpenditureLabel = new Label("总支出：¥" + summaryManager.getTotalExpenditure());
-        Label totalSurplusLabel = new Label("剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
+        Label surplusLabel = new Label("剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
 
         // 添加分类按钮
         Button addCategoryButton = new Button("添加分类");
@@ -234,7 +233,13 @@ public class FinanceTrackerUI extends Application {
         ListView<String> transactionRecordList = new ListView<>();
         transactionRecordList.setPrefWidth(400);   // 设置宽度为 400
         transactionRecordList.setPrefHeight(200);  // 设置高度为 200
+
+        ListView<String> transactionRecord2List = new ListView<>();
+        transactionRecord2List.setPrefWidth(400);   // 设置宽度为 400
+        transactionRecord2List.setPrefHeight(200);  // 设置高度为 200
+
         Button showTransactionButton = new Button("查看交易记录");
+        Button showDialogButton = new Button("查看类别交易记录");
 
         // 交易记录布局
         VBox transactionBox = new VBox(10);
@@ -246,22 +251,17 @@ public class FinanceTrackerUI extends Application {
                 new Label("选择类别："), categoryComboBox,
                 addTransactionButton,
                 addCategoryButton,
-                showTransactionButton
+                showTransactionButton,
+                showDialogButton
         );
 
-        // 汇总布局
-        VBox monthlySummaryBox = new VBox(10);
-        monthlySummaryBox.setAlignment(Pos.CENTER);
-        monthlySummaryBox.getChildren().addAll(monthlyIncomeLabel, monthlyExpenditureLabel, monthlySurplusLabel);
-
-        VBox totalSummaryBox = new VBox(10);
-        totalSummaryBox.setAlignment(Pos.CENTER);
-        totalSummaryBox.getChildren().addAll(totalIncomeLabel, totalExpenditureLabel, totalSurplusLabel);
-
-// 主布局
-        VBox summaryAndRecordsBox = new VBox(20);
+        // 本月汇总和交易记录布局
+        VBox summaryAndRecordsBox = new VBox(10);
         summaryAndRecordsBox.setAlignment(Pos.CENTER);
-        summaryAndRecordsBox.getChildren().addAll(monthlySummaryBox, totalSummaryBox, transactionRecordList);
+        summaryAndRecordsBox.setPadding(new Insets(20, 20, 20, 20));
+        summaryAndRecordsBox.getChildren().addAll(
+                totalIncomeLabel, totalExpenditureLabel, surplusLabel, transactionRecordList
+        );
 
         // 主容器，使用一个垂直布局 (VBox) 来安排两个部分：交易输入部分和汇总部分
         VBox mainLayout = new VBox(20);
@@ -291,19 +291,79 @@ public class FinanceTrackerUI extends Application {
             transactionManager.addTransaction(type, category, amount, date);
             showTransactionRecord(type, category, amount, transactionRecordList);
 
-            // 更新本月收支
-            monthlyIncomeLabel.setText("本月总收入：¥" + transactionManager.getMonthlyIncome());
-            monthlyExpenditureLabel.setText("本月总支出：¥" + transactionManager.getMonthlyExpenditure());
-            monthlySurplusLabel.setText("本月剩余：¥" + (transactionManager.getMonthlyIncome() - transactionManager.getMonthlyExpenditure()));
-
-            // 更新总收支
+            // 更新总收入和总支出
             totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome());
             totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
-            totalSurplusLabel.setText("总剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
+            surplusLabel.setText("剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
         });
+
         // 查看交易记录按钮
         showTransactionButton.setOnAction(e -> {
-            loadTransactionRecords(transactionRecordList);
+            String category = categoryComboBox.getValue();
+            List<Transaction> transactions = loadTransactionRecords(transactionRecordList, null);
+
+            if (transactions.size() >= 0 && category != null) {
+                double in = 0d;
+                double out = 0d;
+                for (int i = 0; i < transactions.size(); i++) {
+                    if ("收入".equals(transactions.get(i).getType())) {
+                        in += transactions.get(i).getAmount();
+                    }
+                    if ("支出".equals(transactions.get(i).getType())) {
+                        out += transactions.get(i).getAmount();
+                    }
+                }
+                if (in > 0) {
+                    totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome() + "  " + category + "收入：¥" + in);
+                } else {
+                    totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome());
+                }
+
+                if (out > 0) {
+                    totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure() + "  " + category + "支出：¥" + out);
+                } else {
+                    totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
+                }
+            } else {
+                totalIncomeLabel.setText("总收入：¥" +summaryManager.getTotalIncome());
+                totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
+            }
+
+        });
+
+        showDialogButton.setOnAction(e -> {
+            String category = categoryComboBox.getValue();
+            List<Transaction> transactions = loadTransactionRecords(transactionRecord2List, category);
+
+            String inStr = "";
+            String outStr = "";
+
+            if (transactions.size() >= 0 && category != null) {
+                double in = 0d;
+                double out = 0d;
+                for (int i = 0; i < transactions.size(); i++) {
+                    if ("收入".equals(transactions.get(i).getType())) {
+                        in += transactions.get(i).getAmount();
+                    }
+                    if ("支出".equals(transactions.get(i).getType())) {
+                        out += transactions.get(i).getAmount();
+                    }
+                }
+                if (in > 0) {
+                    inStr = category + "收入：¥" + in;
+                }
+
+                if (out > 0) {
+                    outStr = category + "支出：¥" + out;
+                }
+            }
+
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.initModality(Modality.APPLICATION_MODAL); // 设置为模态对话框
+            dialog.setTitle(inStr + "   " + outStr);
+            dialog.getDialogPane().setContent(transactionRecord2List); // 设置内容为ListView
+            dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE); // 添加关闭按钮
+            dialog.showAndWait(); // 显示对话框并等待关闭
         });
     }
 
@@ -332,12 +392,25 @@ public class FinanceTrackerUI extends Application {
     }
 
     // 加载交易记录
-    private void loadTransactionRecords(ListView<String> transactionRecordList) {
+    private List<Transaction> loadTransactionRecords(ListView<String> transactionRecordList, String category) {
+        transactionRecordList.getItems().clear();
         List<Transaction> transactions = transactionManager.getAllTransactions();
+        List<Transaction> list = new ArrayList<>();
         for (Transaction transaction : transactions) {
-            String record = transaction.getType() + ": " + transaction.getCategory() + " ¥" + transaction.getAmount() + " 时间: " + transaction.getDate();
-            transactionRecordList.getItems().add(record);  // 加载所有交易记录
+
+            if ( category != null && transaction != null && !"".equals(category) && !"请选择分类".equals(category)
+                    && !category.equals(transaction.getCategory())) {
+                transaction = null;
+            }
+            if (transaction != null) {
+                String record = transaction.getType() + ": " + transaction.getCategory() + " ¥" + transaction.getAmount() + " 时间: " + transaction.getDate();
+                transactionRecordList.getItems().add(record);  // 加载所有交易记录
+                list.add(transaction);
+            }
+
         }
+
+        return list;
     }
 
     // 弹出提示框
