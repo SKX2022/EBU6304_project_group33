@@ -12,17 +12,17 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class FinanceTrackerUI extends Application {
-
 
     private SummaryManager summaryManager;
     private TransactionManager transactionManager;
@@ -100,13 +100,13 @@ public class FinanceTrackerUI extends Application {
             }
 
             if (loggedInUser != null) {
-                showAlert("登录成功", "欢迎回来，" + username + "！");
+                showAlert(Alert.AlertType.INFORMATION, "登录成功", "欢迎回来，" + username + "！");
                 categoryManager = new CategoryManager(loggedInUser);  // 传递 loggedInUser 对象
                 transactionManager = new TransactionManager(loggedInUser);  // 传递 loggedInUser 对象
 
                 showFinancePage(root, loggedInUser);  // 登录成功后跳转到记账界面
             } else {
-                showAlert("登录失败", "用户名或密码错误！");
+                showAlert(Alert.AlertType.INFORMATION, "登录失败", "用户名或密码错误！");
             }
         });
 
@@ -117,11 +117,11 @@ public class FinanceTrackerUI extends Application {
 
             // 调用 registerUser 方法注册新用户
             if (register.registerUser(username, password)) {
-                showAlert("注册成功", "用户名：" + username + " 已注册！");
+                showAlert(Alert.AlertType.INFORMATION, "注册成功", "用户名：" + username + " 已注册！");
                 root.getChildren().clear();
                 root.getChildren().add(loginBox);  // 切换回登录界面
             } else {
-                showAlert("注册失败", "用户名已存在！");
+                showAlert(Alert.AlertType.INFORMATION, "注册失败", "用户名已存在！");
             }
         });
 
@@ -188,7 +188,7 @@ public class FinanceTrackerUI extends Application {
     }
 
     // 弹出提示框
-    private void showAlert(String title, String message) {
+    private void showAlert(Alert.AlertType information, String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -322,13 +322,6 @@ public class FinanceTrackerUI extends Application {
                     updatedCalculator.calculateRemaining()
             );
 
-
-
-            
-
-
-
-
         });
 
         // 查看交易记录按钮
@@ -399,6 +392,46 @@ public class FinanceTrackerUI extends Application {
             dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE); // 添加关闭按钮
             dialog.showAndWait(); // 显示对话框并等待关闭
         });
+
+
+        Button importExcelButton = new Button("📥 从Excel导入");
+        styleButton(importExcelButton);
+        transactionBox.getChildren().add(1, importExcelButton); // 插入到设置按钮上方
+
+// 2. 添加按钮点击事件
+        importExcelButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("选择Excel交易记录文件");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Excel文件", "*.xlsx")
+            );
+
+            File selectedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
+            if (selectedFile != null) {
+                try {
+                    // 调用Excel导入方法
+                    List<String> errors = ExcelImporter.importTransactions(
+                            loggedInUser,
+                            selectedFile.getAbsolutePath()
+                    );
+
+                    // 刷新数据
+
+
+                    // 显示结果
+                    if (errors.isEmpty()) {
+                        showAlert(Alert.AlertType.INFORMATION, "导入成功",
+                                "成功导入交易记录！");
+                    } else {
+                        showErrorDialog("导入完成（含错误）", errors);
+                    }
+
+                } catch (Exception ex) {
+                    showAlert(Alert.AlertType.ERROR, "导入失败",
+                            "错误信息: " + ex.getMessage());
+                }
+            }
+        });
     }
     // 在 FinanceTrackerUI 类中添加以下方法
     private void showThresholdSettingsDialog(UserThreshold threshold) {
@@ -439,13 +472,11 @@ public class FinanceTrackerUI extends Application {
                     ThresholdManager.saveThreshold(threshold);
                     return true;
                 } catch (NumberFormatException ex) {
-                    showAlert("输入错误", "请输入有效数字！");
+                    showAlert(Alert.AlertType.INFORMATION, "输入错误", "请输入有效数字！");
                 }
             }
             return null;
         });
-
-
 
         dialog.showAndWait();
     }
@@ -453,12 +484,12 @@ public class FinanceTrackerUI extends Application {
     private void checkThresholds(UserThreshold threshold, double totalExpense, double remaining) {
         if (threshold.getTotalExpenseThreshold() != null &&
                 totalExpense > threshold.getTotalExpenseThreshold()) {
-            showAlert("超额警告", "本月总支出已超过设定阈值！\n当前支出：" + totalExpense);
+            showAlert(Alert.AlertType.INFORMATION, "超额警告", "本月总支出已超过设定阈值！\n当前支出：" + totalExpense);
         }
 
         if (threshold.getRemainingThreshold() != null &&
                 remaining < threshold.getRemainingThreshold()) {
-            showAlert("余额不足", "️剩余金额低于安全线！\n当前余额：" + remaining);
+            showAlert(Alert.AlertType.INFORMATION, "余额不足", "️剩余金额低于安全线！\n当前余额：" + remaining);
         }
     }
 
@@ -525,5 +556,21 @@ public class FinanceTrackerUI extends Application {
             // 更新分类选择框
             updateCategoryComboBox(categoryType, categoryComboBox);
         });
+    }
+
+
+
+    private void showErrorDialog(String title, List<String> errors) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+
+        // 将错误信息转换为文本区域
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);
+        textArea.setText(String.join("\n", errors));
+
+        alert.getDialogPane().setExpandableContent(new VBox(textArea));
+        alert.showAndWait();
     }
 }
