@@ -528,8 +528,8 @@ public class FinanceTrackerUI extends Application {
             dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
             dialog.showAndWait();
         });
-        // Excel导入按钮事件
-        importExcelButton.setOnAction(e -> {
+        // Excel导入按钮事件修改后代码
+        importExcelButton.setOnAction(a -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("选择Excel交易记录文件");
             fileChooser.getExtensionFilters().add(
@@ -543,6 +543,19 @@ public class FinanceTrackerUI extends Application {
                             loggedInUser,
                             selectedFile.getAbsolutePath()
                     );
+
+                    // 重新加载交易记录
+                    transactionManager = new TransactionManager(loggedInUser); // 重新加载最新数据
+                    categoryManager = new CategoryManager(loggedInUser);
+                    summaryManager = new SummaryManager(transactionManager,categoryManager);
+                    // 更新本月收支
+                    monthlyIncomeLabel.setText("本月总收入：¥" + transactionManager.getMonthlyIncome());
+                    monthlyExpenditureLabel.setText("本月总支出：¥" + transactionManager.getMonthlyExpenditure());
+                    monthlySurplusLabel.setText("本月剩余：¥" + (transactionManager.getMonthlyIncome() - transactionManager.getMonthlyExpenditure()));
+                    // 更新总收支
+                    totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome());
+                    totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
+                    totalSurplusLabel.setText("总剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
 
                     if (errors.isEmpty()) {
                         showAlert(Alert.AlertType.INFORMATION, "导入成功", "成功导入交易记录！");
@@ -561,6 +574,7 @@ public class FinanceTrackerUI extends Application {
             findByDateUI findByDatePage = new findByDateUI(loggedInUser);
             findByDatePage.start(findByDateStage);
         });
+
     }
 
     // 设置汇总标签样式
@@ -699,27 +713,27 @@ public class FinanceTrackerUI extends Application {
         recordListView.getItems().add(record);
     }
 
-    // 加载交易记录
     private List<Transaction> loadTransactionRecords(ListView<String> recordListView, String filterCategory) {
-        recordListView.getItems().clear();
         List<Transaction> allTransactions = transactionManager.getAllTransactions();
         List<Transaction> filteredTransactions = new ArrayList<>();
 
-        for (Transaction transaction : allTransactions) {
-            boolean shouldAdd = filterCategory == null || filterCategory.equals("请选择分类") ||
-                    (transaction.getCategory() != null && transaction.getCategory().equals(filterCategory));
+        String selectedCategory = (filterCategory != null && !filterCategory.equals("请选择分类")) ? filterCategory : null;
 
-            if (shouldAdd) {
+        for (Transaction transaction : allTransactions) {
+            boolean matchCategory = selectedCategory == null ||
+                    transaction.getCategory() != null &&
+                            transaction.getCategory().equals(selectedCategory);
+
+            if (matchCategory) {
                 String record = String.format("%s: %s  ¥%.2f  %s",
                         transaction.getType(),
-                        transaction.getCategory() != null ? transaction.getCategory() : "无分类",
+                        transaction.getCategory(),
                         transaction.getAmount(),
                         transaction.getDate());
                 recordListView.getItems().add(record);
                 filteredTransactions.add(transaction);
             }
         }
-
         return filteredTransactions;
     }
 
@@ -765,4 +779,5 @@ public class FinanceTrackerUI extends Application {
 
         dialog.showAndWait();
     }
+
 }
