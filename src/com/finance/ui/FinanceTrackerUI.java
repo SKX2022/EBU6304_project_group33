@@ -416,6 +416,8 @@ public class FinanceTrackerUI extends Application {
                     );
 
                     // 刷新数据
+                    // 新增：更新分类选择框（假设有名为 categoryComboBox 的下拉框）
+                    updateCategoryComboBox("transaction", categoryComboBox);  // 第一个参数表示交易分类类型
 
 
                     // 显示结果
@@ -425,7 +427,17 @@ public class FinanceTrackerUI extends Application {
                     } else {
                         showErrorDialog("导入完成（含错误）", errors);
                     }
+                    // 新增刷新逻辑 ↓↓↓
+                    String category = categoryComboBox.getValue();
+                    updateCategoryComboBox("transaction", categoryComboBox); // 刷新分类下拉框
+                    loadTransactionRecords(transactionRecordList, null);    // 刷新交易记录列表
+                    loadTransactionRecords(transactionRecord2List, category); // 刷新分类过滤后的记录
 
+                    // 同步更新统计标签
+                    totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome());
+                    totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
+                    monthlyIncomeLabel.setText("月度收入：¥" + transactionManager.getMonthlyIncome());
+                    monthlyExpenditureLabel.setText("月度支出：¥" + transactionManager.getMonthlyExpenditure());
                 } catch (Exception ex) {
                     showAlert(Alert.AlertType.ERROR, "导入失败",
                             "错误信息: " + ex.getMessage());
@@ -573,4 +585,6 @@ public class FinanceTrackerUI extends Application {
         alert.getDialogPane().setExpandableContent(new VBox(textArea));
         alert.showAndWait();
     }
+
+
 }
