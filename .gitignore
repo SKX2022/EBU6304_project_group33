@@ -14,3 +14,6 @@
 
 # 忽略 IntelliJ IDEA 的 jarRepositories.xml 文件
 .idea/jarRepositories.xml
+target/finance-tracker-1.0-SNAPSHOT.jar
+target/finance-tracker-1.0-SNAPSHOT.jar
+target/finance-tracker-1.0-SNAPSHOT.jar

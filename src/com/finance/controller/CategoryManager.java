@@ -49,12 +49,15 @@ public class CategoryManager {
     }
 
     // 添加新的分类
-    public void addCategory(String categoryName) {
-        Category category = new Category(categoryName);
+    public boolean addCategory(String type, String categoryName) {
+        if (categories.stream().anyMatch(c -> c.getName().equals(categoryName) && c.getType().equals(type))) {
+            return false; // 分类已存在
+        }
+        Category category = new Category(type, categoryName);
         categories.add(category);
-        saveCategories();  // 保存分类数据到文件
+        saveCategories(); // 保存分类数据到文件
+        return true;
     }
-
     // 获取用户的所有分类
     public List<Category> getCategories() {
         return categories;

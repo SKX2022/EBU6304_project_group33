@@ -44,7 +44,7 @@ public class ExcelImporter {
                     validateTransactionData(type, amount, date);
 
                     // 处理分类
-                    handleCategory(categoryManager, category);
+                    handleCategory(categoryManager, type,category);
 
                     // 添加交易记录
                     transactionManager.addTransaction(type, category, amount, date);
@@ -97,11 +97,11 @@ public class ExcelImporter {
         }
     }
 
-    private static void handleCategory(CategoryManager categoryManager, String category) {
+    private static void handleCategory(CategoryManager categoryManager, String type, String categoryName) {
         boolean exists = categoryManager.getCategories().stream()
-                .anyMatch(c -> c.getName().equals(category));
+                .anyMatch(c -> c.getName().equals(categoryName) && c.getType().equals(type));
         if (!exists) {
-            categoryManager.addCategory(category);
+            categoryManager.addCategory(type, categoryName);
         }
     }
 }
