@@ -226,7 +226,7 @@ public class FinanceTrackerUI extends Application {
         Label totalSurplusLabel = new Label("剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
         Label monthlyIncomeLabel = new Label("月度收入：¥" + transactionManager.getMonthlyIncome());
         Label monthlyExpenditureLabel = new Label("月度支出：¥" + transactionManager.getMonthlyExpenditure());
-        Label monthlySurplusLabel = new Label("月度剩余：¥" + (summaryManager.getTotalIncome() - summaryManager.getTotalExpenditure()));
+        Label monthlySurplusLabel = new Label("月度剩余：¥" + (transactionManager.getMonthlyIncome() - transactionManager.getMonthlyExpenditure()));
 
         // 添加分类按钮
         Button addCategoryButton = new Button("添加分类");
@@ -263,7 +263,13 @@ public class FinanceTrackerUI extends Application {
         summaryAndRecordsBox.setAlignment(Pos.CENTER);
         summaryAndRecordsBox.setPadding(new Insets(20, 20, 20, 20));
         summaryAndRecordsBox.getChildren().addAll(
-                totalIncomeLabel, totalExpenditureLabel, totalSurplusLabel, transactionRecordList
+                totalIncomeLabel,
+                totalExpenditureLabel,
+                totalSurplusLabel,
+                monthlyIncomeLabel,  // 添加月度收入标签
+                monthlyExpenditureLabel,  // 添加月度支出标签
+                monthlySurplusLabel,  // 添加月度剩余标签
+                transactionRecordList
         );
 
         // 主容器，使用一个垂直布局 (VBox) 来安排两个部分：交易输入部分和汇总部分
@@ -330,33 +336,42 @@ public class FinanceTrackerUI extends Application {
             String category = categoryComboBox.getValue();
             List<Transaction> transactions = loadTransactionRecords(transactionRecordList, null);
 
+            // 获取月度收入和月度支出
+            double monthlyIncome = transactionManager.getMonthlyIncome();
+            double monthlyExpenditure = transactionManager.getMonthlyExpenditure();
+
+            // 更新月度收入和月度支出标签
+            monthlyIncomeLabel.setText("月收入：¥" + monthlyIncome);
+            monthlyExpenditureLabel.setText("月支出：¥" + monthlyExpenditure);
+
             if (transactions.size() >= 0 && category != null) {
                 double in = 0d;
                 double out = 0d;
-                for (int i = 0; i < transactions.size(); i++) {
-                    if ("收入".equals(transactions.get(i).getType())) {
-                        in += transactions.get(i).getAmount();
+                for (Transaction transaction : transactions) {
+                    if ("收入".equals(transaction.getType()) && category.equals(transaction.getCategory())) {
+                        in += transaction.getAmount();
                     }
-                    if ("支出".equals(transactions.get(i).getType())) {
-                        out += transactions.get(i).getAmount();
+                    if ("支出".equals(transaction.getType()) && category.equals(transaction.getCategory())) {
+                        out += transaction.getAmount();
                     }
                 }
+
+                // 更新总收入和总支出标签
                 if (in > 0) {
                     totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome() + "  " + category + "收入：¥" + in);
                 } else {
-                    totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome());
+                    totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome() + "  " + category + "收入：无");
                 }
 
                 if (out > 0) {
                     totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure() + "  " + category + "支出：¥" + out);
                 } else {
-                    totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
+                    totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure() + "  " + category + "支出：无");
                 }
             } else {
-                totalIncomeLabel.setText("总收入：¥" +summaryManager.getTotalIncome());
+                totalIncomeLabel.setText("总收入：¥" + summaryManager.getTotalIncome());
                 totalExpenditureLabel.setText("总支出：¥" + summaryManager.getTotalExpenditure());
             }
-
         });
 
         showDialogButton.setOnAction(e -> {
