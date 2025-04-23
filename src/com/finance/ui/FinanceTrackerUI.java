@@ -497,35 +497,43 @@ public class FinanceTrackerUI extends Application {
                 return;
             }
 
-            List<Transaction> transactions = loadTransactionRecords(transactionRecord2List, category);
+            // 创建新的ListView，避免旧记录影响
+            ListView<String> categoryTransactionList = new ListView<>();
+            categoryTransactionList.setPrefWidth(400);
+            categoryTransactionList.setPrefHeight(300);
+            categoryTransactionList.setStyle("-fx-font-size: 13px; -fx-font-family: 'Microsoft YaHei';");
 
-            String inStr = "";
-            String outStr = "";
+            // 加载指定类别的交易记录
+            List<Transaction> transactions = loadTransactionRecords(categoryTransactionList, category);
 
-            if (transactions.size() >= 0 && category != null) {
-                double in = 0d;
-                double out = 0d;
-                for (Transaction transaction : transactions) {
-                    if ("收入".equals(transaction.getType())) {
-                        in += transaction.getAmount();
-                    }
-                    if ("支出".equals(transaction.getType())) {
-                        out += transaction.getAmount();
-                    }
-                }
-                if (in > 0) {
-                    inStr = category + "收入：¥" + in;
-                }
-                if (out > 0) {
-                    outStr = category + "支出：¥" + out;
+            // 计算当前类别的收入和支出总额
+            double categoryIncome = 0;
+            double categoryExpense = 0;
+
+            for (Transaction transaction : transactions) {
+                if ("收入".equals(transaction.getType())) {
+                    categoryIncome += transaction.getAmount();
+                } else if ("支出".equals(transaction.getType())) {
+                    categoryExpense += transaction.getAmount();
                 }
             }
 
+            // 构建标题信息
+            String title = "";
+            if (categoryIncome > 0) {
+                title += String.format("%s收入：¥%.2f   ", category, categoryIncome);
+            }
+            if (categoryExpense > 0) {
+                title += String.format("%s支出：¥%.2f", category, categoryExpense);
+            }
+
+            // 创建并显示对话框
             Dialog<Void> dialog = new Dialog<>();
             dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setTitle(inStr + "   " + outStr);
-            dialog.getDialogPane().setContent(transactionRecord2List);
+            dialog.setTitle(title);
+            dialog.getDialogPane().setContent(categoryTransactionList);
             dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+            dialog.getDialogPane().setPrefSize(500, 400);
             dialog.showAndWait();
         });
         // Excel导入按钮事件修改后代码
