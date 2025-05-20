@@ -82,26 +82,29 @@
 
 /* 进度条样式 */
 .progress-bar {
-    -fx-accent: #27ae60;
-    -fx-control-inner-background: #ecf0f1;
+    -fx-accent: transparent; /* 避免系统默认色覆盖 */
+    -fx-control-inner-background: #f0f4f8; /* 背景灰蓝 */
     -fx-background-insets: 0;
     -fx-background-radius: 5;
-    -fx-padding: 5;
+}
+
+.progress-bar .track {
+    -fx-background-color: #e3effc; /* 进度条底色更亮 */
 }
 
 /* 收入进度条颜色 */
 #incomeProgressBar .bar {
-    -fx-background-color: #2ecc71;
+    -fx-background-color: #87CEFA;
 }
 
 /* 支出进度条颜色 */
 #expenseProgressBar .bar {
-    -fx-background-color: #e74c3c;
+    -fx-background-color: #87CEFA;
 }
 
 /* 盈余进度条颜色 */
 #surplusProgressBar .bar {
-    -fx-background-color: #f1c40f;
+    -fx-background-color: #87CEFA;
 }
 
 /* ListView 样式 */
