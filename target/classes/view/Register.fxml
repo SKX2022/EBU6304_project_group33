@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.finance.controller.RegisterController"
+           stylesheets="@../css/style.css">
+
+    <!-- 背景图层 -->
+    <ImageView fitHeight="600" fitWidth="900" preserveRatio="false">
+        <image>
+            <Image url="@../images/m.png" />
+        </image>
+    </ImageView>
+
+    <!-- 注册卡片层 -->
+    <VBox spacing="20" alignment="CENTER" styleClass="login-card">
+        <Label text="Create Your Account" styleClass="login-title"/>
+
+        <TextField fx:id="usernameField" promptText="Username" maxWidth="300" styleClass="input-field"/>
+        <PasswordField fx:id="passwordField" promptText="Password" maxWidth="300" styleClass="input-field"/>
+        <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" maxWidth="300" styleClass="input-field"/>
+
+        <Button text="Register" onAction="#handleRegister" styleClass="button-primary"/>
+        <Hyperlink text="Already have an account? Login here" onAction="#goToLogin" styleClass="link-text"/>
+        <Label fx:id="errorLabel" textFill="red" visible="false" />
+    </VBox>
+
+</StackPane>

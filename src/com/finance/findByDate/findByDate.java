@@ -1,7 +1,7 @@
 package com.finance.findByDate;
 import com.finance.model.Transaction;
 import com.finance.model.User;
-import com.finance.controller.TransactionManager;
+import com.finance.manager.TransactionManager;
 import java.util.List;
 import java.util.ArrayList;
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+
+<HBox fx:id="navigationBar"
+      xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.finance.controller.NavigationBarController"
+      styleClass="navigation-bar"
+      spacing="20"
+      alignment="CENTER_LEFT"
+      style="-fx-padding: 10 20;">
+
+    <Button fx:id="homeButton" text="Home" onAction="#goHome" styleClass="nav-button"/>
+    <Button fx:id="flowButton" text="Flow" onAction="#goFlow" styleClass="nav-button"/>
+    <Button fx:id="incomeAnalysisButton" text="Income Analysis" onAction="#goIncomeAnalysis" styleClass="nav-button"/>
+    <Button fx:id="expenditureAnalysisButton" text="Expenditure Analysis" onAction="#goExpenditureAnalysis" styleClass="nav-button"/>
+    <Button fx:id="graphButton" text="Graph" onAction="#goGraph" styleClass="nav-button"/>
+
+</HBox>
