@@ -35,6 +35,8 @@ public final class SceneSwitcher {
 
         Scene scene = new Scene(rootGroup);
         stage.setScene(scene);
+        stage.setWidth(baseWidth);   // ► 让 Stage 起步就是设计稿宽
+        stage.setHeight(baseHeight); // ► 让 Stage 起步就是设计稿高
 
         /* 监听窗口变化保持等比缩放 */
         ChangeListener<Number> listener = (o, ov, nv) -> refreshScale();
