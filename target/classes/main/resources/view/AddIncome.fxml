@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.finance.controller.AddIncomeController"
+      alignment="CENTER" spacing="20"
+      stylesheets="@../css/style.css"
+      style="-fx-padding:40;">
+
+    <Label text="Add New Income Category" styleClass="label-title"/>
+
+    <TextField fx:id="categoryField"
+               promptText="Income category name"
+               maxWidth="300" styleClass="input-field"/>
+
+    <HBox spacing="12" alignment="CENTER">
+        <Button text="Save"   onAction="#handleSave"   styleClass="button-primary"/>
+        <Button text="Cancel" onAction="#handleCancel"/>
+    </HBox>
+
+    <Label fx:id="errorLabel" textFill="red" visible="false"/>
+</VBox>

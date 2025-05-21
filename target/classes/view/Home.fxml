@@ -19,16 +19,16 @@
 
                 <!-- 图片和本月收入支出 -->
                 <StackPane alignment="TOP_LEFT">
-                    <ImageView fitHeight="200" fitWidth="360" preserveRatio="true">
+                    <ImageView fitHeight="300" fitWidth="500" preserveRatio="true">
                         <image>
                             <Image url="@../images/m.png" />
                         </image>
                     </ImageView>
                     <VBox spacing="6" style="-fx-padding: 20;">
                         <Label text="This month" styleClass="label-title"/>
-                        <Label fx:id="monthlyIncomeLabel" text="本月收入：¥0.00" styleClass="label-data"/>
-                        <Label fx:id="monthlyExpenseLabel" text="本月支出：¥0.00" styleClass="label-data"/>
-                        <Label fx:id="monthlySurplusLabel" text="本月盈余：¥0.00" styleClass="label-data"/>
+                        <Label fx:id="monthlyIncomeLabel" text="Month Income：¥0.00" styleClass="label-data"/>
+                        <Label fx:id="monthlyExpenseLabel" text="Month Expenditure：¥0.00" styleClass="label-data"/>
+                        <Label fx:id="monthlySurplusLabel" text="Month Surplus：¥0.00" styleClass="label-data"/>
                     </VBox>
                 </StackPane>
 
@@ -37,21 +37,21 @@
                     <Label text="Summary of total income and expenditure" styleClass="label-section"/>
 
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="收入"/>
-                        <ProgressBar fx:id="incomeProgressBar" prefWidth="300" progress="0.0"/>
-                        <Label fx:id="totalIncomeLabel" text="总收入：¥0.00"/>
+                        <Label text="Income" minWidth="80"/>
+                        <ProgressBar fx:id="incomeProgressBar" HBox.hgrow="ALWAYS" prefWidth="300" progress="0.0"/>
+                        <Label fx:id="totalIncomeLabel" text="Total Income：¥0.00"/>
                     </HBox>
 
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="支出"/>
-                        <ProgressBar fx:id="expenseProgressBar" prefWidth="300" progress="0.0"/>
-                        <Label fx:id="totalExpenseLabel" text="总支出：¥0.00"/>
+                        <Label text="Expenditure" minWidth="80"/>
+                        <ProgressBar fx:id="expenseProgressBar" HBox.hgrow="ALWAYS" prefWidth="300" progress="0.0"/>
+                        <Label fx:id="totalExpenseLabel" text="Total Expenditure：¥0.00"/>
                     </HBox>
 
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="盈余"/>
-                        <ProgressBar fx:id="surplusProgressBar" prefWidth="300" progress="0.0"/>
-                        <Label fx:id="totalSurplusLabel" text="总盈余：¥0.00"/>
+                        <Label text="Surplus" minWidth="80"/>
+                        <ProgressBar fx:id="surplusProgressBar" HBox.hgrow="ALWAYS" prefWidth="300" progress="0.0"/>
+                        <Label fx:id="totalSurplusLabel" text="Total Surplus：¥0.00"/>
                     </HBox>
                 </VBox>
             </VBox>
@@ -63,12 +63,14 @@
                     <Label text="Expenditure classification" styleClass="label-section"/>
                     <ListView fx:id="expenseCategoryList" prefHeight="100"/>
                     <Button text="Enter for more information" onAction="#goExpenditureAnalysis" styleClass="button-blue"/>
+                    <Button text="+  Add" onAction="#goAddExpense"  styleClass="button-primary"/>
                 </VBox>
 
                 <VBox spacing="10" styleClass="classification-box">
                     <Label text="Income classification" styleClass="label-section"/>
                     <ListView fx:id="incomeCategoryList" prefHeight="100"/>
                     <Button text="Enter for more information" onAction="#goIncomeAnalysis" styleClass="button-blue"/>
+                    <Button text="+  Add" onAction="#goAddIncome"   styleClass="button-primary"/>
                 </VBox>
 
             </VBox>
