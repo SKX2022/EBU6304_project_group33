@@ -59,7 +59,8 @@
 .classification-box {
     -fx-background-color: #ffffff;
     -fx-padding: 15;
-    -fx-border-color: #dcdcdc;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
@@ -82,14 +83,11 @@
 
 /* 进度条样式 */
 .progress-bar {
-    -fx-accent: transparent; /* 避免系统默认色覆盖 */
-    -fx-control-inner-background: #f0f4f8; /* 背景灰蓝 */
+    -fx-accent: #27ae60;
+    -fx-control-inner-background: #ecf0f1;
     -fx-background-insets: 0;
     -fx-background-radius: 5;
-}
-
-.progress-bar .track {
-    -fx-background-color: #e3effc; /* 进度条底色更亮 */
+    -fx-padding: 5;
 }
 
 /* 收入进度条颜色 */
@@ -110,7 +108,9 @@
 /* ListView 样式 */
 .list-view {
     -fx-background-color: #ffffff;
-    -fx-border-color: #dcdcdc;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
     -fx-border-radius: 5;
     -fx-background-radius: 5;
     -fx-padding: 5;
@@ -189,4 +189,22 @@
 
 .link-text:hover {
     -fx-text-fill: #3498db;
+}
+/* ScrollBar 通用美化 */
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #f1f5f9;       /* slate‑100 */
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #cbd5e1;       /* slate‑300 */
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #0ea5e9;       /* sky‑500 */
 }

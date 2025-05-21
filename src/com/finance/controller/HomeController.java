@@ -50,18 +50,18 @@ public class HomeController {
         double expenseMonth = transactionManager.getMonthlyExpenditure();
         double surplusMonth = incomeMonth - expenseMonth;
 
-        monthlyIncomeLabel.setText("本月收入：¥ " + incomeMonth);
-        monthlyExpenseLabel.setText("本月支出：¥ " + expenseMonth);
-        monthlySurplusLabel.setText("本月盈余：¥ " + surplusMonth);
+        monthlyIncomeLabel.setText("Month Income：¥ " + incomeMonth);
+        monthlyExpenseLabel.setText("Month Expenditure：¥ " + expenseMonth);
+        monthlySurplusLabel.setText("Month Surplus：¥ " + surplusMonth);
 
         // 总收支
         double incomeTotal = summaryManager.getTotalIncome();
         double expenseTotal = summaryManager.getTotalExpenditure();
         double surplusTotal = incomeTotal - expenseTotal;
 
-        totalIncomeLabel.setText("总收入：¥ " + incomeTotal);
-        totalExpenseLabel.setText("总支出：¥ " + expenseTotal);
-        totalSurplusLabel.setText("总盈余：¥ " + surplusTotal);
+        totalIncomeLabel.setText("Total Income：¥ " + incomeTotal);
+        totalExpenseLabel.setText("Total Expenditure：¥ " + expenseTotal);
+        totalSurplusLabel.setText("Total Surplus：¥ " + surplusTotal);
 
         // 分类展示
         List<Category> allCategories = categoryManager.loadCategories();
@@ -89,4 +89,6 @@ public class HomeController {
     private void goExpenditureAnalysis(ActionEvent event) {
         SceneSwitcher.switchScene("view/ExpenditureAnalysis.fxml");
     }
+    @FXML private void goAddExpense() { SceneSwitcher.switchScene("/view/AddExpense.fxml"); }
+    @FXML private void goAddIncome()  { SceneSwitcher.switchScene("/view/AddIncome.fxml");  }
 }
