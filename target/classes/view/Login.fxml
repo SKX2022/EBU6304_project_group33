@@ -13,7 +13,7 @@
     <!-- 背景图 -->
     <ImageView fitHeight="600" fitWidth="900" preserveRatio="false">
         <image>
-            <Image url="@../images/m.png" />
+            <Image url="@../images/blue.jpg" />
         </image>
     </ImageView>
 

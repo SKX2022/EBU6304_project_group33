@@ -15,13 +15,13 @@
         <HBox spacing="40" alignment="TOP_LEFT" style="-fx-padding: 30;">
 
             <!-- 左侧：图片 + 本月收支 + 总进度条 -->
-            <VBox spacing="30">
+            <VBox spacing="40">
 
                 <!-- 图片和本月收入支出 -->
                 <StackPane alignment="TOP_LEFT">
-                    <ImageView fitHeight="300" fitWidth="500" preserveRatio="true">
+                    <ImageView fitHeight="350"  preserveRatio="true">
                         <image>
-                            <Image url="@../images/m.png" />
+                            <Image url="@../images/blue.jpg" />
                         </image>
                     </ImageView>
                     <VBox spacing="6" style="-fx-padding: 20;">
