@@ -17,7 +17,7 @@
 
     <HBox spacing="12" alignment="CENTER">
         <Button text="Save"   onAction="#handleSave"   styleClass="button-primary"/>
-        <Button text="Cancel" onAction="#handleCancel"/>
+        <Button text="Cancel" onAction="#handleCancel" styleClass="button-primary"/>
     </HBox>
 
     <Label fx:id="errorLabel" textFill="red" visible="false"/>

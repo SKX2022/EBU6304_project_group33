@@ -9,10 +9,19 @@ import com.finance.session.Session;
 import com.finance.utils.SceneSwitcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -80,6 +89,7 @@ public class HomeController {
         surplusProgressBar.setProgress(Math.max(surplusTotal / max, 0));
     }
 
+
     @FXML
     private void goIncomeAnalysis(ActionEvent event) {
         SceneSwitcher.switchScene("view/IncomeAnalysis.fxml");
@@ -89,6 +99,31 @@ public class HomeController {
     private void goExpenditureAnalysis(ActionEvent event) {
         SceneSwitcher.switchScene("view/ExpenditureAnalysis.fxml");
     }
-    @FXML private void goAddExpense() { SceneSwitcher.switchScene("/view/AddExpense.fxml"); }
-    @FXML private void goAddIncome()  { SceneSwitcher.switchScene("/view/AddIncome.fxml");  }
-}
+    private void showAddDialog(String fxmlPath, String title, Window owner) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+
+            Stage dialog = new Stage();
+            dialog.setTitle(title);
+            dialog.setScene(new Scene(root));
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(owner);      // 由调用者传入的主窗口
+            dialog.setResizable(false);
+            dialog.show();                // 非模态；想阻塞主窗用 showAndWait()
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void goAddExpense(ActionEvent event) {
+        Window owner = ((Node) event.getSource()).getScene().getWindow();
+        showAddDialog("/view/AddExpense.fxml", "Add Expense Category", owner);
+    }
+
+    @FXML
+    private void goAddIncome(ActionEvent event) {
+        Window owner = ((Node) event.getSource()).getScene().getWindow();
+        showAddDialog("/view/AddIncome.fxml", "Add Income Category", owner);
+    }}
