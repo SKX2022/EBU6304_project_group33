@@ -1,28 +1,38 @@
 package com.finance.controller;
 
-import com.finance.service.UserfulDataPicker; // 导入 UserfulDataPicker 类
+import com.finance.service.UserfulDataPicker;
 
 import javafx.event.ActionEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable; // 导入 Initializable 接口
+import javafx.fxml.Initializable;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert; // 导入 Alert 类用于显示提示信息
+import javafx.scene.control.Alert;
+// 不再需要这些导入，因为我们不再从FMXL的Circle获取颜色或手动设置内联样式
+// import javafx.scene.paint.Paint;
+// import javafx.scene.shape.Circle;
+// import javafx.application.Platform; // 如果不再Platform.runLater()，也可移除
 
 import java.net.URL;
-import java.time.LocalDate; // 用于获取当前年份
-import java.time.YearMonth; // 用于计算某月的天数
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.HashMap;
+import java.time.format.DateTimeFormatter;
 
-// 让 GraphController 实现 Initializable 接口
 public class GraphController implements Initializable {
-    // 注入 FXML 中定义的 6 个下拉框
+    // FXML 注入的 UI 元素
     @FXML private ComboBox<Integer> Year0;
     @FXML private ComboBox<Integer> Month0;
     @FXML private ComboBox<Integer> Day0;
@@ -30,50 +40,91 @@ public class GraphController implements Initializable {
     @FXML private ComboBox<Integer> Month1;
     @FXML private ComboBox<Integer> Day1;
 
-    // 将 initialize 方法的签名改为正确的形式，并添加 @Override 注解
+    // FXML 注入的折线图及其轴
+    @FXML private LineChart<String, Number> financeLineChart;
+    @FXML private CategoryAxis xAxis;
+    @FXML private NumberAxis yAxis;
+
+    // 如果 FXML 中有 fx:id，这里仍然会注入，但我们不会使用它们来设置折线颜色。
+    // 如果 FXML 中没有 fx:id，可以删除这三行。
+    // @FXML private Circle expenditureColorCircle;
+    // @FXML private Circle incomeColorCircle;
+    // @FXML private Circle surplusColorCircle;
+
+    // 定义用于存储图表数据的数据系列
+    private XYChart.Series<String, Number> expenditureSeries;
+    private XYChart.Series<String, Number> incomeSeries;
+    private XYChart.Series<String, Number> surplusSeries;
+
+    // 日期格式化器，用于将 LocalDate 转换为 "yyyy-MM-dd" 字符串，以匹配 UserfulDataPicker 的 Map 键
+    private static final DateTimeFormatter DATE_KEY_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // 先填充年和月，因为日期的填充依赖于它们
+        // 初始化日期选择下拉框
         fillYear0();
         fillYear1();
         fillMonth0();
         fillMonth1();
 
-        // 为年和月添加监听器，以便在它们的值改变时更新日期的下拉框
-        // 注意：这里移除了对 DayX 的监听，因为 submitDateRange 按钮会统一处理
+        // 为年和月下拉框添加监听器，以便在值改变时更新日期下拉框
         Year0.valueProperty().addListener((obs, oldVal, newVal) -> updateDayComboBox(0));
         Month0.valueProperty().addListener((obs, oldVal, newVal) -> updateDayComboBox(0));
-
         Year1.valueProperty().addListener((obs, oldVal, newVal) -> updateDayComboBox(1));
         Month1.valueProperty().addListener((obs, oldVal, newVal) -> updateDayComboBox(1));
 
-        // 设置默认选择，并首次更新日期的下拉框
+        // 设置默认选择为当前日期，并首次更新日期下拉框
         LocalDate today = LocalDate.now();
-        Year0.getSelectionModel().select(Integer.valueOf(today.getYear())); // 默认选择当前年份
-        Month0.getSelectionModel().select(Integer.valueOf(today.getMonthValue())); // 默认选择当前月份
-        updateDayComboBox(0); // 第一次调用 updateDayComboBox 来填充 Day0
-        Day0.getSelectionModel().select(Integer.valueOf(today.getDayOfMonth())); // 默认选择当前日期
+        Year0.getSelectionModel().select(Integer.valueOf(today.getYear()));
+        Month0.getSelectionModel().select(Integer.valueOf(today.getMonthValue()));
+        updateDayComboBox(0);
+        Day0.getSelectionModel().select(Integer.valueOf(today.getDayOfMonth()));
 
-        Year1.getSelectionModel().select(Integer.valueOf(today.getYear())); // 默认选择当前年份
-        Month1.getSelectionModel().select(Integer.valueOf(today.getMonthValue())); // 默认选择当前月份
-        updateDayComboBox(1); // 第一次调用 updateDayComboBox 来填充 Day1
-        Day1.getSelectionModel().select(Integer.valueOf(today.getDayOfMonth())); // 默认选择当前日期
+        Year1.getSelectionModel().select(Integer.valueOf(today.getYear()));
+        Month1.getSelectionModel().select(Integer.valueOf(today.getMonthValue()));
+        updateDayComboBox(1);
+        Day1.getSelectionModel().select(Integer.valueOf(today.getDayOfMonth()));
 
-        // 默认情况下，initialize 不再立即调用 updateChartWithSelectedDates()，
-        // 而是由确认按钮 (submitDateRange) 来触发。
-        // 如果您希望应用启动时就显示默认日期的数据，可以保留在这里调用一次 updateChartWithSelectedDates();
-        // 但如果您的用户预期是先选日期再点确认，则不需要在此处调用。
+        // 初始化图表数据系列并添加到图表中
+        expenditureSeries = new XYChart.Series<>();
+        expenditureSeries.setName("支出"); // 确保图例显示中文
 
+        incomeSeries = new XYChart.Series<>();
+        incomeSeries.setName("收入"); // 确保图例显示中文
 
+        surplusSeries = new XYChart.Series<>();
+        surplusSeries.setName("盈余"); // 确保图例显示中文
+
+        // 添加系列的顺序很重要，它决定了在CSS中它们对应的索引（-fx-series-0, -fx-series-1, -fx-series-2）
+        financeLineChart.getData().addAll(expenditureSeries, incomeSeries, surplusSeries);
+
+        // *** 重要：移除所有手动设置折线颜色的代码 ***
+        // 因为颜色将由 style.css 控制
+
+        // 配置轴的初始标签
+        xAxis.setLabel("日期");
+        yAxis.setLabel("金额");
+
+        // 应用启动时默认加载数据（可选，如果需要用户点击按钮才加载则注释此行）
+        updateChartWithSelectedDates();
     }
 
     @FXML
     public void analyzeAndSuggest(ActionEvent actionEvent) {
-        // AI 分析逻辑，保持不变
+        System.out.println("AI 分析收支情况并给出储蓄建议等");
+        showAlert("AI 分析", "AI 分析功能待实现，敬请期待！", Alert.AlertType.INFORMATION);
     }
 
     @FXML
     public void submitDateRange(ActionEvent actionEvent) {
+        // 触发图表根据选定日期更新
+        updateChartWithSelectedDates();
+    }
+
+    /**
+     * 根据用户选择的日期范围获取数据并更新图表。
+     */
+    private void updateChartWithSelectedDates() {
         // 获取选定的起始和结束日期
         LocalDate startDate = getSelectedDate(Year0, Month0, Day0);
         LocalDate endDate = getSelectedDate(Year1, Month1, Day1);
@@ -90,44 +141,114 @@ public class GraphController implements Initializable {
             return;
         }
 
-        // --- 日期范围封装位置 ---
-        // 在这里，您可以将 startDate 和 endDate 封装到您希望的任何对象中
-        // 例如，您可以创建一个自定义的 DateRange 类，或者直接传递这两个 LocalDate 对象
-        UserfulDataPicker dataPicker = new UserfulDataPicker(startDate.toString(), endDate.toString());
-        // 这里可以使用 dataPicker 对象来获取所需的数据
-        //最大值
-        double max = dataPicker.getMax();
-        //最小值
-        double min = dataPicker.getMin();
-        // 每日的余额
-        List<Double> surplus = dataPicker.getSurplus();
-        // 收入
-        Map<String,Double> income = dataPicker.getIncome();
-        //支出
-        Map<String,Double> expenditure = dataPicker.getExpenditure();
+        // 使用 UserfulDataPicker 获取数据
+        UserfulDataPicker dataPicker = new UserfulDataPicker(
+                startDate.format(DATE_KEY_FORMATTER),
+                endDate.format(DATE_KEY_FORMATTER)
+        );
 
-        // ****** 在这里调用您的数据加载和图表更新逻辑 ******
-        // 这就是您需要根据选定的 startDate 和 endDate 来查询数据库或服务，
-        // 并更新 LineChart 的地方。
-        // financeLineChart.getData().clear(); // 示例：清空现有数据
-        // Series<String, Number> expenditureSeries = new Series<>();
-        // ... 根据 startDate 和 endDate 从您的数据源获取数据 ...
-        // financeLineChart.getData().add(expenditureSeries);
+        Map<String, Double> incomeDataMap = dataPicker.getIncome();
+        Map<String, Double> expenditureDataMap = dataPicker.getExpenditure();
 
-        // 提示用户操作成功
-        //showAlert("日期范围已提交", "图表将更新显示 " + startDate + " 至 " + endDate + " 的数据。", Alert.AlertType.INFORMATION);
+        // 调用更新图表的核心方法
+        updateFinanceChart(incomeDataMap, expenditureDataMap, startDate, endDate);
+        // *** 重要：这里也不再需要调用 applySeriesColors() ***
     }
 
-    // 填充起始年下拉框
+    /**
+     * 根据获取到的财务数据更新折线图。
+     *
+     * @param incomeDataMap 每日收入数据，键为 "yyyy-MM-dd" 格式的日期字符串
+     * @param expenditureDataMap 每日支出数据，键为 "yyyy-MM-dd" 格式的日期字符串
+     * @param startDate 数据范围的开始日期
+     * @param endDate 数据范围的结束日期
+     */
+    private void updateFinanceChart(Map<String, Double> incomeDataMap,
+                                    Map<String, Double> expenditureDataMap,
+                                    LocalDate startDate, LocalDate endDate) {
+        // 清除旧数据点
+        expenditureSeries.getData().clear();
+        incomeSeries.getData().clear();
+        surplusSeries.getData().clear();
+
+        double maxAllValue = 0;
+        double minSurplusValue = 0;
+
+        // 定义 X 轴日期标签的格式（例如 "05-23"）
+        DateTimeFormatter xAxisLabelFormatter = DateTimeFormatter.ofPattern("MM-dd");
+
+        // 遍历日期范围，添加数据点
+        LocalDate currentDate = startDate;
+        while (!currentDate.isAfter(endDate)) {
+            String dateKey = currentDate.format(DATE_KEY_FORMATTER);
+
+            Double dailyIncome = incomeDataMap.getOrDefault(dateKey, 0.0);
+            Double dailyExpenditure = expenditureDataMap.getOrDefault(dateKey, 0.0);
+            Double dailySurplus = dailyIncome - dailyExpenditure;
+
+            String dateLabel = currentDate.format(xAxisLabelFormatter);
+            expenditureSeries.getData().add(new XYChart.Data<>(dateLabel, dailyExpenditure));
+            incomeSeries.getData().add(new XYChart.Data<>(dateLabel, dailyIncome));
+            surplusSeries.getData().add(new XYChart.Data<>(dateLabel, dailySurplus));
+
+            maxAllValue = Math.max(maxAllValue, dailyExpenditure);
+            maxAllValue = Math.max(maxAllValue, dailyIncome);
+            maxAllValue = Math.max(maxAllValue, Math.abs(dailySurplus));
+
+            minSurplusValue = Math.min(minSurplusValue, dailySurplus);
+
+            currentDate = currentDate.plusDays(1);
+        }
+
+        // --- 动态配置 Y 轴 ---
+        double effectiveUpperBound = calculateUpperBound(maxAllValue);
+        double effectiveLowerBound = 0;
+        double effectiveTickUnit;
+
+        if (minSurplusValue < 0) {
+            effectiveLowerBound = Math.floor(minSurplusValue / 1000) * 1000;
+            effectiveTickUnit = calculateTickUnit(effectiveUpperBound - effectiveLowerBound);
+        } else {
+            effectiveLowerBound = 0;
+            effectiveTickUnit = calculateTickUnit(effectiveUpperBound);
+        }
+
+        yAxis.setLowerBound(effectiveLowerBound);
+        yAxis.setUpperBound(effectiveUpperBound);
+        yAxis.setTickUnit(effectiveTickUnit);
+        yAxis.setMinorTickVisible(false);
+    }
+
+    private double calculateUpperBound(double maxValue) {
+        if (maxValue <= 0) return 10000.0;
+        if (maxValue < 1000) return Math.ceil(maxValue / 100.0) * 100.0;
+        if (maxValue < 5000) return Math.ceil(maxValue / 500.0) * 500.0;
+        if (maxValue < 10000) return Math.ceil(maxValue / 1000.0) * 1000.0;
+        if (maxValue < 50000) return Math.ceil(maxValue / 5000.0) * 5000.0;
+        if (maxValue < 100000) return Math.ceil(maxValue / 10000.0) * 10000.0;
+        return Math.ceil(maxValue / 50000.0) * 50000.0;
+    }
+
+    private double calculateTickUnit(double range) {
+        if (range <= 0) return 1000.0;
+        double roughTickUnit = range / 5.0;
+
+        if (roughTickUnit < 100) return Math.ceil(roughTickUnit / 10.0) * 10.0;
+        if (roughTickUnit < 500) return Math.ceil(roughTickUnit / 50.0) * 50.0;
+        if (roughTickUnit < 1000) return Math.ceil(roughTickUnit / 100.0) * 100.0;
+        if (roughTickUnit < 5000) return Math.ceil(roughTickUnit / 500.0) * 500.0;
+        if (roughTickUnit < 10000) return Math.ceil(roughTickUnit / 1000.0) * 1000.0;
+        return Math.ceil(roughTickUnit / 5000.0) * 5000.0;
+    }
+
     private void fillYear0(){
         int currentYear = LocalDate.now().getYear();
-        // 年份范围从当前年份前15年到当前年份后5年
         ObservableList<Integer> years = IntStream.rangeClosed(currentYear - 15, currentYear + 5)
                 .boxed()
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
         Year0.setItems(years);
     }
-    // 填充结束年份下拉框
+
     private void fillYear1(){
         int currentYear = LocalDate.now().getYear();
         ObservableList<Integer> years = IntStream.rangeClosed(currentYear - 15, currentYear + 5)
@@ -135,14 +256,14 @@ public class GraphController implements Initializable {
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
         Year1.setItems(years);
     }
-    // 填充初始月份下拉框
+
     private void fillMonth0(){
         ObservableList<Integer> months = IntStream.rangeClosed(1, 12)
                 .boxed()
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
         Month0.setItems(months);
     }
-    // 填充结束月份下拉框
+
     private void fillMonth1(){
         ObservableList<Integer> months = IntStream.rangeClosed(1, 12)
                 .boxed()
@@ -150,14 +271,13 @@ public class GraphController implements Initializable {
         Month1.setItems(months);
     }
 
-    // 统一的更新日期下拉框的方法
     private void updateDayComboBox(int index) {
         ComboBox<Integer> yearComboBox = (index == 0) ? Year0 : Year1;
         ComboBox<Integer> monthComboBox = (index == 0) ? Month0 : Month1;
         ComboBox<Integer> dayComboBox = (index == 0) ? Day0 : Day1;
 
-        Integer selectedYear = yearComboBox.getValue(); // 使用 getValue() 获取当前选择的值
-        Integer selectedMonth = monthComboBox.getValue(); // 使用 getValue() 获取当前选择的值
+        Integer selectedYear = yearComboBox.getValue();
+        Integer selectedMonth = monthComboBox.getValue();
 
         if (selectedYear != null && selectedMonth != null) {
             try {
@@ -166,37 +286,23 @@ public class GraphController implements Initializable {
                         .boxed()
                         .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
-                Integer currentSelectedDay = dayComboBox.getValue(); // 记住当前选择的日期
+                Integer currentSelectedDay = dayComboBox.getValue();
                 dayComboBox.setItems(days);
 
-                // 尝试重新选择用户之前选中的日期
                 if (currentSelectedDay != null && days.contains(currentSelectedDay)) {
                     dayComboBox.getSelectionModel().select(currentSelectedDay);
                 } else {
-                    // 如果旧日期超出新列表范围，则选择最后一个有效日期
                     dayComboBox.getSelectionModel().select(Integer.valueOf(Math.min(currentSelectedDay != null ? currentSelectedDay : 1, daysInMonth)));
                 }
             } catch (java.time.DateTimeException e) {
                 System.err.println("无效的年份或月份组合: " + selectedYear + "-" + selectedMonth + " - " + e.getMessage());
-                dayComboBox.setItems(FXCollections.emptyObservableList()); // 清空日期列表
+                dayComboBox.setItems(FXCollections.emptyObservableList());
             }
         } else {
-            // 如果年份或月份未选择，则清空日期下拉框
             dayComboBox.setItems(FXCollections.emptyObservableList());
         }
-
-        // 注意：这里不再自动调用 updateChartWithSelectedDates()，而是由确认按钮触发。
-        // 如果您希望每次日期下拉框改变时都更新图表（即不需要确认按钮），则取消注释下面这行。
-        // updateChartWithSelectedDates();
     }
 
-    /**
-     * 辅助方法：从年、月、日 ComboBoxes 中获取 LocalDate 对象。
-     * @param yearCb 年份 ComboBox
-     * @param monthCb 月份 ComboBox
-     * @param dayCb 日期 ComboBox
-     * @return 组合的 LocalDate 对象，如果任何一个 ComboBox 没有选择，或日期组合无效，则返回 null。
-     */
     private LocalDate getSelectedDate(ComboBox<Integer> yearCb, ComboBox<Integer> monthCb, ComboBox<Integer> dayCb) {
         Integer year = yearCb.getValue();
         Integer month = monthCb.getValue();
@@ -207,22 +313,16 @@ public class GraphController implements Initializable {
                 return LocalDate.of(year, month, day);
             } catch (java.time.DateTimeException e) {
                 System.err.println("无效的日期组合: " + year + "-" + month + "-" + day + " - " + e.getMessage());
-                return null; // 返回 null 表示日期无效
+                return null;
             }
         }
-        return null; // 如果任何一个 ComboBox 没有选择
+        return null;
     }
 
-    /**
-     * 显示一个简单的提示框。
-     * @param title 提示框标题
-     * @param message 提示信息
-     * @param type 提示框类型 (例如 Alert.AlertType.INFORMATION, Alert.AlertType.ERROR)
-     */
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
-        alert.setHeaderText(null); // 不显示头部文本
+        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }

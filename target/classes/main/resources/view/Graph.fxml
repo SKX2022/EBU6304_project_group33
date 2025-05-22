@@ -50,7 +50,7 @@
                     </HBox>
                 </HBox>
 
-                <HBox alignment="CENTER_LEFT" spacing="30" styleClass="classification-box">
+                <!--<HBox alignment="CENTER_LEFT" spacing="30" styleClass="classification-box">
                     <padding>
                         <Insets top="10" bottom="10" left="20" right="20"/>
                     </padding>
@@ -66,7 +66,7 @@
                         <Circle radius="5" fill="#4A90E2"/>
                         <Label text="Surplus" styleClass="label-data"/>
                     </HBox>
-                </HBox>
+                </HBox>-->
 
                 <LineChart fx:id="financeLineChart"
                            HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
