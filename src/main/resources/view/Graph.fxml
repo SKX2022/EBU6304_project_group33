@@ -31,7 +31,7 @@
                     <Region HBox.hgrow="ALWAYS"/>
                     <HBox alignment="CENTER_RIGHT"
                           styleClass="classification-box"
-                          onMouseClicked="#handleDateRangeSelection"
+                          onMouseClicked="#submitDateRange"
                           style="-fx-cursor: hand;">
                         <padding>
                             <Insets top="8" bottom="8" left="15" right="15"/>
@@ -44,6 +44,9 @@
                         <ComboBox fx:id="Year1" promptText="结束年" styleClass="combo-box"/>
                         <ComboBox fx:id="Month1" promptText="月" styleClass="combo-box"/>
                         <ComboBox fx:id="Day1" promptText="日" styleClass="combo-box"/>
+                        <Button fx:id="submit" onAction="#submitDateRange"
+                                styleClass="classification-box"
+                                text="提交"/>
                     </HBox>
                 </HBox>
 
