@@ -21,6 +21,9 @@ public class UserfulDataPicker {
     private Map<String, Double> expenditure = new TreeMap<>();
     // 每日余额。我们也按日期排序，并确保是某一天的净余额
     private Map<String, Double> dailySurplus = new TreeMap<>();
+    //将时间段内的收支具体情况全部转化成String
+    private List<String> transactionDetails = new ArrayList<>();
+
 
     // 最大最小值应计算每日的收入、支出和盈余，而不是累计值或单笔交易
     private double maxOverallValue = 0.0;
@@ -55,7 +58,6 @@ public class UserfulDataPicker {
         // 步骤1: 遍历所有交易，按日期汇总收入和支出
         for (Transaction transaction : transactions) {
             // 解析交易日期。假设 transaction.getDate() 返回的是 "yyyy-MM-dd" 格式的字符串
-            // 如果它返回的是 "yyyy-MM-dd HH:mm:ss"，则需要先截取或解析
             String transactionDateStr = transaction.getDate();
             LocalDate transactionDate;
             try {
@@ -74,7 +76,9 @@ public class UserfulDataPicker {
             // 检查交易日期是否在指定范围内
             if (!transactionDate.isBefore(startDate) && !transactionDate.isAfter(endDate)) {
                 String formattedDate = transactionDate.format(DATE_FORMATTER); // 统一格式
-
+                // 将交易信息转换为字符串并存储
+                transactionDetails.add(String.format("日期: %s, 类型: %s, 分类：%s, 金额: %.2f", formattedDate, transaction.getType(),transaction.getCategory(), transaction.getAmount()));
+                // 记录交易金额和类型
                 double amount = transaction.getAmount();
                 String type = transaction.getType();
 
@@ -138,5 +142,10 @@ public class UserfulDataPicker {
     // 获取选定日期范围内的最小金额或盈余值
     public double getMin() {
         return minOverallValue;
+    }
+
+    // 获取交易详情列表
+    public List<String> getTransactionDetails() {
+        return transactionDetails;
     }
 }

@@ -1,5 +1,6 @@
 package com.finance.controller;
 
+import com.finance.service.LlmService;
 import com.finance.service.UserfulDataPicker;
 
 import javafx.event.ActionEvent;
@@ -13,23 +14,17 @@ import javafx.scene.control.ComboBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-// 不再需要这些导入，因为我们不再从FMXL的Circle获取颜色或手动设置内联样式
-// import javafx.scene.paint.Paint;
-// import javafx.scene.shape.Circle;
-// import javafx.application.Platform; // 如果不再Platform.runLater()，也可移除
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.HashMap;
-import java.time.format.DateTimeFormatter;
 
 public class GraphController implements Initializable {
     // FXML 注入的 UI 元素
@@ -44,12 +39,6 @@ public class GraphController implements Initializable {
     @FXML private LineChart<String, Number> financeLineChart;
     @FXML private CategoryAxis xAxis;
     @FXML private NumberAxis yAxis;
-
-    // 如果 FXML 中有 fx:id，这里仍然会注入，但我们不会使用它们来设置折线颜色。
-    // 如果 FXML 中没有 fx:id，可以删除这三行。
-    // @FXML private Circle expenditureColorCircle;
-    // @FXML private Circle incomeColorCircle;
-    // @FXML private Circle surplusColorCircle;
 
     // 定义用于存储图表数据的数据系列
     private XYChart.Series<String, Number> expenditureSeries;
@@ -98,9 +87,6 @@ public class GraphController implements Initializable {
         // 添加系列的顺序很重要，它决定了在CSS中它们对应的索引（-fx-series-0, -fx-series-1, -fx-series-2）
         financeLineChart.getData().addAll(expenditureSeries, incomeSeries, surplusSeries);
 
-        // *** 重要：移除所有手动设置折线颜色的代码 ***
-        // 因为颜色将由 style.css 控制
-
         // 配置轴的初始标签
         xAxis.setLabel("日期");
         yAxis.setLabel("金额");
@@ -111,9 +97,111 @@ public class GraphController implements Initializable {
 
     @FXML
     public void analyzeAndSuggest(ActionEvent actionEvent) {
-        System.out.println("AI 分析收支情况并给出储蓄建议等");
-        showAlert("AI 分析", "AI 分析功能待实现，敬请期待！", Alert.AlertType.INFORMATION);
+        System.out.println("GraphController: AI 分析收支情况并给出储蓄建议等 - 按钮被点击");
+
+        // 1. 获取选定的日期范围，用于 UserfulDataPicker
+        LocalDate startDate = getSelectedDate(Year0, Month0, Day0);
+        LocalDate endDate = getSelectedDate(Year1, Month1, Day1);
+
+        if (startDate == null || endDate == null) {
+            showAlert("日期选择错误", "请确保已选择完整的起始和结束日期。", Alert.AlertType.ERROR);
+            System.err.println("GraphController: 日期选择不完整，无法进行AI分析。");
+            return;
+        }
+        if (endDate.isBefore(startDate)) {
+            showAlert("日期范围错误", "结束日期不能早于起始日期！", Alert.AlertType.ERROR);
+            System.err.println("GraphController: 结束日期早于起始日期，无法进行AI分析。");
+            return;
+        }
+
+        // 2. 使用 UserfulDataPicker 获取原始交易明细列表
+        System.out.println("GraphController: 正在通过 UserfulDataPicker 获取交易明细...");
+        UserfulDataPicker dataPicker = new UserfulDataPicker(
+                startDate.format(DATE_KEY_FORMATTER),
+                endDate.format(DATE_KEY_FORMATTER)
+        );
+        List<String> transactionDetailsList = dataPicker.getTransactionDetails();
+        System.out.println("GraphController: 获取到的原始交易明细数量: " + transactionDetailsList.size());
+
+        // 添加打印日志，查看UserfulDataPicker返回的原始交易明细内容
+        System.out.println("GraphController: --- UserfulDataPicker 获取到的原始交易明细内容 ---");
+        if (transactionDetailsList.isEmpty()) {
+            System.out.println("  (交易明细列表为空)");
+        } else {
+            for (String detail : transactionDetailsList) {
+                System.out.println("  - " + detail);
+            }
+        }
+        System.out.println("GraphController: ------------------------------------------------");
+
+
+        // 3. 将 List<String> 拼接成一个大字符串作为 LLM 的 prompt
+        String details = mergeString(transactionDetailsList);
+        String fullPrompt = details + "请分析以上收支情况，并给出详细的储蓄和支出优化建议：";
+
+        System.out.println("GraphController: --- 准备发送给 AI 的完整 Prompt ---");
+        System.out.println(fullPrompt); // **打印完整的 Prompt，确认其内容和格式**
+        System.out.println("GraphController: ------------------------------------");
+
+        try {
+            // 4. 创建 LlmService 实例
+            LlmService llmService = new LlmService(fullPrompt);
+
+            // ****** 核心修复：调用 callLlmApi() 方法，实际执行 API 请求 ******
+            System.out.println("GraphController: 正在调用 LlmService.callLlmApi()，请求 AI API...");
+            llmService.callLlmApi(); // 这是关键，确保API被调用
+            System.out.println("GraphController: LlmService.callLlmApi() 调用完成。");
+            // ******************************************************************
+
+            // 5. 获取 AI 的回答
+            String aiResponse = llmService.getAnswer(); // 现在应该能获取到数据了
+            System.out.println("GraphController: --- 从 LlmService 获取到的 AI 回答 ---");
+            System.out.println(aiResponse != null && !aiResponse.isEmpty() ? aiResponse : "[回答为空或无效]"); // 打印获取到的回答，或提示为空
+            System.out.println("GraphController: -------------------------------------");
+
+            // 6. 弹出窗口显示结果
+            if (aiResponse != null && !aiResponse.isEmpty()) {
+                showAlert("AI 分析结果", aiResponse, Alert.AlertType.INFORMATION);
+            } else {
+                showAlert("AI 分析失败", "未能获取到AI的分析结果。请检查API返回或数据是否为空。", Alert.AlertType.WARNING);
+            }
+
+        } catch (IOException e) {
+            System.err.println("GraphController 错误：API 调用网络或I/O异常: " + e.getMessage());
+            e.printStackTrace(); // 打印完整的堆栈跟踪
+            showAlert("错误", "AI 分析服务网络连接失败：" + e.getMessage(), Alert.AlertType.ERROR);
+        } catch (InterruptedException e) {
+            System.err.println("GraphController 错误：API 调用被中断: " + e.getMessage());
+            e.printStackTrace(); // 打印完整的堆栈跟踪
+            showAlert("错误", "AI 分析服务中断，请稍后再试。", Alert.AlertType.ERROR);
+            Thread.currentThread().interrupt(); // 重新设置中断状态
+        } catch (LlmService.LlmServiceException e) {
+            System.err.println("GraphController 错误：AI 服务内部异常: " + e.getMessage());
+            e.printStackTrace(); // 打印完整的堆栈跟踪
+            showAlert("错误", "AI 分析服务出错：" + e.getMessage(), Alert.AlertType.ERROR);
+        } catch (Exception e) { // 捕获所有其他未知异常
+            System.err.println("GraphController 错误：发生未知错误: " + e.getMessage());
+            e.printStackTrace(); // 打印完整的堆栈跟踪
+            showAlert("错误", "发生未知错误：" + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
+
+    //字符串拼接
+    private String mergeString(List<String> strings) {
+        StringBuilder sb = new StringBuilder();
+        if (strings != null && !strings.isEmpty()) {
+            for (String str : strings) {
+                sb.append(str).append(";\n"); // 每个明细后加分号和换行符，更清晰
+            }
+            if (sb.length() > 0) {
+                sb.setLength(sb.length() - 2); // 移除最后一个 ";\n"
+            }
+        } else {
+            System.out.println("GraphController: mergeString 收到空列表，返回空字符串。"); // 添加日志
+        }
+        return sb.toString();
+    }
+
 
     @FXML
     public void submitDateRange(ActionEvent actionEvent) {
@@ -152,7 +240,6 @@ public class GraphController implements Initializable {
 
         // 调用更新图表的核心方法
         updateFinanceChart(incomeDataMap, expenditureDataMap, startDate, endDate);
-        // *** 重要：这里也不再需要调用 applySeriesColors() ***
     }
 
     /**
@@ -295,7 +382,7 @@ public class GraphController implements Initializable {
                     dayComboBox.getSelectionModel().select(Integer.valueOf(Math.min(currentSelectedDay != null ? currentSelectedDay : 1, daysInMonth)));
                 }
             } catch (java.time.DateTimeException e) {
-                System.err.println("无效的年份或月份组合: " + selectedYear + "-" + selectedMonth + " - " + e.getMessage());
+                System.err.println("GraphController: 无效的年份或月份组合: " + selectedYear + "-" + selectedMonth + " - " + e.getMessage());
                 dayComboBox.setItems(FXCollections.emptyObservableList());
             }
         } else {
@@ -312,7 +399,7 @@ public class GraphController implements Initializable {
             try {
                 return LocalDate.of(year, month, day);
             } catch (java.time.DateTimeException e) {
-                System.err.println("无效的日期组合: " + year + "-" + month + "-" + day + " - " + e.getMessage());
+                System.err.println("GraphController: 无效的日期组合: " + year + "-" + month + "-" + day + " - " + e.getMessage());
                 return null;
             }
         }
@@ -323,7 +410,19 @@ public class GraphController implements Initializable {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        // 如果message是null，给一个默认值防止NullPointerException
+        alert.setContentText(message != null ? message : "[未获取到AI分析结果]");
+
+        // 绑定到主窗口并尝试居中显示，如果你希望弹窗更显眼
+        if (financeLineChart != null && financeLineChart.getScene() != null && financeLineChart.getScene().getWindow() != null) {
+            alert.initOwner(financeLineChart.getScene().getWindow());
+            // 尝试将弹窗居中
+            alert.setX(financeLineChart.getScene().getWindow().getX() + financeLineChart.getScene().getWindow().getWidth() / 2 - alert.getDialogPane().getWidth() / 2);
+            alert.setY(financeLineChart.getScene().getWindow().getY() + financeLineChart.getScene().getWindow().getHeight() / 2 - alert.getDialogPane().getHeight() / 2);
+        }
+
+        System.out.println("GraphController: 准备显示弹窗，标题: \"" + title + "\", 内容截取: \"" + (message != null ? message.substring(0, Math.min(message.length(), 100)) : "[内容为null或空]") + "...\"");
+        alert.showAndWait(); // 显示弹窗并等待用户关闭
+        System.out.println("GraphController: 弹窗已关闭。");
     }
 }
