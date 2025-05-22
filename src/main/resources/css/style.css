@@ -209,3 +209,91 @@
 .scroll-bar .thumb:hover {
     -fx-background-color: #0ea5e9;       /* sky‑500 */
 }
+
+/* --- LineChart 折线图系列颜色设置 --- */
+
+/* 支出系列 (第一个添加的系列，对应 index 0) */
+.chart-series-line.chart-series-0 {
+    -fx-stroke: #FF6B6B; /* 设置折线颜色为支出红色 */
+    -fx-stroke-width: 2.5px; /* 可选：增加折线宽度，使其更明显 */
+}
+
+.chart-line-symbol.chart-series-0 {
+    -fx-background-color: #FF6B6B, white; /* 设置数据点符号的背景色（内圈颜色）和外圈颜色 */
+    -fx-background-radius: 5px; /* 数据点圆角大小 */
+    -fx-padding: 5px; /* 数据点大小 */
+}
+
+/* 收入系列 (第二个添加的系列，对应 index 1) */
+.chart-series-line.chart-series-1 {
+    -fx-stroke: #4CAF50; /* 设置折线颜色为收入绿色 */
+    -fx-stroke-width: 2.5px;
+}
+
+.chart-line-symbol.chart-series-1 {
+    -fx-background-color: #4CAF50, white;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* 盈余系列 (第三个添加的系列，对应 index 2) */
+.chart-series-line.chart-series-2 {
+    -fx-stroke: #4A90E2; /* 设置折线颜色为盈余蓝色 */
+    -fx-stroke-width: 2.5px;
+}
+
+.chart-line-symbol.chart-series-2 {
+    -fx-background-color: #4A90E2, white;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* --- 可选：调整图表背景和网格线 --- */
+.chart-content {
+    -fx-background-color: #ffffff; /* 图表绘图区域的背景颜色 */
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent; /* 移除默认的图表背景色，使其透明 */
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: #f0f0f0; /* 垂直网格线颜色 */
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #f0f0f0; /* 水平网格线颜色 */
+}
+
+.chart-vertical-zero-line, .chart-horizontal-zero-line {
+    -fx-stroke: #cccccc; /* 零线颜色 */
+    -fx-stroke-width: 1px;
+}
+
+/* 轴标签颜色 */
+.axis-label {
+    -fx-text-fill: #555555;
+    -fx-font-size: 14px;
+}
+
+/* 刻度标签颜色 */
+.axis-tick-mark {
+    -fx-stroke: #cccccc;
+}
+.axis-tick-label {
+    -fx-text-fill: #555555;
+    -fx-font-size: 12px;
+}
+
+/* 图例样式 */
+.chart-legend {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.chart-legend-item {
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+}

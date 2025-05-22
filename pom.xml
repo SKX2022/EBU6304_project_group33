@@ -15,8 +15,8 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- JavaFX SDK settings -->
-        <javafx.version>21</javafx.version>
-        <javafx.sdk.path>/Users/wangruizhi/Downloads/javafx-sdk-24.0.1</javafx.sdk.path>
+        <javafx.version>23</javafx.version>
+        <javafx.sdk.path>D:\Others\JavaFX\openjfx-24.0.1_windows-x64_bin-sdk\javafx-sdk-24.0.1</javafx.sdk.path>
         <mainClass>com.finance.MainApplication</mainClass>
     </properties>
 
@@ -46,6 +46,11 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.16.2</version> <!-- 可根据需要使用最新版本 -->
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.16.1</version>
         </dependency>
     </dependencies>
 
