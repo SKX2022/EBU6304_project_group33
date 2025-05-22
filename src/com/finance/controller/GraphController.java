@@ -1,5 +1,7 @@
 package com.finance.controller;
 
+import com.finance.service.UserfulDataPicker; // 导入 UserfulDataPicker 类
+
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
@@ -12,6 +14,8 @@ import javafx.scene.control.Alert; // 导入 Alert 类用于显示提示信息
 import java.net.URL;
 import java.time.LocalDate; // 用于获取当前年份
 import java.time.YearMonth; // 用于计算某月的天数
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -59,6 +63,8 @@ public class GraphController implements Initializable {
         // 而是由确认按钮 (submitDateRange) 来触发。
         // 如果您希望应用启动时就显示默认日期的数据，可以保留在这里调用一次 updateChartWithSelectedDates();
         // 但如果您的用户预期是先选日期再点确认，则不需要在此处调用。
+
+
     }
 
     @FXML
@@ -87,7 +93,18 @@ public class GraphController implements Initializable {
         // --- 日期范围封装位置 ---
         // 在这里，您可以将 startDate 和 endDate 封装到您希望的任何对象中
         // 例如，您可以创建一个自定义的 DateRange 类，或者直接传递这两个 LocalDate 对象
-        System.out.println("用户确认的日期范围：从 " + startDate + " 到 " + endDate);
+        UserfulDataPicker dataPicker = new UserfulDataPicker(startDate.toString(), endDate.toString());
+        // 这里可以使用 dataPicker 对象来获取所需的数据
+        //最大值
+        double max = dataPicker.getMax();
+        //最小值
+        double min = dataPicker.getMin();
+        // 每日的余额
+        List<Double> surplus = dataPicker.getSurplus();
+        // 收入
+        Map<String,Double> income = dataPicker.getIncome();
+        //支出
+        Map<String,Double> expenditure = dataPicker.getExpenditure();
 
         // ****** 在这里调用您的数据加载和图表更新逻辑 ******
         // 这就是您需要根据选定的 startDate 和 endDate 来查询数据库或服务，
@@ -98,7 +115,7 @@ public class GraphController implements Initializable {
         // financeLineChart.getData().add(expenditureSeries);
 
         // 提示用户操作成功
-        showAlert("日期范围已提交", "图表将更新显示 " + startDate + " 至 " + endDate + " 的数据。", Alert.AlertType.INFORMATION);
+        //showAlert("日期范围已提交", "图表将更新显示 " + startDate + " 至 " + endDate + " 的数据。", Alert.AlertType.INFORMATION);
     }
 
     // 填充起始年下拉框
