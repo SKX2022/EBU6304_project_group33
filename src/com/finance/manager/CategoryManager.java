@@ -7,6 +7,7 @@ import com.finance.model.User;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 public class CategoryManager {
 
@@ -58,8 +59,30 @@ public class CategoryManager {
         saveCategories(); // 保存分类数据到文件
         return true;
     }
+
+    // 删除指定分类
+    public boolean deleteCategory(String type, String categoryName) {
+        boolean removed = false;
+        Iterator<Category> iterator = categories.iterator();
+        while (iterator.hasNext()) {
+            Category category = iterator.next();
+            if (category.getType().equals(type) && category.getName().equals(categoryName)) {
+                iterator.remove();
+                removed = true;
+                break;
+            }
+        }
+
+        if (removed) {
+            saveCategories();  // 保存更新后的分类数据
+            return true;
+        }
+        return false;
+    }
+
     // 获取用户的所有分类
     public List<Category> getCategories() {
         return categories;
     }
 }
+
