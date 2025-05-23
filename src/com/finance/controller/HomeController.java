@@ -21,6 +21,8 @@ import javafx.scene.control.ProgressBar;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.stage.WindowEvent;
+import javafx.event.EventHandler;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -115,7 +117,11 @@ public class HomeController {
         incomeCategoryList.getItems().clear();
         expenseCategoryList.getItems().clear();
 
-        List<Category> allCategories = categoryManager.loadCategories();
+        // 创建新的CategoryManager实例以确保获取最新数据
+        categoryManager = new CategoryManager(currentUser);
+
+        // 获取最新的分类列表
+        List<Category> allCategories = categoryManager.getCategories();
         for (Category c : allCategories) {
             if ("收入".equals(c.getType())) {
                 incomeCategoryList.getItems().add(c.getName());
@@ -123,6 +129,11 @@ public class HomeController {
                 expenseCategoryList.getItems().add(c.getName());
             }
         }
+    }
+
+    // 创建一个窗口关闭事件监听器，用于在添加分类窗口关闭后刷新分类列表
+    private EventHandler<WindowEvent> createWindowCloseHandler() {
+        return event -> updateCategoryLists();
     }
 
     @FXML
@@ -201,23 +212,6 @@ public class HomeController {
         alert.showAndWait();
     }
 
-    private void showAddDialog(String fxmlPath, String title, Window owner) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-
-            Stage dialog = new Stage();
-            dialog.setTitle(title);
-            dialog.setScene(new Scene(root));
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.initOwner(owner);      // 由调用者传入的主窗口
-            dialog.setResizable(false);
-            dialog.show();                // 非模态；想阻塞主窗用 showAndWait()
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @FXML
     private void goAddExpense(ActionEvent event) {
         Window owner = ((Node) event.getSource()).getScene().getWindow();
@@ -229,5 +223,25 @@ public class HomeController {
         Window owner = ((Node) event.getSource()).getScene().getWindow();
         showAddDialog("/view/AddIncome.fxml", "Add Income Category", owner);
     }
-}
 
+    private void showAddDialog(String fxmlPath, String title, Window owner) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+
+            Stage dialog = new Stage();
+            dialog.setTitle(title);
+            dialog.setScene(new Scene(root));
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(owner);      // 由调用者传入的主窗口
+            dialog.setResizable(false);
+
+            // 添加窗口关闭事件监听器，当窗口关闭时刷新分类列表
+            dialog.setOnHidden(createWindowCloseHandler());
+
+            dialog.show();                // 非模态；想阻塞主窗用 showAndWait()
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
