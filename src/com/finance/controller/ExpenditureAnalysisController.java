@@ -15,7 +15,15 @@ import java.util.Map;
 import com.finance.service.LlmService.LlmServiceException;
 import java.io.IOException;
 import java.util.List;
-
+import java.math.BigDecimal;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.text.DecimalFormat;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 
 public class ExpenditureAnalysisController {
 
@@ -79,55 +87,60 @@ public class ExpenditureAnalysisController {
     @FXML
     private void handleAnalyzeButtonClick() {
         try {
-            // 初始化分类统计Map
-            Map<String, Double> categoryAmounts = transactionManager.getAllTransactions().stream()
+            Map<String, Double> categoryAmounts = transactions.stream()
                     .filter(t -> "支出".equals(t.getType()))
                     .collect(Collectors.groupingBy(
                             Transaction::getCategory,
-                            Collectors.summingDouble(Transaction::getAmount)
-                    ));
+                            Collectors.summingDouble(Transaction::getAmount))
+                    );
 
-            // 构建分类统计信息
             StringBuilder promptBuilder = new StringBuilder();
-            categoryAmounts.forEach((category, amount) -> {
-                promptBuilder.append(String.format("%s: ¥%.2f\n", category, amount));
-            });
-
-            // 获取交易明细
-            List<Transaction> transactions = transactionManager.getAllTransactions();
+            categoryAmounts.forEach((category, amount) ->
+                    promptBuilder.append(String.format("%s: ¥%.2f\n", category, amount)));
 
             transactions.forEach(t -> {
-                String datePart = t.getDate().substring(0, 10);
+                BigDecimal amount = BigDecimal.valueOf(t.getAmount())
+                        .setScale(2, RoundingMode.HALF_UP);
                 promptBuilder.append(String.format(
-                        "[%s] %s: ¥%.2f;\n",
-                        datePart,
+                        "[%s] %s: ¥%s;\n",
+                        t.getDate().substring(0, 10),
                         t.getType(),
-                        t.getAmount())
-                );
+                        amount));
             });
             promptBuilder.append("请分析各类支出情况，并给出详细的支出优化建议：");
 
-            // 调用AI服务
             LlmService llmService = new LlmService(promptBuilder.toString());
             llmService.callLlmApi();
-            String aiResponse = llmService.getAnswer();
+            showAlert(Alert.AlertType.INFORMATION, "分析结果", llmService.getAnswer());
 
-            // 显示结果弹窗
-            showAlert(Alert.AlertType.INFORMATION, "分析结果", aiResponse);
-
-        } catch (IOException | InterruptedException e) {
-            showAlert(Alert.AlertType.ERROR, "系统错误", "请求AI服务时发生异常: " + e.getMessage());
-        } catch (LlmServiceException e) {
-            showAlert(Alert.AlertType.ERROR, "AI解析错误", e.getMessage());
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "错误", e.getMessage());
         }
     }
 
-    // 通用弹窗显示方法
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
+
+        // 创建滚动面板
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        // 创建文本区域
+        TextArea textArea = new TextArea(message);
+        textArea.setStyle("-fx-font-size: 14px; -fx-wrap-text: true;");
+        textArea.setEditable(false);
+        scrollPane.setContent(textArea);
+
+        // 配置对话框
+        alert.getDialogPane().setContent(scrollPane);
+        alert.setWidth(600);
+        alert.setHeight(400);
+        alert.setResizable(false);
+
+        // 显示弹窗
         alert.showAndWait();
     }
 }
