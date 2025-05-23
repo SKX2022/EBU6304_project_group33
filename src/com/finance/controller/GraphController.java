@@ -14,6 +14,9 @@ import javafx.scene.control.ComboBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.Node;
 
 import java.io.IOException;
 import java.net.URL;
@@ -47,6 +50,7 @@ public class GraphController implements Initializable {
 
     // 日期格式化器，用于将 LocalDate 转换为 "yyyy-MM-dd" 字符串，以匹配 UserfulDataPicker 的 Map 键
     private static final DateTimeFormatter DATE_KEY_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DISPLAY_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy年MM月dd日");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -76,23 +80,93 @@ public class GraphController implements Initializable {
 
         // 初始化图表数据系列并添加到图表中
         expenditureSeries = new XYChart.Series<>();
-        expenditureSeries.setName("支出"); // 确保图例显示中文
+        expenditureSeries.setName("支出");
 
         incomeSeries = new XYChart.Series<>();
-        incomeSeries.setName("收入"); // 确保图例显示中文
+        incomeSeries.setName("收入");
 
         surplusSeries = new XYChart.Series<>();
-        surplusSeries.setName("盈余"); // 确保图例显示中文
+        surplusSeries.setName("盈余");
 
-        // 添加系列的顺序很重要，它决定了在CSS中它们对应的索引（-fx-series-0, -fx-series-1, -fx-series-2）
+        // 添加系列的顺序很重要，它决定了在CSS中它们对应的索引
         financeLineChart.getData().addAll(expenditureSeries, incomeSeries, surplusSeries);
 
         // 配置轴的初始标签
         xAxis.setLabel("日期");
         yAxis.setLabel("金额");
 
-        // 应用启动时默认加载数据（可选，如果需要用户点击按钮才加载则注释此行）
+        // 添加图表整体悬停交互效果
+        financeLineChart.setOnMouseMoved(event -> handleChartMouseMoved(event));
+        financeLineChart.setOnMouseExited(event -> resetChartStyles());
+
+        // 应用启动时默认加载数据
         updateChartWithSelectedDates();
+    }
+
+    /**
+     * 处理鼠标在图表上移动的事件
+     */
+    private void handleChartMouseMoved(MouseEvent event) {
+        boolean seriesHighlighted = false;
+
+        // 首先将所有系列设置为淡出状态
+        for (XYChart.Series<String, Number> s : financeLineChart.getData()) {
+            if (s.getNode() != null) {
+                s.getNode().setStyle("-fx-opacity: 0.5;");
+            }
+
+            // 数据点也淡出
+            for (XYChart.Data<String, Number> d : s.getData()) {
+                if (d.getNode() != null) {
+                    d.getNode().setStyle("-fx-opacity: 0.5;");
+                }
+            }
+        }
+
+        // 然后检查鼠标是否在某个系列的数据点附近
+        for (XYChart.Series<String, Number> s : financeLineChart.getData()) {
+            for (XYChart.Data<String, Number> d : s.getData()) {
+                if (d.getNode() != null && d.getNode().getBoundsInParent().contains(
+                        d.getNode().sceneToLocal(event.getSceneX(), event.getSceneY()))) {
+                    // 高亮当前系列
+                    if (s.getNode() != null) {
+                        s.getNode().setStyle("-fx-opacity: 1.0;");
+                    }
+
+                    // 高亮该系列的所有数据点
+                    for (XYChart.Data<String, Number> pd : s.getData()) {
+                        if (pd.getNode() != null) {
+                            pd.getNode().setStyle("-fx-opacity: 1.0;");
+                        }
+                    }
+
+                    seriesHighlighted = true;
+                    break;
+                }
+            }
+        }
+
+        // 如果没有找到特定的系列，则恢复所有系列的正常显示
+        if (!seriesHighlighted) {
+            resetChartStyles();
+        }
+    }
+
+    /**
+     * 重置所有图表样式到默认状态
+     */
+    private void resetChartStyles() {
+        for (XYChart.Series<String, Number> s : financeLineChart.getData()) {
+            if (s.getNode() != null) {
+                s.getNode().setStyle("-fx-opacity: 1.0;");
+            }
+
+            for (XYChart.Data<String, Number> d : s.getData()) {
+                if (d.getNode() != null) {
+                    d.getNode().setStyle("-fx-opacity: 1.0;");
+                }
+            }
+        }
     }
 
     @FXML
@@ -304,6 +378,162 @@ public class GraphController implements Initializable {
         yAxis.setUpperBound(effectiveUpperBound);
         yAxis.setTickUnit(effectiveTickUnit);
         yAxis.setMinorTickVisible(false);
+
+        // 为数据点添加交互效果
+        addDataPointInteractions();
+    }
+
+    /**
+     * 为图表中的所有数据点添加交互效果
+     */
+    private void addDataPointInteractions() {
+        // 为每个系列的每个数据点添加交互效果
+        for (XYChart.Series<String, Number> series : financeLineChart.getData()) {
+            String seriesName = series.getName();
+            String seriesColor = getColorForSeries(seriesName);
+
+            for (XYChart.Data<String, Number> dataPoint : series.getData()) {
+                // 数据点可能尚未被渲染，需要等待节点实际可用
+                if (dataPoint.getNode() != null) {
+                    setupDataPointNode(dataPoint, seriesName, seriesColor);
+                } else {
+                    // 如果节点尚未准备好，添加监听器等待节点变为可用
+                    dataPoint.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                        if (newNode != null) {
+                            setupDataPointNode(dataPoint, seriesName, seriesColor);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /**
+     * 为单个数据点节点设置交互效果
+     */
+    private void setupDataPointNode(XYChart.Data<String, Number> dataPoint, String seriesName, String seriesColor) {
+        Node node = dataPoint.getNode();
+        if (node == null) return;
+
+        // 获取数据值和日期标签
+        String dateStr = dataPoint.getXValue();
+        Number value = dataPoint.getYValue();
+
+        // 创建工具提示
+        Tooltip tooltip = new Tooltip(
+            String.format("%s\n日期：%s\n金额：%.2f 元",
+                seriesName, dateStr, value.doubleValue())
+        );
+        tooltip.setStyle("-fx-font-size: 14px; -fx-background-color: rgba(50,50,50,0.8); -fx-text-fill: white;");
+
+        // 安装工具提示
+        Tooltip.install(node, tooltip);
+
+        // 添加鼠标进入事件
+        node.setOnMouseEntered(event -> {
+            // 高亮显示该数据点
+            node.setStyle(
+                "-fx-background-color: " + seriesColor + ", white; " +
+                "-fx-background-radius: 8px; " +
+                "-fx-padding: 8px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 0); " +
+                "-fx-scale-x: 1.5; " +
+                "-fx-scale-y: 1.5;"
+            );
+
+            // 高亮当前系列，淡化其他系列
+            highlightSeries(seriesName);
+
+            // 阻止事件继续传播
+            event.consume();
+        });
+
+        // 添加鼠标离开事件
+        node.setOnMouseExited(event -> {
+            // 恢复默认样式
+            node.setStyle("");
+
+            // 恢复所有系列的正常显示
+            resetChartStyles();
+
+            // 阻止事件继续传播
+            event.consume();
+        });
+
+        // 添加点击事件
+        node.setOnMouseClicked(event -> {
+            // 获取完整日期（假设我们可以从标签解析出日期）
+            // 这里简化处理，实际可能需要从数据源获取完整信息
+            showDataPointDetails(seriesName, dateStr, value.doubleValue());
+            event.consume();
+        });
+    }
+
+    /**
+     * 高亮特定系列，淡化其他系列
+     */
+    private void highlightSeries(String seriesName) {
+        for (XYChart.Series<String, Number> s : financeLineChart.getData()) {
+            if (s.getName().equals(seriesName)) {
+                // 高亮当前系列
+                if (s.getNode() != null) {
+                    s.getNode().setStyle("-fx-opacity: 1.0;");
+                }
+
+                // 高亮该系列的所有数据点
+                for (XYChart.Data<String, Number> d : s.getData()) {
+                    if (d.getNode() != null && !d.getNode().isHover()) {
+                        d.getNode().setStyle("-fx-opacity: 1.0;");
+                    }
+                }
+            } else {
+                // 淡化其他系列
+                if (s.getNode() != null) {
+                    s.getNode().setStyle("-fx-opacity: 0.3;");
+                }
+
+                // 淡化其他系列的所有数据点
+                for (XYChart.Data<String, Number> d : s.getData()) {
+                    if (d.getNode() != null) {
+                        d.getNode().setStyle("-fx-opacity: 0.3;");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 显示数据点详细信息
+     */
+    private void showDataPointDetails(String seriesName, String dateStr, double value) {
+        String formattedValue = String.format("%.2f", value);
+        String title = seriesName + "详情";
+        String message = String.format("日期：%s\n%s：%s 元", dateStr, seriesName, formattedValue);
+
+        // 如果是盈余，可以添加额外信息
+        if (seriesName.equals("盈余")) {
+            if (value > 0) {
+                message += "\n\n该日有盈余，财务状况良好！";
+            } else if (value < 0) {
+                message += "\n\n该日支出超过收入，建议控制支出。";
+            } else {
+                message += "\n\n该日收支平衡。";
+            }
+        }
+
+        showAlert(title, message, Alert.AlertType.INFORMATION);
+    }
+
+    /**
+     * 根据系列名称返回对应的颜色代码
+     */
+    private String getColorForSeries(String seriesName) {
+        switch(seriesName) {
+            case "支出": return "#FF6B6B";
+            case "收入": return "#4CAF50";
+            case "盈余": return "#4A90E2";
+            default: return "#555555";
+        }
     }
 
     private double calculateUpperBound(double maxValue) {

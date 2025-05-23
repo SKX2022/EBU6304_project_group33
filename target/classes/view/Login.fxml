@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.finance.controller.LoginController"
+           stylesheets="@../css/style.css">
+
+    <!-- 背景图 -->
+    <ImageView fitHeight="600" fitWidth="900" preserveRatio="false">
+        <image>
+            <Image url="@../images/blue.jpg" />
+        </image>
+    </ImageView>
+
+    <!-- 登录卡片 -->
+    <VBox spacing="20" alignment="CENTER" styleClass="login-card">
+        <Label text="Finance Tracker Login" styleClass="login-title"/>
+
+        <TextField fx:id="usernameField" promptText="Username" maxWidth="300" styleClass="input-field"/>
+        <PasswordField fx:id="passwordField" promptText="Password" maxWidth="300" styleClass="input-field"/>
+
+        <Button text="Login" onAction="#handleLogin" styleClass="button-primary"/>
+        <Hyperlink text="Don't have an account? Register here" onAction="#handleGoToRegister" styleClass="link-text"/>
+
+        <Label fx:id="errorLabel" textFill="red" visible="false"/>
+    </VBox>
+
+</StackPane>
