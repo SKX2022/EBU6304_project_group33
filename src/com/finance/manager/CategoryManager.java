@@ -21,11 +21,11 @@ public class CategoryManager {
             throw new IllegalArgumentException("User cannot be null");
         }
         this.user = user;
-        this.categories = loadCategories();  // 加载用户的分类数据
+        this.categories = loadCategoriesFromFile();  // 加载用户的分类数据
     }
 
-    // 加载用户的分类数据
-    public List<Category> loadCategories() {
+    // 从文件加载用户的分类数据（私有方法）
+    private List<Category> loadCategoriesFromFile() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             File file = new File(CATEGORIES_FILE_PREFIX + user.getUsername() + ".json");
@@ -39,7 +39,12 @@ public class CategoryManager {
         }
     }
 
-    // 保存用户的分类数据
+    // 加载用户的分类数据（公开方法 - 返回内存中的数据）
+    public List<Category> loadCategories() {
+        return new ArrayList<>(categories);  // 返回副本，防止外部修改
+    }
+
+    // 保存用户的分类数据到文件
     private void saveCategories() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -82,7 +87,12 @@ public class CategoryManager {
 
     // 获取用户的所有分类
     public List<Category> getCategories() {
-        return categories;
+        return new ArrayList<>(categories);  // 返回副本，防止外部修改
+    }
+
+    // 重新从文件加载分类（如果需要强制刷新）
+    public void reloadCategories() {
+        this.categories = loadCategoriesFromFile();
     }
 }
 
