@@ -17,6 +17,10 @@ public class NavigationBarController {
         SceneSwitcher.switchScene("/view/IncomeAnalysis.fxml");
     }
 
+    public void goRevenue(ActionEvent event) {
+        SceneSwitcher.switchScene("/view/Revenue.fxml");
+    }
+
     public void goExpenditureAnalysis(ActionEvent event) {
         SceneSwitcher.switchScene("/view/ExpenditureAnalysis.fxml");
     }

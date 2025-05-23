@@ -13,6 +13,7 @@
     <Button fx:id="homeButton" onAction="#goHome" styleClass="nav-button" text="Home" />
     <Button fx:id="flowButton" onAction="#goFlow" styleClass="nav-button" text="Flow" />
     <Button fx:id="incomeAnalysisButton" onAction="#goIncomeAnalysis" styleClass="nav-button" text="Income Analysis" />
+    <Button fx:id="revenueButton" onAction="#goRevenue" styleClass="nav-button" text="Revenue" />
     <Button fx:id="expenditureAnalysisButton" onAction="#goExpenditureAnalysis" styleClass="nav-button" text="Expenditure Analysis" />
     <Button fx:id="graphButton" onAction="#goGraph" styleClass="nav-button" text="Graph" />
 
