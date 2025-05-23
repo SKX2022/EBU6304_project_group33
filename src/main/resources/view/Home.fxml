@@ -63,17 +63,24 @@
                     <Label text="Expenditure classification" styleClass="label-section"/>
                     <ListView fx:id="expenseCategoryList" prefHeight="100"/>
                     <Button text="Enter for more information" onAction="#goExpenditureAnalysis" styleClass="button-blue"/>
-                    <Button text="+  Add" onAction="#goAddExpense"  styleClass="button-primary"/>
+                    <HBox spacing="10">
+                        <Button text="+  Add" onAction="#goAddExpense"  styleClass="button-primary"/>
+                        <Button text="Delete" onAction="#deleteExpenseCategory" styleClass="button-primary"/>
+                    </HBox>
                 </VBox>
 
                 <VBox spacing="10" styleClass="classification-box">
                     <Label text="Income classification" styleClass="label-section"/>
                     <ListView fx:id="incomeCategoryList" prefHeight="100"/>
                     <Button text="Enter for more information" onAction="#goIncomeAnalysis" styleClass="button-blue"/>
-                    <Button text="+  Add" onAction="#goAddIncome"   styleClass="button-primary"/>
+                    <HBox spacing="10">
+                        <Button text="+  Add" onAction="#goAddIncome"   styleClass="button-primary"/>
+                        <Button text="Delete" onAction="#deleteIncomeCategory" styleClass="button-primary"/>
+                    </HBox>
                 </VBox>
 
             </VBox>
         </HBox>
     </center>
 </BorderPane>
+

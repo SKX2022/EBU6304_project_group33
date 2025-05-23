@@ -13,6 +13,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
@@ -20,13 +22,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.text.DecimalFormat;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Optional;
 
 public class HomeController {
 
@@ -44,13 +46,16 @@ public class HomeController {
     @FXML private ListView<String> incomeCategoryList;
     @FXML private ListView<String> expenseCategoryList;
 
+    private CategoryManager categoryManager;
+    private User currentUser;
+
     @FXML
     public void initialize() {
-        User currentUser = Session.getCurrentUser();
+        currentUser = Session.getCurrentUser();
         if (currentUser == null) return;
 
+        categoryManager = new CategoryManager(currentUser);
         TransactionManager transactionManager = new TransactionManager(currentUser);
-        CategoryManager categoryManager = new CategoryManager(currentUser);
         SummaryManager summaryManager = new SummaryManager(transactionManager, categoryManager);
 
         LocalDate now = LocalDate.now();
@@ -87,6 +92,29 @@ public class HomeController {
         totalSurplusLabel.setText("Total Surplus：¥ " + df.format(surplusTotal));
 
         // 分类展示
+        updateCategoryLists();
+
+        // 设置进度条（基于最大值）
+        BigDecimal bdIncomeTotal = BigDecimal.valueOf(incomeTotal);
+        BigDecimal bdExpenseTotal = BigDecimal.valueOf(expenseTotal);
+        BigDecimal maxValue = bdIncomeTotal.max(bdExpenseTotal).max(BigDecimal.ONE);
+
+        // 计算比例并转换为double用于进度条
+        incomeProgressBar.setProgress(bdIncomeTotal.divide(maxValue, 10, RoundingMode.HALF_UP).doubleValue());
+        expenseProgressBar.setProgress(bdExpenseTotal.divide(maxValue, 10, RoundingMode.HALF_UP).doubleValue());
+
+        // 盈余进度条处理，确保不为负
+        BigDecimal surplusRatio = surplusTotal.divide(maxValue, 10, RoundingMode.HALF_UP);
+        double surplusProgress = Math.max(surplusRatio.doubleValue(), 0);
+        surplusProgressBar.setProgress(surplusProgress);
+    }
+
+    // 更新分类列表方法
+    private void updateCategoryLists() {
+        // 清空现有列表
+        incomeCategoryList.getItems().clear();
+        expenseCategoryList.getItems().clear();
+
         List<Category> allCategories = categoryManager.loadCategories();
         for (Category c : allCategories) {
             if ("收入".equals(c.getType())) {
@@ -95,22 +123,7 @@ public class HomeController {
                 expenseCategoryList.getItems().add(c.getName());
             }
         }
-
-        // 设置进度条（基于最大值）
-        BigDecimal bdIncomeTotal = BigDecimal.valueOf(incomeTotal);
-        BigDecimal bdExpenseTotal = BigDecimal.valueOf(expenseTotal);
-        BigDecimal maxValue = bdIncomeTotal.max(bdExpenseTotal).max(BigDecimal.ONE);
-
-// 计算比例并转换为double用于进度条
-        incomeProgressBar.setProgress(bdIncomeTotal.divide(maxValue, 10, RoundingMode.HALF_UP).doubleValue());
-        expenseProgressBar.setProgress(bdExpenseTotal.divide(maxValue, 10, RoundingMode.HALF_UP).doubleValue());
-
-// 盈余进度条处理，确保不为负
-        BigDecimal surplusRatio = surplusTotal.divide(maxValue, 10, RoundingMode.HALF_UP);
-        double surplusProgress = Math.max(surplusRatio.doubleValue(), 0);
-        surplusProgressBar.setProgress(surplusProgress);
     }
-
 
     @FXML
     private void goIncomeAnalysis(ActionEvent event) {
@@ -121,6 +134,73 @@ public class HomeController {
     private void goExpenditureAnalysis(ActionEvent event) {
         SceneSwitcher.switchScene("view/ExpenditureAnalysis.fxml");
     }
+
+    @FXML
+    private void deleteExpenseCategory() {
+        String selectedCategory = expenseCategoryList.getSelectionModel().getSelectedItem();
+        if (selectedCategory == null) {
+            showAlert("警告", "请先选择一个要删除的支出分类", Alert.AlertType.WARNING);
+            return;
+        }
+
+        // 弹出确认对话框
+        boolean confirmed = showConfirmationDialog("删除分类",
+                "确定要删除支出分类 \"" + selectedCategory + "\" 吗？\n删除后相关数据将无法恢复。");
+
+        if (confirmed) {
+            boolean deleted = categoryManager.deleteCategory("支出", selectedCategory);
+            if (deleted) {
+                updateCategoryLists(); // 更新列表显示
+                showAlert("成功", "支出分类已删除", Alert.AlertType.INFORMATION);
+            } else {
+                showAlert("错误", "删除分类失败", Alert.AlertType.ERROR);
+            }
+        }
+    }
+
+    @FXML
+    private void deleteIncomeCategory() {
+        String selectedCategory = incomeCategoryList.getSelectionModel().getSelectedItem();
+        if (selectedCategory == null) {
+            showAlert("警告", "请先选择一个要删除的收入分类", Alert.AlertType.WARNING);
+            return;
+        }
+
+        // 弹出确认对话框
+        boolean confirmed = showConfirmationDialog("删除分类",
+                "确定要删除收入分类 \"" + selectedCategory + "\" 吗？\n删除后相关数据将无法恢复。");
+
+        if (confirmed) {
+            boolean deleted = categoryManager.deleteCategory("收入", selectedCategory);
+            if (deleted) {
+                updateCategoryLists(); // 更新列表显示
+                showAlert("成功", "收入分类已删除", Alert.AlertType.INFORMATION);
+            } else {
+                showAlert("错误", "删除分类失败", Alert.AlertType.ERROR);
+            }
+        }
+    }
+
+    // 显示确认对话框
+    private boolean showConfirmationDialog(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
+    }
+
+    // 显示提示信息
+    private void showAlert(String title, String content, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
     private void showAddDialog(String fxmlPath, String title, Window owner) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
@@ -148,4 +228,6 @@ public class HomeController {
     private void goAddIncome(ActionEvent event) {
         Window owner = ((Node) event.getSource()).getScene().getWindow();
         showAddDialog("/view/AddIncome.fxml", "Add Income Category", owner);
-    }}
+    }
+}
+
