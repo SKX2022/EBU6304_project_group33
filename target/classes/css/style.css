@@ -416,3 +416,102 @@
     -fx-background-color: rgba(245,245,250,0.3);
     -fx-transition: all 0.2s ease-out;
 }
+
+/* 1. 导航栏文字简化 */
+.navigation-bar .button {
+    -fx-font-size: 18px; /* 适当放大导航文字 */
+    -fx-padding: 0 15px; /* 增加间距 */
+}
+
+/* 2. 总收入显示样式 */
+.total-income-container {
+    -fx-padding: 5px 0 15px 30px; /* 上 右 下 左 */
+    -fx-alignment: center-left;
+}
+
+.total-income-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.total-income-amount {
+    -fx-font-size: 32px !important;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60; /* 绿色强调 */
+    -fx-padding: 0 0 0 10px;
+}
+
+/* 3. 表格布局优化 */
+.income-table-container {
+    -fx-padding: 0 0 0 30px; /* 只保留左间距 */
+    -fx-alignment: top-left;
+}
+
+.income-table {
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+    -fx-table-cell-border-color: transparent;
+}
+
+/* 4. 底部标题样式 */
+.bottom-title {
+    -fx-font-size: 20px;
+    -fx-text-fill: #7f8c8d;
+    -fx-padding: 30px 0 10px 30px;
+    -fx-alignment: bottom-left;
+}
+
+/* 收入分析页面特定样式 */
+.income-analysis-container {
+    -fx-padding: 20px;
+}
+
+.total-income-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.total-income-amount {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60;
+}
+
+.income-table {
+    -fx-font-size: 14px;
+}
+
+.income-table .table-column {
+    -fx-alignment: CENTER;
+}
+
+.income-pie-chart {
+    -fx-font-size: 12px;
+}
+
+.ai-analysis-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+
+.ai-analysis-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* AI分析弹窗样式 */
+.analysis-popup {
+    -fx-background-color: #f9f9f9;
+}
+
+.analysis-text-area {
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 4px;
+    -fx-padding: 10px;
+}
