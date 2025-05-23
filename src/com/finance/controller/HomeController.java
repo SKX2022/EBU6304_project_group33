@@ -24,6 +24,9 @@ import javafx.stage.Window;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.text.DecimalFormat;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class HomeController {
 
@@ -57,20 +60,31 @@ public class HomeController {
         // 月收支
         double incomeMonth = transactionManager.getMonthlyIncome();
         double expenseMonth = transactionManager.getMonthlyExpenditure();
-        double surplusMonth = incomeMonth - expenseMonth;
 
-        monthlyIncomeLabel.setText("Month Income：¥ " + incomeMonth);
-        monthlyExpenseLabel.setText("Month Expenditure：¥ " + expenseMonth);
-        monthlySurplusLabel.setText("Month Surplus：¥ " + surplusMonth);
+        // 使用BigDecimal计算盈余，确保精度
+        BigDecimal surplusMonth = BigDecimal.valueOf(incomeMonth)
+                .subtract(BigDecimal.valueOf(expenseMonth))
+                .setScale(2, RoundingMode.HALF_UP);
+
+        // 格式化显示
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+
+        monthlyIncomeLabel.setText("Month Income：¥ " + df.format(incomeMonth));
+        monthlyExpenseLabel.setText("Month Expenditure：¥ " + df.format(expenseMonth));
+        monthlySurplusLabel.setText("Month Surplus：¥ " + df.format(surplusMonth));
 
         // 总收支
         double incomeTotal = summaryManager.getTotalIncome();
         double expenseTotal = summaryManager.getTotalExpenditure();
-        double surplusTotal = incomeTotal - expenseTotal;
 
-        totalIncomeLabel.setText("Total Income：¥ " + incomeTotal);
-        totalExpenseLabel.setText("Total Expenditure：¥ " + expenseTotal);
-        totalSurplusLabel.setText("Total Surplus：¥ " + surplusTotal);
+        // 使用BigDecimal计算盈余
+        BigDecimal surplusTotal = BigDecimal.valueOf(incomeTotal)
+                .subtract(BigDecimal.valueOf(expenseTotal))
+                .setScale(2, RoundingMode.HALF_UP);
+
+        totalIncomeLabel.setText("Total Income：¥ " + df.format(incomeTotal));
+        totalExpenseLabel.setText("Total Expenditure：¥ " + df.format(expenseTotal));
+        totalSurplusLabel.setText("Total Surplus：¥ " + df.format(surplusTotal));
 
         // 分类展示
         List<Category> allCategories = categoryManager.loadCategories();
@@ -83,10 +97,18 @@ public class HomeController {
         }
 
         // 设置进度条（基于最大值）
-        double max = Math.max(Math.max(incomeTotal, expenseTotal), 1.0);
-        incomeProgressBar.setProgress(incomeTotal / max);
-        expenseProgressBar.setProgress(expenseTotal / max);
-        surplusProgressBar.setProgress(Math.max(surplusTotal / max, 0));
+        BigDecimal bdIncomeTotal = BigDecimal.valueOf(incomeTotal);
+        BigDecimal bdExpenseTotal = BigDecimal.valueOf(expenseTotal);
+        BigDecimal maxValue = bdIncomeTotal.max(bdExpenseTotal).max(BigDecimal.ONE);
+
+// 计算比例并转换为double用于进度条
+        incomeProgressBar.setProgress(bdIncomeTotal.divide(maxValue, 10, RoundingMode.HALF_UP).doubleValue());
+        expenseProgressBar.setProgress(bdExpenseTotal.divide(maxValue, 10, RoundingMode.HALF_UP).doubleValue());
+
+// 盈余进度条处理，确保不为负
+        BigDecimal surplusRatio = surplusTotal.divide(maxValue, 10, RoundingMode.HALF_UP);
+        double surplusProgress = Math.max(surplusRatio.doubleValue(), 0);
+        surplusProgressBar.setProgress(surplusProgress);
     }
 
 

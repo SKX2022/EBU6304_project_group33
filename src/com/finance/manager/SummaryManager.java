@@ -3,7 +3,8 @@ package com.finance.manager;
 import com.finance.model.Transaction;
 
 import java.util.*;
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 public class SummaryManager {
 
     private TransactionManager transactionManager;
@@ -16,23 +17,23 @@ public class SummaryManager {
 
     // 计算总收入和总支出
     public double getTotalIncome() {
-        double totalIncome = 0;
+        BigDecimal totalIncome = BigDecimal.ZERO;
         for (Transaction transaction : transactionManager.getAllTransactions()) {
             if (transaction.getType().equals("收入")) {
-                totalIncome += transaction.getAmount();
+                totalIncome = totalIncome.add(BigDecimal.valueOf(transaction.getAmount()));
             }
         }
-        return totalIncome;
+        return totalIncome.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     public double getTotalExpenditure() {
-        double totalExpenditure = 0;
+        BigDecimal totalExpenditure = BigDecimal.ZERO;
         for (Transaction transaction : transactionManager.getAllTransactions()) {
             if (transaction.getType().equals("支出")) {
-                totalExpenditure += transaction.getAmount();
+                totalExpenditure = totalExpenditure.add(BigDecimal.valueOf(transaction.getAmount()));
             }
         }
-        return totalExpenditure;
+        return totalExpenditure.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     // 获取总收支和本月收支汇总

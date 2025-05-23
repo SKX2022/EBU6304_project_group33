@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class TransactionManager {
 
@@ -62,25 +64,32 @@ public class TransactionManager {
         return transactions;
     }
 
-    // 修正后的计算本月总收入方法
+    // 修改计算本月总收入方法，使用BigDecimal
     public double getMonthlyIncome() {
-        return transactions.stream()
-                .filter(t -> t.getType().equals("收入") && isCurrentMonth(t.getDate()))
-                .mapToDouble(Transaction::getAmount)
-                .sum();
+        BigDecimal monthlyIncome = BigDecimal.ZERO;
+        for (Transaction transaction : transactions) {
+            if (transaction.getType().equals("收入") && isCurrentMonth(transaction.getDate())) {
+                monthlyIncome = monthlyIncome.add(BigDecimal.valueOf(transaction.getAmount()));
+            }
+        }
+        return monthlyIncome.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
-    // 修正后的计算本月总支出方法
+    // 修改计算本月总支出方法，使用BigDecimal
     public double getMonthlyExpenditure() {
-        return transactions.stream()
-                .filter(t -> t.getType().equals("支出") && isCurrentMonth(t.getDate()))
-                .mapToDouble(Transaction::getAmount)
-                .sum();
+        BigDecimal monthlyExpenditure = BigDecimal.ZERO;
+        for (Transaction transaction : transactions) {
+            if (transaction.getType().equals("支出") && isCurrentMonth(transaction.getDate())) {
+                monthlyExpenditure = monthlyExpenditure.add(BigDecimal.valueOf(transaction.getAmount()));
+            }
+        }
+        return monthlyExpenditure.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
-
     // 判断交易日期是否属于当前月份
     private boolean isCurrentMonth(String date) {
         LocalDate transactionDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         LocalDate now = LocalDate.now();
         return transactionDate.getYear() == now.getYear() && transactionDate.getMonth() == now.getMonth();
-    }}
+    }
+
+}
