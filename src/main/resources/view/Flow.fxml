@@ -10,9 +10,9 @@
             fx:controller="com.finance.controller.FlowController"
             stylesheets="@../css/style.css">
 
-<top>
-    <fx:include source="NavigationBar.fxml" />
-</top>
+    <top>
+        <fx:include source="NavigationBar.fxml" />
+    </top>
     <center>
         <VBox spacing="20" style="-fx-padding: 20; -fx-background-color: white;">
 
@@ -54,6 +54,12 @@
 
             <!-- 分页控制 -->
             <HBox spacing="10" alignment="CENTER_RIGHT" styleClass="pagination">
+                <!-- 在原FXML文件中添加按钮事件绑定 -->
+                <Button text="加入记录"
+                        fx:id="addButton"
+                        onAction="#handleAddTransaction"
+                        styleClass="pagination-button"/>
+
                 <Button fx:id="previousButton" text="Previous" styleClass="pagination-button"/>
                 <Label fx:id="pageInfoLabel" text="Page 1 of 1" styleClass="pagination-label"/>
                 <Button fx:id="nextButton" text="Next" styleClass="pagination-button"/>
@@ -61,3 +67,4 @@
         </VBox>
     </center>
 </BorderPane>
+
