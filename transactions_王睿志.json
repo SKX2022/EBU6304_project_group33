@@ -1,1 +1,1202 @@
-[{"type":"收入","category":"工资","amount":8000.0,"date":"2025-04-23 00:20:10","user":{"username":"王睿志","password":"1234","transactions":[],"categories":[]}},{"type":"收入","category":"工资","amount":8000.0,"date":"2025-05-13 00:20:10","user":{"username":"王睿志","password":"1234","transactions":[],"categories":[]}},{"type":"支出","category":"吃饭","amount":50.0,"date":"2025-04-23 00:20:44","user":{"username":"王睿志","password":"1234","transactions":[],"categories":[]}},{"type":"支出","category":"吃饭","amount":100.0,"date":"2025-04-23 00:22:49","user":{"username":"王睿志","password":"1234","transactions":[],"categories":[]}},{"type":"支出","category":"交通","amount":6.0,"date":"2025-04-23 00:45:49","user":{"username":"王睿志","password":"1234","transactions":[],"categories":[]}},{"type":"支出","category":"数码产品","amount":1200.0,"date":"2025-04-23 00:45:57","user":{"username":"王睿志","password":"1234","transactions":[],"categories":[]}}]
+[
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 81.48,
+    "date": "2025-04-01 11:04:57",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "收入",
+    "category": "奖金",
+    "amount": 1788.57,
+    "date": "2025-04-01 11:56:10",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "房租",
+    "amount": 2535.23,
+    "date": "2025-04-01 14:42:50",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "交通",
+    "amount": 137.15,
+    "date": "2025-04-01 16:01:20",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "交通",
+    "amount": 48.76,
+    "date": "2025-04-01 17:05:38",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 122.38,
+    "date": "2025-04-02 07:29:04",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "数码产品",
+    "amount": 1913.66,
+    "date": "2025-04-02 11:00:32",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 27.18,
+    "date": "2025-04-03 07:45:15",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 620.04,
+    "date": "2025-04-03 12:50:51",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 908.69,
+    "date": "2025-04-03 17:55:17",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "交通",
+    "amount": 36.37,
+    "date": "2025-04-03 21:03:25",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 464.95,
+    "date": "2025-04-04 07:26:18",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 1625.34,
+    "date": "2025-04-04 20:29:14",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 60.66,
+    "date": "2025-04-05 07:56:38",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 834.54,
+    "date": "2025-04-05 21:24:10",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "购物",
+    "amount": 988.34,
+    "date": "2025-04-06 07:27:04",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "交通",
+    "amount": 104.65,
+    "date": "2025-04-06 21:09:24",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "数码产品",
+    "amount": 1150.04,
+    "date": "2025-04-07 07:05:51",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 27.71,
+    "date": "2025-04-07 09:07:30",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 9.22,
+    "date": "2025-04-07 13:20:02",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 926.14,
+    "date": "2025-04-08 10:51:32",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 148.04,
+    "date": "2025-04-08 14:59:09",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "数码产品",
+    "amount": 1116.59,
+    "date": "2025-04-08 16:54:19",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 354.29,
+    "date": "2025-04-08 17:34:06",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 319.39,
+    "date": "2025-04-08 18:16:28",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "数码产品",
+    "amount": 865.48,
+    "date": "2025-04-09 06:40:10",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "购物",
+    "amount": 1100.5,
+    "date": "2025-04-09 06:52:21",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "收入",
+    "category": "礼金",
+    "amount": 636.3,
+    "date": "2025-04-09 13:25:54",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "购物",
+    "amount": 1632.97,
+    "date": "2025-04-09 15:17:33",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "购物",
+    "amount": 1682.49,
+    "date": "2025-04-09 21:35:47",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 440.97,
+    "date": "2025-04-10 08:52:11",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 22.43,
+    "date": "2025-04-10 11:03:29",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "收入",
+    "category": "工资",
+    "amount": 9426.79,
+    "date": "2025-04-10 13:37:18",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 186.04,
+    "date": "2025-04-10 15:25:34",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 177.68,
+    "date": "2025-04-10 21:38:22",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 1339.69,
+    "date": "2025-04-11 09:28:58",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "收入",
+    "category": "礼金",
+    "amount": 535.35,
+    "date": "2025-04-11 10:31:00",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 134.89,
+    "date": "2025-04-11 21:13:11",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "数码产品",
+    "amount": 524.21,
+    "date": "2025-04-11 22:31:31",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 163.53,
+    "date": "2025-04-12 11:15:25",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 512.02,
+    "date": "2025-04-12 11:45:43",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "交通",
+    "amount": 169.01,
+    "date": "2025-04-12 12:16:14",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 29.81,
+    "date": "2025-04-12 16:29:59",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 129.77,
+    "date": "2025-04-13 21:08:21",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 18.49,
+    "date": "2025-04-14 06:54:36",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 732.27,
+    "date": "2025-04-14 11:46:16",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 1209.52,
+    "date": "2025-04-14 20:30:28",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 135.66,
+    "date": "2025-04-15 06:23:48",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "购物",
+    "amount": 245.02,
+    "date": "2025-04-15 16:20:07",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "交通",
+    "amount": 44.69,
+    "date": "2025-04-16 10:26:42",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "数码产品",
+    "amount": 177.75,
+    "date": "2025-04-16 13:10:04",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "数码产品",
+    "amount": 393.97,
+    "date": "2025-04-16 14:46:36",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "交通",
+    "amount": 27.08,
+    "date": "2025-04-16 20:24:29",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 156.33,
+    "date": "2025-04-16 20:51:34",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 191.41,
+    "date": "2025-04-17 20:58:39",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 394.77,
+    "date": "2025-04-18 14:32:06",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "交通",
+    "amount": 118.12,
+    "date": "2025-04-18 15:28:34",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 168.49,
+    "date": "2025-04-18 22:19:29",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 136.2,
+    "date": "2025-04-19 11:46:16",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "房租",
+    "amount": 2769.94,
+    "date": "2025-04-19 17:26:12",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 110.09,
+    "date": "2025-04-19 20:04:00",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "房租",
+    "amount": 1530.41,
+    "date": "2025-04-19 20:27:50",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "数码产品",
+    "amount": 1159.24,
+    "date": "2025-04-20 17:26:10",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 116.87,
+    "date": "2025-04-20 19:29:44",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "房租",
+    "amount": 2941.28,
+    "date": "2025-04-20 20:44:33",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 485.28,
+    "date": "2025-04-20 21:55:11",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 623.26,
+    "date": "2025-04-20 22:59:56",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 179.24,
+    "date": "2025-04-21 10:20:44",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 1431.72,
+    "date": "2025-04-21 11:06:01",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "交通",
+    "amount": 160.21,
+    "date": "2025-04-21 19:59:07",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 414.98,
+    "date": "2025-04-21 22:36:28",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "房租",
+    "amount": 2477.02,
+    "date": "2025-04-22 13:48:41",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "收入",
+    "category": "工资",
+    "amount": 9795.2,
+    "date": "2025-04-23 18:01:29",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 1312.51,
+    "date": "2025-04-23 18:31:44",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 70.97,
+    "date": "2025-04-23 20:27:59",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 177.9,
+    "date": "2025-04-24 10:44:47",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 1336.56,
+    "date": "2025-04-24 10:45:23",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 199.8,
+    "date": "2025-04-24 13:09:39",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 35.86,
+    "date": "2025-04-24 15:24:38",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "房租",
+    "amount": 2039.67,
+    "date": "2025-04-25 16:06:35",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 148.42,
+    "date": "2025-04-26 09:19:44",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "数码产品",
+    "amount": 1689.96,
+    "date": "2025-04-26 13:27:39",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "购物",
+    "amount": 976.81,
+    "date": "2025-04-26 16:44:14",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 1536.58,
+    "date": "2025-04-26 22:02:22",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "数码产品",
+    "amount": 1962.93,
+    "date": "2025-04-26 22:19:28",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 104.59,
+    "date": "2025-04-27 12:42:26",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 367.56,
+    "date": "2025-04-28 08:04:37",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 577.06,
+    "date": "2025-04-28 11:12:14",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "房租",
+    "amount": 2051.9,
+    "date": "2025-04-28 18:35:05",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "收入",
+    "category": "奖金",
+    "amount": 2151.42,
+    "date": "2025-04-28 20:59:16",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "房租",
+    "amount": 1983.83,
+    "date": "2025-04-28 22:16:58",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "吃饭",
+    "amount": 177.1,
+    "date": "2025-04-29 15:22:01",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 185.87,
+    "date": "2025-04-29 19:35:03",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "数码产品",
+    "amount": 1262.71,
+    "date": "2025-04-29 21:33:23",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 1544.34,
+    "date": "2025-04-29 22:54:22",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "医疗",
+    "amount": 1131.6,
+    "date": "2025-04-29 22:54:44",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "房租",
+    "amount": 2733.61,
+    "date": "2025-04-30 06:39:58",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "房租",
+    "amount": 2609.37,
+    "date": "2025-04-30 14:50:14",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "旅行",
+    "amount": 1631.71,
+    "date": "2025-04-30 21:59:18",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  },
+  {
+    "type": "支出",
+    "category": "娱乐",
+    "amount": 79.62,
+    "date": "2025-04-30 22:57:07",
+    "user": {
+      "username": "王睿志",
+      "password": "王睿志",
+      "transactions": [],
+      "categories": []
+    }
+  }
+]

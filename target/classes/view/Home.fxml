@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.finance.controller.HomeController"
+            stylesheets="@../css/style.css">
+
+    <top>
+        <fx:include source="NavigationBar.fxml" />
+    </top>
+
+    <center>
+        <HBox spacing="40" alignment="TOP_LEFT" style="-fx-padding: 30;">
+
+            <!-- 左侧：图片 + 本月收支 + 总进度条 -->
+            <VBox spacing="40">
+
+                <!-- 图片和本月收入支出 -->
+                <StackPane alignment="TOP_LEFT">
+                    <ImageView fitHeight="350"  preserveRatio="true">
+                        <image>
+                            <Image url="@../images/blue.jpg" />
+                        </image>
+                    </ImageView>
+                    <VBox spacing="6" style="-fx-padding: 20;">
+                        <Label text="This month" styleClass="label-title"/>
+                        <Label fx:id="monthlyIncomeLabel" text="Month Income：¥0.00" styleClass="label-data"/>
+                        <Label fx:id="monthlyExpenseLabel" text="Month Expenditure：¥0.00" styleClass="label-data"/>
+                        <Label fx:id="monthlySurplusLabel" text="Month Surplus：¥0.00" styleClass="label-data"/>
+                    </VBox>
+                </StackPane>
+
+                <!-- 总收入支出盈余进度条 -->
+                <VBox spacing="15">
+                    <Label text="Summary of total income and expenditure" styleClass="label-section"/>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Income" minWidth="80"/>
+                        <ProgressBar fx:id="incomeProgressBar" HBox.hgrow="ALWAYS" prefWidth="300" progress="0.0"/>
+                        <Label fx:id="totalIncomeLabel" text="Total Income：¥0.00"/>
+                    </HBox>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Expenditure" minWidth="80"/>
+                        <ProgressBar fx:id="expenseProgressBar" HBox.hgrow="ALWAYS" prefWidth="300" progress="0.0"/>
+                        <Label fx:id="totalExpenseLabel" text="Total Expenditure：¥0.00"/>
+                    </HBox>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Surplus" minWidth="80"/>
+                        <ProgressBar fx:id="surplusProgressBar" HBox.hgrow="ALWAYS" prefWidth="300" progress="0.0"/>
+                        <Label fx:id="totalSurplusLabel" text="Total Surplus：¥0.00"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <!-- 右侧：分类垂直排列 -->
+            <VBox spacing="20">
+
+                <VBox spacing="10" styleClass="classification-box">
+                    <Label text="Expenditure classification" styleClass="label-section"/>
+                    <ListView fx:id="expenseCategoryList" prefHeight="100"/>
+                    <Button text="Enter for more information" onAction="#goExpenditureAnalysis" styleClass="button-blue"/>
+                    <Button text="+  Add" onAction="#goAddExpense"  styleClass="button-primary"/>
+                </VBox>
+
+                <VBox spacing="10" styleClass="classification-box">
+                    <Label text="Income classification" styleClass="label-section"/>
+                    <ListView fx:id="incomeCategoryList" prefHeight="100"/>
+                    <Button text="Enter for more information" onAction="#goIncomeAnalysis" styleClass="button-blue"/>
+                    <Button text="+  Add" onAction="#goAddIncome"   styleClass="button-primary"/>
+                </VBox>
+
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>
