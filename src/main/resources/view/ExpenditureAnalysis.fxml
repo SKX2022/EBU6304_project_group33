@@ -22,9 +22,6 @@
           AnchorPane.leftAnchor="20"
           AnchorPane.rightAnchor="20">
 
-        <Label text="支出分析"
-               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-
         <HBox spacing="30" alignment="CENTER">
             <!-- 左侧分类和金额列表 -->
             <VBox spacing="10" styleClass="classification-box" style="-fx-pref-width: 350px;">

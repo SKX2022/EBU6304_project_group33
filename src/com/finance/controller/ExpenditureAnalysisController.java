@@ -24,65 +24,106 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.collections.ObservableList;
+import javafx.util.StringConverter;
 
 public class ExpenditureAnalysisController {
 
     @FXML private ListView<String> categoryTypeList;
-    @FXML private ListView<Double> categoryAmountList;
+    @FXML private ListView<String> categoryAmountList;
     @FXML private Label totalExpenseLabel;
-    @FXML private PieChart expenditurePieChart;
+    @FXML private PieChart expenditurePieChart;  // 正确声明（无泛型参数）
     @FXML private Label analysisResultLabel;
 
     private TransactionManager transactionManager;
-    private List<Transaction> transactions; // 新增交易记录列表
+    private List<Transaction> transactions;
 
     @FXML
     public void initialize() {
-        // 初始化事务管理器
         transactionManager = new TransactionManager(Session.getCurrentUser());
-
-        // 加载交易数据
         transactions = transactionManager.getAllTransactions();
-
-        // 初始化UI组件
         loadExpenditureData();
     }
 
     private void loadExpenditureData() {
-        // 构建支出分类统计
-        Map<String, Double> categoryMap = transactions.stream()
+        // 使用BigDecimal精确计算
+        Map<String, BigDecimal> categoryMap = transactions.stream()
                 .filter(t -> "支出".equals(t.getType()))
                 .collect(Collectors.groupingBy(
                         Transaction::getCategory,
-                        Collectors.summingDouble(Transaction::getAmount)
-                ));
+                        Collectors.mapping(Transaction::getAmount,
+                                Collectors.collectingAndThen(
+                                        Collectors.toList(),
+                                        list -> list.stream()
+                                                .map(BigDecimal::valueOf)
+                                                .reduce(BigDecimal.ZERO, BigDecimal::add)))));
+
+        // 转换为保留两位小数的Map
+        Map<String, BigDecimal> formattedMap = categoryMap.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue().setScale(2, RoundingMode.HALF_UP)));
 
         // 更新总消费标签
-        double total = categoryMap.values().stream().mapToDouble(Double::doubleValue).sum();
-        totalExpenseLabel.setText(String.format("总支出: ¥%.2f", total));
+        BigDecimal total = formattedMap.values().stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        totalExpenseLabel.setText(String.format("总支出: ¥%s",
+                total.stripTrailingZeros().toPlainString()));
 
-        // 绑定分类数据到UI控件
-        categoryTypeList.setItems(FXCollections.observableArrayList(
-                categoryMap.keySet().stream().sorted().toList()
-        ));
-        categoryAmountList.setItems(FXCollections.observableArrayList(
-                categoryMap.values().stream().sorted().toList()
-        ));
+        // 配置BigDecimal转换器
+        StringConverter<BigDecimal> amountConverter = new StringConverter<>() {
+            private final DecimalFormat df = new DecimalFormat("#0.00");
+
+            @Override
+            public String toString(BigDecimal object) {
+                return df.format(object != null ? object : BigDecimal.ZERO);
+            }
+
+            @Override
+            public BigDecimal fromString(String string) {
+                return new BigDecimal(string);
+            }
+        };
+
+        // 绑定数据到UI控件
+        ObservableList<String> categories = FXCollections.observableArrayList(
+                formattedMap.keySet().stream().sorted().toList());
+        ObservableList<String> amounts = FXCollections.observableArrayList(
+                formattedMap.values().stream()
+                        .map(amountConverter::toString)
+                        .toList());
+
+        categoryTypeList.setItems(categories);
+        categoryAmountList.setItems(amounts);
 
         // 更新饼图数据
-        updatePieChartData(categoryMap);
+        updatePieChartData(formattedMap);
     }
 
-    private void updatePieChartData(Map<String, Double> categoryMap) {
+    private void updatePieChartData(Map<String, BigDecimal> categoryMap) {
         expenditurePieChart.getData().clear();
-        double total = categoryMap.values().stream().mapToDouble(Double::doubleValue).sum();
+        BigDecimal total = categoryMap.values().stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
 
         categoryMap.forEach((category, amount) -> {
-            String label = String.format("%s (%.1f%%)", category,
-                    (amount / total) * 100);
-            expenditurePieChart.getData().add(new PieChart.Data(label, amount));
+            // 使用精确的百分比计算
+            BigDecimal percentage = amount.divide(total, 4, RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(100));
+
+            // 强制保留两位小数
+            String formattedPercentage = percentage.setScale(2, RoundingMode.HALF_UP) + "%";
+            String label = String.format("%s\n%s", category, formattedPercentage);
+
+            // 使用double值构造PieChart.Data
+            expenditurePieChart.getData().add(new PieChart.Data(label, amount.doubleValue()));
         });
+
+        // 强制刷新图表布局
+        expenditurePieChart.layout();
     }
+
 
     @FXML
     private void handleAnalyzeButtonClick() {
