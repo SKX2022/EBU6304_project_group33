@@ -138,12 +138,12 @@ public class HomeController {
 
     @FXML
     private void goIncomeAnalysis(ActionEvent event) {
-        SceneSwitcher.switchScene("view/IncomeAnalysis.fxml");
+        SceneSwitcher.switchScene("/view/IncomeAnalysis.fxml");
     }
 
     @FXML
     private void goExpenditureAnalysis(ActionEvent event) {
-        SceneSwitcher.switchScene("view/ExpenditureAnalysis.fxml");
+        SceneSwitcher.switchScene("/view/ExpenditureAnalysis.fxml");
     }
 
     @FXML
