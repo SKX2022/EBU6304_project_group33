@@ -255,10 +255,18 @@ public class FlowController {
         alert.setHeaderText(null);
         alert.setContentText(message);
 
+        // 应用CSS样式
+        alert.getDialogPane().getStylesheets().add(
+            getClass().getResource("/css/style.css").toExternalForm()
+        );
+        alert.getDialogPane().getStyleClass().add("login-card");
+
         // 添加确认按钮样式
         ButtonType okButton = new ButtonType("确定", ButtonBar.ButtonData.OK_DONE);
         alert.getButtonTypes().setAll(okButton);
 
+        Button okButtonNode = (Button) alert.getDialogPane().lookupButton(okButton);
+        okButtonNode.getStyleClass().add("button-blue");
 
         alert.showAndWait();
     }
@@ -326,8 +334,21 @@ public class FlowController {
         alert.setHeaderText(null);
         alert.setContentText(message);
 
+        // 应用CSS样式
+        alert.getDialogPane().getStylesheets().add(
+            getClass().getResource("/css/style.css").toExternalForm()
+        );
+        alert.getDialogPane().getStyleClass().add("login-card");
+
         ButtonType yesButton = new ButtonType("确定", ButtonBar.ButtonData.OK_DONE);
-        alert.getButtonTypes().setAll(yesButton, ButtonType.CANCEL);
+        ButtonType cancelButton = new ButtonType("取消", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yesButton, cancelButton);
+
+        Button yesButtonNode = (Button) alert.getDialogPane().lookupButton(yesButton);
+        Button cancelButtonNode = (Button) alert.getDialogPane().lookupButton(cancelButton);
+
+        yesButtonNode.getStyleClass().add("button-blue");
+        cancelButtonNode.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #334155;");
 
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == yesButton;
@@ -349,96 +370,148 @@ public class FlowController {
         dialog.setTitle("新增交易记录");
         dialog.setHeaderText(null);
         dialog.getDialogPane().setContent(createDialogContent());
+
+        // 应用CSS样式
+        dialog.getDialogPane().getStylesheets().add(
+            getClass().getResource("/css/style.css").toExternalForm()
+        );
+        dialog.getDialogPane().getStyleClass().add("login-card");
+
         return dialog;
     }
 
     private Parent createDialogContent() {
         GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setHgap(15);
+        grid.setVgap(15);
+        grid.setPadding(new Insets(20, 20, 20, 20));
+        grid.getStyleClass().add("classification-box");
 
-        // 创建所有字段
-        TextField typeField = createLabeledField("类型（收入/支出）", "textField_type");
-        ComboBox<Category> categoryField = new ComboBox<>();
-        categoryField.setItems(categoryComboBox.getItems());  // 复用主界面的分类数据
-        categoryField.setPromptText("选择分类");
-        categoryField.setConverter(categoryComboBox.getConverter());
-        categoryField.setId(generateUniqueId("comboBox_category"));
-        TextField amountField = createLabeledField("金额", "textField_amount");
-        TextField descriptionField = createLabeledField("备注", "textField_description");
+        // 创建交易类型下拉框（收入/支出）
+        ComboBox<String> typeComboBox = new ComboBox<>();
+        typeComboBox.getItems().addAll("收入", "支出");
+        typeComboBox.setPromptText("选择类型");
+        typeComboBox.setId("comboBox_type");
+        typeComboBox.getStyleClass().add("input-field");
+        typeComboBox.setPrefWidth(250);
 
+        // 创建分类下拉框
         dialogCategoryField = new ComboBox<>();
-        dialogCategoryField.setItems(categoryComboBox.getItems());
-        dialogCategoryField.setConverter(categoryComboBox.getConverter());
-        grid.add(new Label("分类:"), 0, 1);
-        grid.add(dialogCategoryField, 1, 1); // 布局位置根据实际调整
+        // 从CategoryManager获取分类
+        CategoryManager categoryManager = new CategoryManager(Session.getCurrentUser());
+        List<Category> categories = categoryManager.getCategories();
+        // 排除"All"分类
+        ObservableList<Category> categoryList = FXCollections.observableArrayList(
+                categories.stream()
+                        .filter(c -> !"ALL".equals(c.getType()))
+                        .collect(Collectors.toList())
+        );
+        dialogCategoryField.setItems(categoryList);
+        dialogCategoryField.setPromptText("选择分类");
+        dialogCategoryField.getStyleClass().add("input-field");
+        dialogCategoryField.setPrefWidth(250);
+        dialogCategoryField.setConverter(new StringConverter<Category>() {
+            @Override
+            public String toString(Category category) {
+                return category != null ? category.getName() : "";
+            }
+
+            @Override
+            public Category fromString(String string) {
+                return categoryList.stream()
+                        .filter(c -> c.getName().equalsIgnoreCase(string.trim()))
+                        .findFirst()
+                        .orElse(null);
+            }
+        });
+
+        // 创建金额输入框
+        TextField amountField = new TextField();
+        amountField.setPromptText("请输入金额");
+        amountField.setId("textField_amount");
+        amountField.getStyleClass().add("input-field");
+        amountField.setPrefWidth(250);
+
+        // 创建日期选择器
+        dialogDatePickerField = new DatePicker(LocalDate.now());
+        dialogDatePickerField.setPromptText("选择日期");
+        dialogDatePickerField.setId("datePicker_date");
+        dialogDatePickerField.getStyleClass().add("input-field");
+        dialogDatePickerField.setPrefWidth(250);
+        dialogDatePickerField.setConverter(new StringConverter<LocalDate>() {
+            private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            @Override
+            public String toString(LocalDate date) {
+                return date != null ? formatter.format(date) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                return string != null && !string.isEmpty()
+                        ? LocalDate.parse(string, formatter)
+                        : null;
+            }
+        });
+
+        // 创建备注输入框
+        TextField descriptionField = new TextField();
+        descriptionField.setPromptText("请输入备注说明");
+        descriptionField.setId("textField_description");
+        descriptionField.getStyleClass().add("input-field");
+        descriptionField.setPrefWidth(250);
+
+        // 创建标签并设置样式
+        Label typeLabel = new Label("交易类型:");
+        Label categoryLabel = new Label("分类:");
+        Label amountLabel = new Label("金额:");
+        Label dateLabel = new Label("日期:");
+        Label descriptionLabel = new Label("备注:");
+
+        typeLabel.getStyleClass().add("label-section");
+        categoryLabel.getStyleClass().add("label-section");
+        amountLabel.getStyleClass().add("label-section");
+        dateLabel.getStyleClass().add("label-section");
+        descriptionLabel.getStyleClass().add("label-section");
+
+        // 设置标签样式
+        typeLabel.setStyle("-fx-font-size: 14px;");
+        categoryLabel.setStyle("-fx-font-size: 14px;");
+        amountLabel.setStyle("-fx-font-size: 14px;");
+        dateLabel.setStyle("-fx-font-size: 14px;");
+        descriptionLabel.setStyle("-fx-font-size: 14px;");
 
         // 布局配置
-        grid.add(new Label("类型:"), 0, 0);
-        grid.add(typeField, 1, 0);
+        grid.add(typeLabel, 0, 0);
+        grid.add(typeComboBox, 1, 0);
 
-        /*grid.add(new Label("分类:"), 0, 1);
-        grid.add(categoryField, 1, 1);*/
+        grid.add(categoryLabel, 0, 1);
+        grid.add(dialogCategoryField, 1, 1);
 
-        grid.add(new Label("金额:"), 0, 2);
+        grid.add(amountLabel, 0, 2);
         grid.add(amountField, 1, 2);
 
-        grid.add(new Label("备注:"), 0, 4);
+        grid.add(dateLabel, 0, 3);
+        grid.add(dialogDatePickerField, 1, 3);
+
+        grid.add(descriptionLabel, 0, 4);
         grid.add(descriptionField, 1, 4);
 
         return grid;
     }
 
-    // 通用组件创建方法
-    private TextField createLabeledField(String labelText, String id) {
-        TextField field = new TextField();
-        field.setPromptText(labelText);
-        field.setId(id);
-        return field;
-    }
-
-    private ComboBox<String> createComboBox(String promptText, ObservableList<String> items) {
-        ComboBox<String> comboBox = new ComboBox<>(items);
-        comboBox.setPromptText(promptText);
-        comboBox.setId(generateUniqueId("comboBox_"));
-        comboBox.setPrefWidth(200);
-        return comboBox;
-    }
-
-    private DatePicker createDatePicker(String promptText) {
-        DatePicker datePicker = new DatePicker();
-        datePicker.setPromptText(promptText);
-        datePicker.setId(generateUniqueId("datePicker_"));
-        datePicker.setConverter(new StringConverter<>() {
-            private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-            @Override
-            public String toString(LocalDate date) {
-                return date == null ? "" : formatter.format(date);
-            }
-
-            @Override
-            public LocalDate fromString(String string) {
-                return string == null || string.isEmpty()
-                        ? null
-                        : LocalDate.parse(string, formatter);
-            }
-        });
-        return datePicker;
-    }
-
-
-    private String generateUniqueId(String prefix) {
-        return prefix + UUID.randomUUID().toString().replace("-", "");
-    }
-
     private void configureDialogContent(TextInputDialog dialog) {
-        // 设置唯一按钮类型
-        dialog.getDialogPane().getButtonTypes().setAll(
-                createButtonType("确定", ButtonBar.ButtonData.OK_DONE),
-                createButtonType("取消", ButtonBar.ButtonData.CANCEL_CLOSE)
-        );
+        // 设置按钮类型
+        ButtonType confirmButtonType = createButtonType("确定", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = createButtonType("取消", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().setAll(confirmButtonType, cancelButtonType);
+
+        // 设置按钮样式
+        Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+        Button cancelButton = (Button) dialog.getDialogPane().lookupButton(cancelButtonType);
+
+        confirmButton.getStyleClass().add("button-blue");
+        cancelButton.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #334155;");
 
         // 添加验证逻辑
         dialog.setResultConverter(dialogButton -> {
@@ -463,18 +536,23 @@ public class FlowController {
 
     private Object processValidInput(TextInputDialog dialog) {
         GridPane grid = (GridPane) dialog.getDialogPane().getContent();
-        TextField typeField = (TextField) grid.lookup("#textField_type");
+        ComboBox<String> typeComboBox = (ComboBox<String>) grid.lookup("#comboBox_type");
         TextField amountField = (TextField) grid.lookup("#textField_amount");
-        ComboBox<Category> categoryField = dialogCategoryField; // 直接使用引用
-        // 输入验证
-        String type = typeField.getText().trim();
-        if (!List.of("收入", "支出").contains(type)) {
-            throw new IllegalArgumentException("无效的交易类型");
+        TextField descriptionField = (TextField) grid.lookup("#textField_description");
+
+        // 获取已经在类中持有引用的控件
+        ComboBox<Category> categoryField = dialogCategoryField;
+        DatePicker datePicker = dialogDatePickerField;
+
+        // 类型验证
+        String type = typeComboBox.getValue();
+        if (type == null || !List.of("收入", "支出").contains(type)) {
+            throw new IllegalArgumentException("请选择有效的交易类型（收入/支出）");
         }
 
         // 分类验证
         Category selectedCategory = categoryField.getSelectionModel().getSelectedItem();
-        if (selectedCategory == null || "ALL".equals(selectedCategory.getName())) {
+        if (selectedCategory == null) {
             throw new IllegalArgumentException("请选择有效分类");
         }
         String category = selectedCategory.getName();
@@ -484,27 +562,56 @@ public class FlowController {
         try {
             amount = new BigDecimal(amountField.getText().trim())
                     .setScale(2, RoundingMode.HALF_UP);
+            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("金额必须大于零");
+            }
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("金额必须为有效数字");
+            throw new IllegalArgumentException("请输入有效的金额数字");
         }
 
+        // 日期处理
+        LocalDate selectedDate = datePicker.getValue();
+        LocalDateTime dateTime;
+        if (selectedDate == null) {
+            // 如果未选择日期，则��用当前系统时间
+            dateTime = LocalDateTime.now();
+        } else {
+            // 如果已选择日期，则使用所选日期和当前时间
+            dateTime = LocalDateTime.of(selectedDate, LocalDateTime.now().toLocalTime());
+        }
+        String formattedDate = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        // 创建交易记录
+        // 获取备注信息
+        String description = descriptionField.getText().trim();
+
+        // 创建交易记录并保存
+        TransactionManager transactionManager = new TransactionManager(Session.getCurrentUser());
+        boolean success = transactionManager.addTransaction(
+                type,
+                category,
+                amount.doubleValue(),
+                formattedDate,
+                description);  // 传递备注信息
+
+        if (!success) {
+            throw new IllegalStateException("添加交易记录失败");
+        }
+
+        // 创建返回的交易对象
         Transaction newTransaction = new Transaction(
                 type,
                 category,
                 amount.doubleValue(),
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), // 修正时间字段
-                Session.getCurrentUser()
-        );
-        TransactionManager transactionManager = new TransactionManager(Session.getCurrentUser());
-        transactionManager.addTransaction(
-                newTransaction.getType(),
-                newTransaction.getCategory(),
-                newTransaction.getAmount(),
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                formattedDate,
+                Session.getCurrentUser(),
+                description);  // 传递备注信息
+
         // 更新UI
         updateTransactionList(newTransaction);
+
+        // 成功提示
+        Platform.runLater(() -> showInfoDialog("操作成功", "交易记录已成功添加"));
+
         return newTransaction;
     }
 
@@ -526,12 +633,48 @@ public class FlowController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+
+        // 应用CSS样式
+        alert.getDialogPane().getStylesheets().add(
+            getClass().getResource("/css/style.css").toExternalForm()
+        );
+        alert.getDialogPane().getStyleClass().add("login-card");
+
+        ButtonType okButton = new ButtonType("确定", ButtonBar.ButtonData.OK_DONE);
+        alert.getButtonTypes().setAll(okButton);
+
+        Button okButtonNode = (Button) alert.getDialogPane().lookupButton(okButton);
+        okButtonNode.getStyleClass().add("button-blue");
+
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.initOwner(null);  // 确保无父窗口时正常显示
         alert.showAndWait();
     }
 
+    @FXML
+    private void handleDeleteTransaction(ActionEvent event) {
+        Transaction selectedTransaction = transactionsTable.getSelectionModel().getSelectedItem();
+        if (selectedTransaction == null) {
+            showErrorDialog("提示", "请先选择要删除的交易记录");
+            return;
+        }
+
+        boolean confirmed = showConfirmDialog("确认删除", "确定要删除所选交易记录吗？此操作无法撤销。");
+        if (confirmed) {
+            TransactionManager transactionManager = new TransactionManager(Session.getCurrentUser());
+
+            // 调用TransactionManager删除记录
+            boolean success = transactionManager.deleteTransaction(selectedTransaction);
+
+            if (success) {
+                // 从UI列表中移除
+                transactionsData.remove(selectedTransaction);
+                transactionsTable.refresh();
+                showInfoDialog("操作成功", "交易记录已成功删除");
+            } else {
+                showErrorDialog("操作失败", "删除交易记录时发生错误");
+            }
+        }
+    }
+
 }
-
-
-

@@ -52,11 +52,60 @@ public class TransactionManager {
         }
     }
 
-    // 添加交易记录
-    public void addTransaction(String type, String category, double amount, String date) {
-        Transaction transaction = new Transaction(type, category, amount, date, user);
-        transactions.add(transaction);
-        saveTransactions();  // 保存交易记录到文件
+    // 添加交易记录（带备注信息）
+    public boolean addTransaction(String type, String category, double amount, String date, String project) {
+        try {
+            Transaction transaction = new Transaction(type, category, amount, date, user, project);
+            transactions.add(transaction);
+            saveTransactions();  // 保存交易记录到文件
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // 保持旧版本的方法兼容性
+    public boolean addTransaction(String type, String category, double amount, String date) {
+        return addTransaction(type, category, amount, date, "");
+    }
+
+    // 删除交易记录
+    public boolean deleteTransaction(Transaction transaction) {
+        if (transaction == null) {
+            return false;
+        }
+
+        try {
+            // 在列表中查找并删除匹配的交易记录
+            boolean removed = false;
+            for (int i = 0; i < transactions.size(); i++) {
+                Transaction t = transactions.get(i);
+                if (isSameTransaction(t, transaction)) {
+                    transactions.remove(i);
+                    removed = true;
+                    break;
+                }
+            }
+
+            if (removed) {
+                saveTransactions(); // 保存更新后的交易记录到文件
+                return true;
+            } else {
+                return false; // 未找到匹配的交易记录
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // 比较两个交易记录是否相同
+    private boolean isSameTransaction(Transaction t1, Transaction t2) {
+        return t1.getType().equals(t2.getType()) &&
+               t1.getCategory().equals(t2.getCategory()) &&
+               Math.abs(t1.getAmount() - t2.getAmount()) < 0.001 && // 浮点数比较
+               t1.getDate().equals(t2.getDate());
     }
 
     // 获取所有交易记录
