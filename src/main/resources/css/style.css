@@ -417,186 +417,101 @@
     -fx-transition: all 0.2s ease-out;
 }
 
-/* ===== 收入分析界面样式 ===== */
+/* 1. 导航栏文字简化 */
+.navigation-bar .button {
+    -fx-font-size: 18px; /* 适当放大导航文字 */
+    -fx-padding: 0 15px; /* 增加间距 */
+}
 
-/* 标题样式 */
-.income-title {
-    -fx-font-size: 32px;
+/* 2. 总收入显示样式 */
+.total-income-container {
+    -fx-padding: 5px 0 15px 30px; /* 上 右 下 左 */
+    -fx-alignment: center-left;
+}
+
+.total-income-label {
     -fx-font-weight: bold;
     -fx-text-fill: #2c3e50;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
 }
 
-.income-subtitle {
-    -fx-font-size: 16px;
-    -fx-text-fill: #7f8c8d;
-    -fx-text-alignment: center;
+.total-income-amount {
+    -fx-font-size: 32px !important;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60; /* 绿色强调 */
+    -fx-padding: 0 0 0 10px;
 }
 
-/* 卡片样式 */
-.income-input-card, .income-result-card {
-    -fx-background-color: #ffffff;
-    -fx-padding: 20;
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+/* 3. 表格布局优化 */
+.income-table-container {
+    -fx-padding: 0 0 0 30px; /* 只保留左间距 */
+    -fx-alignment: top-left;
 }
 
-.income-note-card {
-    -fx-background-color: #f8f9fa;
-    -fx-padding: 20;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-border-color: #e9ecef;
-    -fx-border-width: 1;
+.income-table {
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+    -fx-table-cell-border-color: transparent;
 }
 
-/* 区块标题 */
-.section-title {
+/* 4. 底部标题样式 */
+.bottom-title {
     -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #2c3e50;
-    -fx-padding: 0 0 10 0;
+    -fx-text-fill: #7f8c8d;
+    -fx-padding: 30px 0 10px 30px;
+    -fx-alignment: bottom-left;
 }
 
-/* 输入字段样式 */
-.input-label {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #34495e;
+/* 收入分析页面特定样式 */
+.income-analysis-container {
+    -fx-padding: 20px;
 }
 
-.income-input-field {
-    -fx-font-size: 14px;
-    -fx-padding: 12 15;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-border-color: #ddd;
-    -fx-border-width: 1;
-    -fx-background-color: #ffffff;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);
-}
-
-.income-input-field:focused {
-    -fx-border-color: #3498db;
-    -fx-border-width: 2;
-    -fx-effect: dropshadow(gaussian, rgba(52,152,219,0.3), 5, 0, 0, 0);
-}
-
-/* 按钮样式 */
-.calculate-button {
-    -fx-background-color: linear-gradient(to bottom, #27ae60, #2ecc71);
-    -fx-text-fill: white;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-padding: 15 25;
-    -fx-background-radius: 8;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 2);
-}
-
-.calculate-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #229954, #27ae60);
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 3);
-}
-
-.reset-button {
-    -fx-background-color: linear-gradient(to bottom, #95a5a6, #bdc3c7);
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-padding: 12 20;
-    -fx-background-radius: 8;
-    -fx-cursor: hand;
-}
-
-.reset-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #7f8c8d, #95a5a6);
-}
-
-/* 结果显示样式 */
-.result-summary {
-    -fx-background-color: #f8f9fa;
-    -fx-padding: 15;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-spacing: 8;
-}
-
-.final-result {
-    -fx-background-color: linear-gradient(to bottom, #e8f5e8, #f0f8f0);
-    -fx-border-color: #27ae60;
-    -fx-border-width: 1;
-}
-
-.result-category {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #2c3e50;
-    -fx-padding: 0 0 5 0;
-}
-
-.result-label {
-    -fx-font-size: 14px;
-    -fx-text-fill: #34495e;
-}
-
-.result-value {
-    -fx-font-size: 14px;
+.total-income-label {
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: #2c3e50;
 }
 
-.tax-value {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #e74c3c;
-}
-
-.deduction-value {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #f39c12;
-}
-
-.total-deduction-value {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #e74c3c;
-}
-
-.net-income-value {
-    -fx-font-size: 16px;
+.total-income-amount {
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: #27ae60;
 }
 
-/* 说明区域样式 */
-.note-title {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #2c3e50;
-    -fx-padding: 0 0 8 0;
+.income-table {
+    -fx-font-size: 14px;
 }
 
-.income-note-card Label {
-    -fx-font-size: 13px;
-    -fx-text-fill: #5a6c7d;
-    -fx-padding: 2 0;
+.income-table .table-column {
+    -fx-alignment: CENTER;
 }
 
-/* 饼图样式 */
-.chart-pie {
-    -fx-border-color: transparent;
-    -fx-background-color: transparent;
-}
-
-.chart-pie-label {
-    -fx-fill: #2c3e50;
+.income-pie-chart {
     -fx-font-size: 12px;
 }
 
-.chart-legend {
-    -fx-background-color: transparent;
-    -fx-padding: 10 0 0 0;
+.ai-analysis-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+
+.ai-analysis-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* AI分析弹窗样式 */
+.analysis-popup {
+    -fx-background-color: #f9f9f9;
+}
+
+.analysis-text-area {
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 4px;
+    -fx-padding: 10px;
 }

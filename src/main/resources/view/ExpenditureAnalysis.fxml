@@ -1,14 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<AnchorPane xmlns="http://javafx.com/javafx"
+<AnchorPane xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.finance.controller.ExpenditureAnalysisController"
-            prefHeight="400.0" prefWidth="600.0">
+            stylesheets="@../css/style.css">
 
+    <!-- 复用导航栏 -->
+    <fx:include source="/view/NavigationBar.fxml" AnchorPane.topAnchor="0"/>
+
+    <!-- 内容区域 -->
+    <VBox spacing="20"
+          AnchorPane.topAnchor="70"
+          AnchorPane.bottomAnchor="50"
+          AnchorPane.leftAnchor="20"
+          AnchorPane.rightAnchor="20">
+
+        <HBox spacing="30" alignment="CENTER">
+            <!-- 左侧分类和金额列表 -->
+            <VBox spacing="10" styleClass="classification-box" style="-fx-pref-width: 350px;">
+                <!-- 总支出 -->
+                <Label text="Total Expenditure: ¥0.00"
+                       fx:id="totalExpenseLabel"
+                       styleClass="label-section"/>
+
+                <!-- 双列式列表容器 -->
+                <HBox spacing="10" alignment="CENTER">
+                    <!-- 分类类型列表 -->
+                    <ListView fx:id="categoryTypeList"
+                              style="-fx-font-size: 14px; -fx-pref-width: 150px;"
+                              VBox.vgrow="ALWAYS">
+                        <placeholder>
+                            <Label text="Income Type"/>
+                        </placeholder>
+                    </ListView>
+
+                    <!-- 金额列表 -->
+                    <ListView fx:id="categoryAmountList"
+                              style="-fx-font-size: 14px; -fx-pref-width: 150px;"
+                              VBox.vgrow="ALWAYS">
+                        <placeholder>
+                            <Label text="Current Quantity"/>
+                        </placeholder>
+                    </ListView>
+                </HBox>
+            </VBox>
+
+            <!-- 右侧图表区域 -->
+            <VBox spacing="10" styleClass="classification-box" style="-fx-pref-width: 450px;">
+                <PieChart fx:id="expenditurePieChart"
+                          title="支出分类占比"
+                          style="-fx-legend-visible: false;">
+                    <labelLineLength>10</labelLineLength>
+                    <labelsVisible>true</labelsVisible>
+                </PieChart>
+            </VBox>
+        </HBox>
+
+        <!-- 新增AI分析按钮 -->
+        <HBox alignment="CENTER" spacing="20" AnchorPane.bottomAnchor="20">
+            <Button text="AI支出建议"
+                    styleClass="button-primary"
+                    onAction="#handleAnalyzeButtonClick"/>
+            <Label fx:id="analysisResultLabel" style="-fx-font-size: 14px; -fx-text-fill: #666"/>
+        </HBox>
+    </VBox>
 </AnchorPane>

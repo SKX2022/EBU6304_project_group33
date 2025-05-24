@@ -2,8 +2,10 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.finance.controller.IncomeAnalysisController"
             stylesheets="@../css/style.css">
 
@@ -12,10 +14,36 @@
     </top>
 
     <center>
-        <VBox alignment="CENTER" spacing="30" style="-fx-padding: 50;">
-            <Label text="📊 Income Analysis" styleClass="income-title"/>
-            <Label text="此页面正在开发中..." styleClass="income-subtitle"/>
-            <Label text="敬请期待更多功能！" style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"/>
+        <VBox spacing="20" styleClass="income-analysis-container" style="-fx-padding: 30;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Total Income: " styleClass="total-income-label"/>
+                <Label fx:id="totalIncomeLabel" text="¥0.00" styleClass="total-income-amount"/>
+            </HBox>
+
+            <HBox spacing="40" alignment="TOP_LEFT">
+                <VBox spacing="15" style="-fx-padding: 0 40 0 0;">
+                    <TableView fx:id="incomeTable" prefHeight="300" prefWidth="400" styleClass="income-table">
+                        <columns>
+                            <TableColumn text="Income Type" prefWidth="200" fx:id="typeColumn"/>
+                            <TableColumn text="Amount" prefWidth="200" fx:id="amountColumn"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+
+                <VBox spacing="15" alignment="CENTER">
+                    <PieChart fx:id="incomePieChart" legendVisible="true"
+                              styleClass="income-pie-chart" prefWidth="400" prefHeight="300"/>
+                </VBox>
+            </HBox>
         </VBox>
     </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 20;">
+            <Button fx:id="analyzeButton" text="AI Income Analysis"
+                    onAction="#showIncomeAnalysisPopup"
+                    styleClass="ai-analysis-button"/>
+        </HBox>
+    </bottom>
 </BorderPane>
+

@@ -5,8 +5,10 @@ import com.finance.model.User;
 import com.finance.session.Session;
 import com.finance.utils.SceneSwitcher;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class AddExpenseController {
 
@@ -39,11 +41,24 @@ public class AddExpenseController {
             errorLabel.setVisible(true);
             return;
         }
-        SceneSwitcher.switchScene("/view/Home.fxml");   // 保存成功返回主页
+
+        // 显示保存成功提示
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("成功");
+        alert.setHeaderText(null);
+        alert.setContentText("支出分类 \"" + name + "\" 已成功添加！");
+        alert.showAndWait();
+
+        // 关闭当前窗口
+        Stage stage = (Stage) categoryField.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
     private void handleCancel() {
-        SceneSwitcher.switchScene("/view/Home.fxml");
+        // 关闭当前窗口
+        Stage stage = (Stage) categoryField.getScene().getWindow();
+        stage.close();
     }
 }
+

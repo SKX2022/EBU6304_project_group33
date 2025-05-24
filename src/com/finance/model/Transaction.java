@@ -9,6 +9,7 @@ public class Transaction {
     private double amount;
     private String date;
     private User user;  // 关联的用户对象
+    private String project; // 备注信息
 
     // 使用 @JsonCreator 和 @JsonProperty 注解
     @JsonCreator
@@ -16,12 +17,19 @@ public class Transaction {
                        @JsonProperty("category") String category,
                        @JsonProperty("amount") double amount,
                        @JsonProperty("date") String date,
-                       @JsonProperty("user") User user) {
+                       @JsonProperty("user") User user,
+                       @JsonProperty("project") String project) {
         this.type = type;
         this.category = category;
         this.amount = amount;
         this.date = date;
         this.user = user;
+        this.project = project != null ? project : ""; // 确保备注不为null
+    }
+
+    // 兼容旧版本的构造函数，不带备注参数
+    public Transaction(String type, String category, double amount, String date, User user) {
+        this(type, category, amount, date, user, "");
     }
 
     // Getter 和 Setter 方法
@@ -64,4 +72,14 @@ public class Transaction {
     public void setUser(User user) {
         this.user = user;
     }
+
+    // 新增备注的getter和setter方法
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
 }
+
