@@ -17,8 +17,15 @@
 
     <HBox spacing="12" alignment="CENTER">
         <Button text="Save"   onAction="#handleSave"   styleClass="button-primary"/>
+        <Button text="AI Smart Create" onAction="#handleAiSuggest" styleClass="button-primary"/>
         <Button text="Cancel" onAction="#handleCancel" styleClass="button-primary"/>
     </HBox>
 
     <Label fx:id="errorLabel" textFill="red" visible="false"/>
+    <ListView fx:id="similarCategoriesListView" visible="false" maxWidth="300" maxHeight="150" />
+    <HBox fx:id="confirmationBox" spacing="12" alignment="CENTER" visible="false">
+        <Button text="Use Existing" onAction="#useExistingCategory" styleClass="button-primary"/>
+        <Button text="Create New" onAction="#createNewCategory" styleClass="button-primary"/>
+    </HBox>
 </VBox>
+

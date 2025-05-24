@@ -6,7 +6,10 @@ import com.finance.model.Category;
 import com.finance.model.ExcelImporter;
 import com.finance.model.Transaction;
 import com.finance.model.User;
+import com.finance.service.LlmService; // 添加LlmService的导入
 import com.finance.session.Session;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
@@ -32,7 +35,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class FlowController {
@@ -42,15 +45,11 @@ public class FlowController {
     @FXML
     private ComboBox<Category> categoryComboBox;
 
-
     @FXML
     private DatePicker startDatePicker;
 
     @FXML
     private DatePicker endDatePicker;
-
-    @FXML
-    private Button addButton;
 
     @FXML
     private Button deleteButton;
@@ -74,11 +73,9 @@ public class FlowController {
     private TableColumn<Transaction, Double> amountColumn;
 
     @FXML
-    private ComboBox<String> typeComboBox;
+    private Button aiSmartAddButton;
 
-
-
-    private ObservableList<Transaction> transactionsData = FXCollections.observableArrayList();
+    private final ObservableList<Transaction> transactionsData = FXCollections.observableArrayList();
     private ComboBox<Category> dialogCategoryField;
     private DatePicker dialogDatePickerField;
 
@@ -87,36 +84,27 @@ public class FlowController {
         User currentUser = Session.getCurrentUser();
         if (currentUser == null) return;
 
-        TransactionManager transactionManager = new TransactionManager(currentUser);
         CategoryManager categoryManager = new CategoryManager(currentUser);
-        LocalDate now = LocalDate.now();
         transactionsTable.setItems(transactionsData);
         categoryComboBox.setOnAction(event -> applyFilters(new ActionEvent()));
         filterComboBox.setOnAction(this::applyFilters);
         startDatePicker.setOnAction(this::applyFilters);
         endDatePicker.setOnAction(this::applyFilters);
-        // 设置筛选条件
+
         filterComboBox.getItems().addAll("All", "Income", "Expenditure");
         filterComboBox.getSelectionModel().select(0);
         refreshTransactions();
         List<Category> categories = categoryManager.getCategories();
         categories.add(0, new Category("All", "ALL"));
         ObservableList<Category> categoryList = FXCollections.observableArrayList(categories);
-        // 监听筛选器值变化
-        filterComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
-            System.out.println("筛选器值变化: " + newVal);
-            applyFilters(new ActionEvent()); // 触发过滤
-        });
 
-        // 监听交易数据变化
-        transactionsData.addListener((Observable observable) -> {
-            System.out.println("交易数据更新，当前数量: " + transactionsData.size());
-        });
-        // 设置数据源
+        filterComboBox.valueProperty().addListener((obs, oldVal, newVal) -> applyFilters(new ActionEvent()));
+
+        transactionsData.addListener((Observable observable) -> {});
+
         categoryComboBox.setItems(categoryList);
 
-        // 设置显示转换器
-        categoryComboBox.setConverter(new StringConverter<Category>() {
+        categoryComboBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(Category category) {
                 return category != null ? category.getName() : "";
@@ -131,11 +119,9 @@ public class FlowController {
             }
         });
 
-        // 设置默认选中项
         categoryComboBox.getSelectionModel().selectFirst();
 
-        // 设置日期选择器格式
-        startDatePicker.setConverter(new StringConverter<LocalDate>() {
+        startDatePicker.setConverter(new StringConverter<>() {
             private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             @Override
@@ -157,7 +143,7 @@ public class FlowController {
             }
         });
 
-        endDatePicker.setConverter(new StringConverter<LocalDate>() {
+        endDatePicker.setConverter(new StringConverter<>() {
             private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             @Override
@@ -179,42 +165,29 @@ public class FlowController {
             }
         });
 
-        // 设置表格列
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         projectColumn.setCellValueFactory(new PropertyValueFactory<>("project"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
 
-        // 加载数据
         refreshTransactions();
         transactionsTable.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldSelection, newSelection) -> {
-                    deleteButton.setDisable(newSelection == null);
-                });
+                (obs, oldSelection, newSelection) -> deleteButton.setDisable(newSelection == null));
+
+        aiSmartAddButton.setOnAction(event -> handleAiSmartAddTransaction());
     }
 
     @FXML
-    /*private void applyFilters(ActionEvent event) {
-        refreshTransactions();
-    }*/
-
     private void refreshTransactions() {
-        // 获取筛选条件
-        String filterType = filterComboBox.getSelectionModel().getSelectedItem();
-        Category selectedCategory = categoryComboBox.getSelectionModel().getSelectedItem();
-        LocalDate startDate = startDatePicker.getValue();
-        LocalDate endDate = endDatePicker.getValue();
-
-        // 加载交易数据
         TransactionManager transactionManager = new TransactionManager(Session.getCurrentUser());
-        List<Transaction> filteredTransactions = transactionManager.getAllTransactions(
-        );
+        List<Transaction> filteredTransactions = transactionManager.getAllTransactions();
 
         transactionsData.setAll(filteredTransactions);
         transactionsTable.refresh();
-        applyFilters(new ActionEvent()); // 显式触发过滤
+        applyFilters(new ActionEvent());
     }
+
     @FXML
     private void importTransactions(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -238,30 +211,26 @@ public class FlowController {
                     refreshTransactions();
                 }
             } catch (Exception e) {
-                showErrorDialog("系统错误", "导入过程中发生未预期异常:\n" + e.toString());
+                showErrorDialog("系统错误", "导入过程中发生未预期异常:\n" + e);
             }
         }
-
     }
 
-    /**
-     * 显示信息对话框
-     * @param title 对话框标题
-     * @param message 提示信息
-     */
     private void showInfoDialog(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
 
-        // 应用CSS样式
-        alert.getDialogPane().getStylesheets().add(
-            getClass().getResource("/css/style.css").toExternalForm()
-        );
-        alert.getDialogPane().getStyleClass().add("login-card");
+        try {
+            alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/css/style.css").toExternalForm()
+            );
+            alert.getDialogPane().getStyleClass().add("login-card");
+        } catch (NullPointerException e) {
+            System.err.println("无法加载CSS样式: " + e.getMessage());
+        }
 
-        // 添加确认按钮样式
         ButtonType okButton = new ButtonType("确定", ButtonBar.ButtonData.OK_DONE);
         alert.getButtonTypes().setAll(okButton);
 
@@ -271,59 +240,51 @@ public class FlowController {
         alert.showAndWait();
     }
 
-
-
     @FXML
     private void applyFilters(ActionEvent event) {
         TransactionManager tm = new TransactionManager(Session.getCurrentUser());
         CategoryManager cm = new CategoryManager(Session.getCurrentUser());
         List<Transaction> rawData = tm.getAllTransactions();
-        List<Category> data = cm.getCategories();
         LocalDate startDate = startDatePicker.getValue();
         LocalDate endDate = endDatePicker.getValue();
 
-        // 正确获取分类名称（来自 categoryComboBox 的选中项）
-        Category selectedCategory = categoryComboBox.getSelectionModel().getSelectedItem();
+        Category selectedCategoryObj = categoryComboBox.getSelectionModel().getSelectedItem();
 
         transactionsData.setAll(rawData.stream()
                 .filter(t -> {
                     LocalDate tradeDate = parseDate(t.getDate());
+                    if (tradeDate == null) return false;
 
-                    // 修正后的类型匹配逻辑
                     boolean typeMatch = switch (filterComboBox.getValue()) {
                         case "All" -> true;
                         case "Income" -> "收入".equals(t.getType());
                         case "Expenditure" -> "支出".equals(t.getType());
-                        default -> false; // 处理未知类型
+                        default -> false;
                     };
 
-                    // 增强型日期匹配（处理空值和格式问题）
                     boolean dateMatch = true;
-
                     if (startDate != null) {
                         dateMatch = !tradeDate.isBefore(startDate);
                     }
                     if (endDate != null) {
-                        dateMatch = dateMatch  && !tradeDate.isAfter(endDate);
+                        dateMatch = dateMatch && !tradeDate.isAfter(endDate);
                     }
 
                     boolean categoryMatch = true;
-                    if (selectedCategory != null && !"ALL".equals(selectedCategory.getName())) {
-                        // 直接比较字符串（假设 category 存储的是分类类型名称）
-                        categoryMatch = selectedCategory.getName().equals(t.getCategory());
+                    if (selectedCategoryObj != null && !"ALL".equals(selectedCategoryObj.getName())) {
+                        categoryMatch = selectedCategoryObj.getName().equals(t.getCategory());
                     }
-                    return typeMatch && dateMatch && categoryMatch ;
+                    return typeMatch && dateMatch && categoryMatch;
                 })
                 .collect(Collectors.toList()));
         transactionsTable.refresh();
     }
 
-    // 辅助方法：安全解析日期
     private LocalDate parseDate(String dateStr) {
         try {
             return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         } catch (DateTimeParseException e) {
-            // 处理解析异常（例如记录日志或返回默认值）
+            System.err.println("日期解析错误: " + dateStr + " - " + e.getMessage());
             return null;
         }
     }
@@ -333,12 +294,14 @@ public class FlowController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
-
-        // 应用CSS样式
-        alert.getDialogPane().getStylesheets().add(
-            getClass().getResource("/css/style.css").toExternalForm()
-        );
-        alert.getDialogPane().getStyleClass().add("login-card");
+        try {
+            alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/css/style.css").toExternalForm()
+            );
+            alert.getDialogPane().getStyleClass().add("login-card");
+        } catch (NullPointerException e) {
+            System.err.println("无法加载CSS样式: " + e.getMessage());
+        }
 
         ButtonType yesButton = new ButtonType("确定", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButton = new ButtonType("取消", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -371,12 +334,14 @@ public class FlowController {
         dialog.setHeaderText(null);
         dialog.getDialogPane().setContent(createDialogContent());
 
-        // 应用CSS样式
-        dialog.getDialogPane().getStylesheets().add(
-            getClass().getResource("/css/style.css").toExternalForm()
-        );
-        dialog.getDialogPane().getStyleClass().add("login-card");
-
+        try {
+            dialog.getDialogPane().getStylesheets().add(
+                getClass().getResource("/css/style.css").toExternalForm()
+            );
+            dialog.getDialogPane().getStyleClass().add("login-card");
+        } catch (NullPointerException e) {
+            System.err.println("无法加载CSS样式: " + e.getMessage());
+        }
         return dialog;
     }
 
@@ -387,20 +352,16 @@ public class FlowController {
         grid.setPadding(new Insets(20, 20, 20, 20));
         grid.getStyleClass().add("classification-box");
 
-        // 创建交易类型下拉框（收入/支出）
-        ComboBox<String> typeComboBox = new ComboBox<>();
-        typeComboBox.getItems().addAll("收入", "支出");
-        typeComboBox.setPromptText("选择类型");
-        typeComboBox.setId("comboBox_type");
-        typeComboBox.getStyleClass().add("input-field");
-        typeComboBox.setPrefWidth(250);
+        ComboBox<String> typeComboBoxLocal = new ComboBox<>();
+        typeComboBoxLocal.getItems().addAll("收入", "支出");
+        typeComboBoxLocal.setPromptText("选择类型");
+        typeComboBoxLocal.setId("comboBox_type");
+        typeComboBoxLocal.getStyleClass().add("input-field");
+        typeComboBoxLocal.setPrefWidth(250);
 
-        // 创建分类下拉框
         dialogCategoryField = new ComboBox<>();
-        // 从CategoryManager获取分类
         CategoryManager categoryManager = new CategoryManager(Session.getCurrentUser());
         List<Category> categories = categoryManager.getCategories();
-        // 排除"All"分类
         ObservableList<Category> categoryList = FXCollections.observableArrayList(
                 categories.stream()
                         .filter(c -> !"ALL".equals(c.getType()))
@@ -410,7 +371,7 @@ public class FlowController {
         dialogCategoryField.setPromptText("选择分类");
         dialogCategoryField.getStyleClass().add("input-field");
         dialogCategoryField.setPrefWidth(250);
-        dialogCategoryField.setConverter(new StringConverter<Category>() {
+        dialogCategoryField.setConverter(new StringConverter<>() {
             @Override
             public String toString(Category category) {
                 return category != null ? category.getName() : "";
@@ -425,20 +386,18 @@ public class FlowController {
             }
         });
 
-        // 创建金额输入框
         TextField amountField = new TextField();
         amountField.setPromptText("请输入金额");
         amountField.setId("textField_amount");
         amountField.getStyleClass().add("input-field");
         amountField.setPrefWidth(250);
 
-        // 创建日期选择器
         dialogDatePickerField = new DatePicker(LocalDate.now());
         dialogDatePickerField.setPromptText("选择日期");
         dialogDatePickerField.setId("datePicker_date");
         dialogDatePickerField.getStyleClass().add("input-field");
         dialogDatePickerField.setPrefWidth(250);
-        dialogDatePickerField.setConverter(new StringConverter<LocalDate>() {
+        dialogDatePickerField.setConverter(new StringConverter<>() {
             private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             @Override
@@ -454,14 +413,12 @@ public class FlowController {
             }
         });
 
-        // 创建备注输入框
         TextField descriptionField = new TextField();
         descriptionField.setPromptText("请输入备注说明");
         descriptionField.setId("textField_description");
         descriptionField.getStyleClass().add("input-field");
         descriptionField.setPrefWidth(250);
 
-        // 创建标签并设置样式
         Label typeLabel = new Label("交易类型:");
         Label categoryLabel = new Label("分类:");
         Label amountLabel = new Label("金额:");
@@ -474,16 +431,14 @@ public class FlowController {
         dateLabel.getStyleClass().add("label-section");
         descriptionLabel.getStyleClass().add("label-section");
 
-        // 设置标签样式
         typeLabel.setStyle("-fx-font-size: 14px;");
         categoryLabel.setStyle("-fx-font-size: 14px;");
         amountLabel.setStyle("-fx-font-size: 14px;");
         dateLabel.setStyle("-fx-font-size: 14px;");
         descriptionLabel.setStyle("-fx-font-size: 14px;");
 
-        // 布局配置
         grid.add(typeLabel, 0, 0);
-        grid.add(typeComboBox, 1, 0);
+        grid.add(typeComboBoxLocal, 1, 0);
 
         grid.add(categoryLabel, 0, 1);
         grid.add(dialogCategoryField, 1, 1);
@@ -501,19 +456,16 @@ public class FlowController {
     }
 
     private void configureDialogContent(TextInputDialog dialog) {
-        // 设置按钮类型
         ButtonType confirmButtonType = createButtonType("确定", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButtonType = createButtonType("取消", ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().setAll(confirmButtonType, cancelButtonType);
 
-        // 设置按钮样式
         Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
         Button cancelButton = (Button) dialog.getDialogPane().lookupButton(cancelButtonType);
 
         confirmButton.getStyleClass().add("button-blue");
         cancelButton.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #334155;");
 
-        // 添加验证逻辑
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == null) return null;
 
@@ -530,34 +482,29 @@ public class FlowController {
     }
 
     private ButtonType createButtonType(String text, ButtonBar.ButtonData data) {
-        ButtonType type = new ButtonType(text, data);
-        return type;
+        return new ButtonType(text, data);
     }
 
     private Object processValidInput(TextInputDialog dialog) {
         GridPane grid = (GridPane) dialog.getDialogPane().getContent();
-        ComboBox<String> typeComboBox = (ComboBox<String>) grid.lookup("#comboBox_type");
+        ComboBox<String> typeComboBoxLocal = (ComboBox<String>) grid.lookup("#comboBox_type");
         TextField amountField = (TextField) grid.lookup("#textField_amount");
         TextField descriptionField = (TextField) grid.lookup("#textField_description");
 
-        // 获取已经在类中持有引用的控件
         ComboBox<Category> categoryField = dialogCategoryField;
         DatePicker datePicker = dialogDatePickerField;
 
-        // 类型验证
-        String type = typeComboBox.getValue();
+        String type = typeComboBoxLocal.getValue();
         if (type == null || !List.of("收入", "支出").contains(type)) {
             throw new IllegalArgumentException("请选择有效的交易类型（收入/支出）");
         }
 
-        // 分类验证
         Category selectedCategory = categoryField.getSelectionModel().getSelectedItem();
         if (selectedCategory == null) {
             throw new IllegalArgumentException("请选择有效分类");
         }
         String category = selectedCategory.getName();
 
-        // 金额验证
         BigDecimal amount;
         try {
             amount = new BigDecimal(amountField.getText().trim())
@@ -569,47 +516,39 @@ public class FlowController {
             throw new IllegalArgumentException("请输入有效的金额数字");
         }
 
-        // 日期处理
         LocalDate selectedDate = datePicker.getValue();
         LocalDateTime dateTime;
         if (selectedDate == null) {
-            // 如果未选择日期，则��用当前系统时间
             dateTime = LocalDateTime.now();
         } else {
-            // 如果已选择日期，则使用所选日期和当前时间
             dateTime = LocalDateTime.of(selectedDate, LocalDateTime.now().toLocalTime());
         }
         String formattedDate = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        // 获取备注信息
         String description = descriptionField.getText().trim();
 
-        // 创建交易记录并保存
         TransactionManager transactionManager = new TransactionManager(Session.getCurrentUser());
         boolean success = transactionManager.addTransaction(
                 type,
                 category,
                 amount.doubleValue(),
                 formattedDate,
-                description);  // 传递备注信息
+                description);
 
         if (!success) {
             throw new IllegalStateException("添加交易记录失败");
         }
 
-        // 创建返回的交易对象
         Transaction newTransaction = new Transaction(
                 type,
                 category,
                 amount.doubleValue(),
                 formattedDate,
                 Session.getCurrentUser(),
-                description);  // 传递备注信息
+                description);
 
-        // 更新UI
         updateTransactionList(newTransaction);
 
-        // 成功提示
         Platform.runLater(() -> showInfoDialog("操作成功", "交易记录已成功添加"));
 
         return newTransaction;
@@ -624,21 +563,23 @@ public class FlowController {
     }
 
     private void clearFormFields() {
-        // 清空字段逻辑（需根据实际组件ID实现）
+        // 清空字段逻辑
     }
 
-    // 优化后的错误提示方法
     private void showErrorDialog(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
 
-        // 应用CSS样式
-        alert.getDialogPane().getStylesheets().add(
-            getClass().getResource("/css/style.css").toExternalForm()
-        );
-        alert.getDialogPane().getStyleClass().add("login-card");
+        try {
+            alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/css/style.css").toExternalForm()
+            );
+            alert.getDialogPane().getStyleClass().add("login-card");
+        } catch (NullPointerException e) {
+            System.err.println("无法加载CSS样式: " + e.getMessage());
+        }
 
         ButtonType okButton = new ButtonType("确定", ButtonBar.ButtonData.OK_DONE);
         alert.getButtonTypes().setAll(okButton);
@@ -647,7 +588,7 @@ public class FlowController {
         okButtonNode.getStyleClass().add("button-blue");
 
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        alert.initOwner(null);  // 确保无父窗口时正常显示
+        alert.initOwner(null);
         alert.showAndWait();
     }
 
@@ -662,12 +603,9 @@ public class FlowController {
         boolean confirmed = showConfirmDialog("确认删除", "确定要删除所选交易记录吗？此操作无法撤销。");
         if (confirmed) {
             TransactionManager transactionManager = new TransactionManager(Session.getCurrentUser());
-
-            // 调用TransactionManager删除记录
             boolean success = transactionManager.deleteTransaction(selectedTransaction);
 
             if (success) {
-                // 从UI列表中移除
                 transactionsData.remove(selectedTransaction);
                 transactionsTable.refresh();
                 showInfoDialog("操作成功", "交易记录已成功删除");
@@ -677,4 +615,206 @@ public class FlowController {
         }
     }
 
+    private void handleAiSmartAddTransaction() {
+        try {
+            TextInputDialog dialog = createAiInputDialog();
+            dialog.showAndWait();
+        } catch (Exception e) {
+            showErrorDialog("系统错误", "AI智能录入初始化失败：" + e.getMessage());
+        }
+    }
+
+    private TextInputDialog createAiInputDialog() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("AI智能录入交易");
+        dialog.setHeaderText(null);
+        dialog.setContentText("请描述您的交易（例如：昨天在餐厅吃饭花了88元）：");
+
+        try {
+            dialog.getDialogPane().getStylesheets().add(
+                getClass().getResource("/css/style.css").toExternalForm()
+            );
+            dialog.getDialogPane().getStyleClass().add("login-card");
+        } catch (NullPointerException e) {
+            System.err.println("无法加载CSS样式: " + e.getMessage());
+        }
+
+        ButtonType confirmButtonType = new ButtonType("识别并添加", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("取消", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().setAll(confirmButtonType, cancelButtonType);
+
+        Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+        Button cancelButton = (Button) dialog.getDialogPane().lookupButton(cancelButtonType);
+
+        confirmButton.getStyleClass().add("button-blue");
+        cancelButton.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #334155;");
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == null) return null;
+            if (dialogButton.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+                String userInput = dialog.getEditor().getText().trim();
+                if (userInput.isEmpty()) {
+                    showErrorDialog("输入错误", "请输入交易描述");
+                    return null;
+                }
+                processAiTransaction(userInput);
+                return userInput;
+            }
+            return null;
+        });
+
+        return dialog;
+    }
+
+    private void processAiTransaction(String userDescription) {
+        showInfoDialog("处理中", "正在使用AI分析您的交易，请稍候...");
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                String prompt = "你是一个财务分析助手。请从用户输入中提取以下信息，格式为JSON：\n" +
+                        "1. 交易类型(type)：'收入'或'支出'\n" +
+                        "2. 分类(category)：例如'餐饮'、'工资'等\n" +
+                        "3. 金额(amount)：数字\n" +
+                        "4. 日期(date)：如果有明确日期，则提取；如果是'昨天'，转换为具体日期；如果没有提及日期，使用当天\n" +
+                        "5. 备注(note)：交易的其他描述信息\n\n" +
+                        "用户输入: \"" + userDescription + "\"\n" +
+                        "只返回JSON格式，不要有其他解释。";
+
+                LlmService llmService = new LlmService(prompt);
+                llmService.callLlmApi();
+                String result = llmService.getAnswer().trim();
+
+                Platform.runLater(() -> {
+                    try {
+                        ObjectMapper mapper = new ObjectMapper();
+                        JsonNode rootNode = mapper.readTree(result);
+
+                        String type = rootNode.path("type").asText();
+                        String category = rootNode.path("category").asText();
+                        double amount = rootNode.path("amount").asDouble();
+                        String dateStr = rootNode.path("date").asText();
+                        String note = rootNode.path("note").asText();
+
+                        LocalDateTime transactionDateTime;
+                        try {
+                            transactionDateTime = LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                        } catch (Exception e) {
+                            try {
+                                LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                transactionDateTime = LocalDateTime.of(date, LocalDateTime.now().toLocalTime());
+                            } catch (Exception e2) {
+                                transactionDateTime = LocalDateTime.now();
+                            }
+                        }
+                        String formattedDate = transactionDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+                        CategoryManager categoryManager = new CategoryManager(Session.getCurrentUser());
+                        boolean categoryExists = categoryManager.getCategories().stream()
+                                                .anyMatch(c -> c.getType().equals(type) && c.getName().equals(category));
+
+                        if (!categoryExists) {
+                            boolean createCategory = showConfirmDialog(
+                                "创建新分类",
+                                "系统未找到分类 \"" + category + "\"，是否创建此分类？"
+                            );
+
+                            if (createCategory) {
+                                categoryManager.addCategory(type, category);
+                                showInfoDialog("分类创建成功", "已创建新分类：" + category);
+                            } else {
+                                showCategorySelectionDialog(type, category, amount, formattedDate, note);
+                                return;
+                            }
+                        }
+
+                        TransactionManager transactionManager = new TransactionManager(Session.getCurrentUser());
+                        boolean success = transactionManager.addTransaction(type, category, amount, formattedDate, note);
+
+                        if (success) {
+                            Transaction newTransaction = new Transaction(
+                                type, category, amount, formattedDate, Session.getCurrentUser(), note
+                            );
+                            updateTransactionList(newTransaction);
+                            showInfoDialog("交易添加成功",
+                                          "已添加" + type + "记录：\n" +
+                                          "分类: " + category + "\n" +
+                                          "金额: " + amount + "\n" +
+                                          "日期: " + formattedDate.substring(0, 10) + "\n" +
+                                          "备注: " + note);
+                            refreshTransactions();
+                        } else {
+                            showErrorDialog("交易添加失败", "无法添加交易记录，请重试");
+                        }
+
+                    } catch (Exception e) {
+                        showErrorDialog("解析错误", "无法解析AI返回的结果: " + e.getMessage() + "\n原始返回: " + result);
+                    }
+                });
+            } catch (IOException | InterruptedException | LlmService.LlmServiceException e) {
+                Platform.runLater(() -> showErrorDialog("AI服务错误", "调用AI服务失败: " + e.getMessage()));
+            }
+        });
+    }
+
+    private void showCategorySelectionDialog(String type, String suggestedCategory, double amount, String date, String note) {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("选择分类");
+        dialog.setHeaderText("请为您的" + type + "交易选择一个分类");
+
+        CategoryManager categoryManager = new CategoryManager(Session.getCurrentUser());
+        List<Category> categories = categoryManager.getCategories().stream()
+                                    .filter(c -> c.getType().equals(type))
+                                    .toList();
+
+        ComboBox<String> categoryCombo = new ComboBox<>();
+        categoryCombo.getItems().addAll(
+            categories.stream().map(Category::getName).toList()
+        );
+
+        if (!categoryCombo.getItems().isEmpty()) {
+            categoryCombo.getSelectionModel().select(0);
+        }
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        grid.add(new Label("选择分类:"), 0, 0);
+        grid.add(categoryCombo, 1, 0);
+
+        dialog.getDialogPane().setContent(grid);
+
+        ButtonType confirmButtonType = new ButtonType("确认", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == confirmButtonType) {
+                return categoryCombo.getValue();
+            }
+            return null;
+        });
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(selectedCategory -> {
+            TransactionManager transactionManager = new TransactionManager(Session.getCurrentUser());
+            boolean success = transactionManager.addTransaction(type, selectedCategory, amount, date, note);
+
+            if (success) {
+                Transaction newTransaction = new Transaction(
+                    type, selectedCategory, amount, date, Session.getCurrentUser(), note
+                );
+                updateTransactionList(newTransaction);
+                showInfoDialog("交易添加成功",
+                              "已添加" + type + "记录：\n" +
+                              "分类: " + selectedCategory + "\n" +
+                              "金额: " + amount + "\n" +
+                              "日期: " + date.substring(0, 10) + "\n" +
+                              "备注: " + note);
+                refreshTransactions();
+            } else {
+                showErrorDialog("交易添加失败", "无法添加交易记录，请重试");
+            }
+        });
+    }
 }

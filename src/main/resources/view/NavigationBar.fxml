@@ -16,5 +16,6 @@
     <Button fx:id="revenueButton" onAction="#goRevenue" styleClass="nav-button" text="Revenue" />
     <Button fx:id="expenditureAnalysisButton" onAction="#goExpenditureAnalysis" styleClass="nav-button" text="Expenditure Analysis" />
     <Button fx:id="graphButton" onAction="#goGraph" styleClass="nav-button" text="Graph" />
-
+    <Button fx:id="localFinanceSettingsButton" onAction="#goLocalFinanceSettings" styleClass="nav-button" text="本地财务环境" />
 </HBox>
+

@@ -82,6 +82,7 @@
                         onAction="#handleAddTransaction"
                         styleClass="button-blue"/>
 
+                <Button fx:id="aiSmartAddButton" text="AI智能录入" styleClass="button-primary"/>
                 <Region HBox.hgrow="ALWAYS" />
 
                 <Button fx:id="previousButton" text="上一页" styleClass="pagination-button"

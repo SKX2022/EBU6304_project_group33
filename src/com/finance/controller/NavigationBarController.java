@@ -28,4 +28,9 @@ public class NavigationBarController {
     public void goGraph(ActionEvent event) {
         SceneSwitcher.switchScene("/view/Graph.fxml");
     }
+
+    public void goLocalFinanceSettings(ActionEvent event) {
+        SceneSwitcher.switchScene("/view/LocalFinanceSettings.fxml");
+    }
 }
+
