@@ -9,8 +9,8 @@
 /* 顶部导航栏 */
 .navigation-bar {
     -fx-background-color: #ffffff;
-    -fx-padding: 20 30;
-    -fx-spacing: 60;
+    -fx-padding: 10 20; /* 减小上下内边距 */
+    -fx-spacing: 10;    /* 进一步减小按钮之间的间距 */
     -fx-alignment: CENTER_LEFT;
     -fx-border-color: #e0e0e0;
     -fx-border-width: 0 0 1 0;
@@ -26,8 +26,9 @@
 .navigation-bar .button {
     -fx-background-color: transparent;
     -fx-text-fill: #2c3e50;
-    -fx-font-size: 16px; /* 将字体大小从20px调整为16px */
-    -fx-font-weight: bold;
+    -fx-font-size: 13px; /* 进一步减小导航按钮字体大小 */
+    -fx-font-weight: normal; /* 确保字体不是粗体以节省空间 */
+    -fx-padding: 4 8; /* 减小按钮自身的内边距 */
     -fx-cursor: hand;
 }
 

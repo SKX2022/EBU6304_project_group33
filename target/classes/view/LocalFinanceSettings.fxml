@@ -9,37 +9,35 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.finance.controller.LocalFinanceSettingsController"
-            prefHeight="600.0" prefWidth="1000.0"
-            stylesheets="@../css/style.css">
+            prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/style.css">
 
     <top>
         <fx:include source="NavigationBar.fxml" />
     </top>
 
     <center>
-        <VBox spacing="20" alignment="TOP_CENTER">
+        <VBox spacing="15" alignment="TOP_CENTER">
             <padding>
-                <Insets top="30" right="50" bottom="30" left="50" />
+                <Insets top="20" right="40" bottom="20" left="40" />
             </padding>
 
             <Text text="中国本地财务环境设置" styleClass="heading">
                 <font>
-                    <Font name="System Bold" size="24.0" />
+                    <Font name="System Bold" size="22.0" />
                 </font>
             </Text>
 
             <Separator />
 
-            <HBox spacing="20" alignment="CENTER">
-                <VBox spacing="15" alignment="CENTER" styleClass="settings-card" HBox.hgrow="ALWAYS">
+            <HBox spacing="30" alignment="TOP_CENTER">
+                <!-- 左侧：手动定制预算设置 -->
+                <VBox spacing="15" alignment="CENTER_LEFT" styleClass="settings-card" HBox.hgrow="ALWAYS" prefWidth="400">
                     <padding>
-                        <Insets top="20" right="20" bottom="20" left="20" />
+                        <Insets top="15" right="15" bottom="15" left="15" />
                     </padding>
-
-                    <Label text="手动定制预算设置" styleClass="label-title" />
-
-                    <GridPane hgap="10" vgap="15">
-                        <Label text="设置年度预算:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                    <Label text="手动定制预算设置" styleClass="label-title" alignment="CENTER" maxWidth="Infinity"/>
+                    <GridPane hgap="10" vgap="12">
+                        <Label text="设置年度预算(元):" GridPane.rowIndex="0" GridPane.columnIndex="0" />
                         <TextField fx:id="yearlyBudgetField" promptText="例如：120000" GridPane.rowIndex="0" GridPane.columnIndex="1" />
 
                         <Label text="春节预算(元):" GridPane.rowIndex="1" GridPane.columnIndex="0" />
@@ -50,66 +48,100 @@
 
                         <Label text="紧急备用金(元):" GridPane.rowIndex="3" GridPane.columnIndex="0" />
                         <TextField fx:id="emergencyFundField" promptText="例如：10000" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                         <columnConstraints>
+                            <ColumnConstraints percentWidth="40"/>
+                            <ColumnConstraints percentWidth="60"/>
+                        </columnConstraints>
                     </GridPane>
+                    <Button text="保存手动设置" onAction="#handleManualSave" styleClass="button-primary" maxWidth="Infinity"/>
 
-                    <Button text="保存设置" onAction="#handleManualSave" styleClass="button-primary" />
+                    <Separator fx:id="monthlyBudgetSeparator" prefWidth="200.0" />
+                    <Label text="按月预算设置 (Monthly Budget Settings)" styleClass="label-section"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="选择月份 (Select Month):"/>
+                        <ComboBox fx:id="monthComboBox" prefWidth="120"/>
+                        <Label text="预算金额 (Budget Amount):"/>
+                        <TextField fx:id="monthlyBudgetField" prefWidth="100" promptText="例如: 8000"/>
+                        <Button fx:id="updateSelectedMonthBudgetInMemoryButton" text="更新此月份内存预算" onAction="#handleUpdateSelectedMonthBudgetInMemory"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 5 0 0 0;">
+                         <Label text="AI对选中月份的建议:" styleClass="label-info-sm"/>
+                         <Label fx:id="aiSuggestionForSelectedMonthLabel" text="-" styleClass="label-value-sm"/>
+                         <Button fx:id="applyAiToSelectedMonthButton" text="应用AI建议到此月份" onAction="#handleApplyAiToSelectedMonth" disable="true"/>
+                    </HBox>
                 </VBox>
 
-                <VBox spacing="15" alignment="CENTER" styleClass="settings-card" HBox.hgrow="ALWAYS">
+                <!-- 右侧：AI智能建议 -->
+                <VBox spacing="15" alignment="CENTER_LEFT" styleClass="settings-card" HBox.hgrow="ALWAYS" prefWidth="500">
                     <padding>
-                        <Insets top="20" right="20" bottom="20" left="20" />
+                        <Insets top="15" right="15" bottom="15" left="15" />
                     </padding>
+                    <Label text="AI智能预算助手" styleClass="label-title" alignment="CENTER" maxWidth="Infinity"/>
 
-                    <Label text="AI智能建议" styleClass="label-title" />
+                    <Label text="向AI描述您的预算调整需求或咨询：" styleClass="label-section"/>
+                    <TextArea fx:id="aiUserInputArea" wrapText="true" editable="true"
+                              prefRowCount="4" promptText="例如：我想提高双11的购物预算，请帮我分析并给出建议。" styleClass="text-area-input"/>
 
-                    <VBox spacing="10" alignment="CENTER_LEFT">
-                        <CheckBox fx:id="springFestivalCheck" text="考虑春节消费" selected="true" />
-                        <CheckBox fx:id="midAutumnCheck" text="考虑中秋节消费" selected="true" />
-                        <CheckBox fx:id="dragonBoatCheck" text="考虑端午节消费" />
-                        <CheckBox fx:id="seasonalCheck" text="考虑季节性消费分析" selected="true" />
-                        <CheckBox fx:id="regionalCheck" text="考虑地区消费差异" />
-                    </VBox>
+                    <Button text="发送给AI分析" onAction="#handleAiConversation" styleClass="button-primary" maxWidth="Infinity"/>
 
-                    <Button text="获取AI智能建议" onAction="#handleAiSuggest" styleClass="button-primary" />
+                    <Label text="AI的分析与建议：" styleClass="label-section"/>
+                    <TextArea fx:id="aiResponseArea" wrapText="true" editable="false"
+                              prefRowCount="6" promptText="AI的分析和建议将显示在这里..." styleClass="text-area-result"/>
                 </VBox>
             </HBox>
 
-            <TextArea fx:id="recommendationArea" wrapText="true" editable="false"
-                      prefRowCount="8" promptText="AI建议将显示在这里" styleClass="text-area-result" />
-
-            <HBox spacing="15" alignment="CENTER">
-                <Button text="应用AI建议" onAction="#applyAiSuggestion" styleClass="button-primary" />
-                <Button text="恢复默认设置" onAction="#resetSettings" styleClass="button-secondary" />
+            <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+                <Button text="应用AI建议到手动设置" onAction="#applyAiSuggestion" styleClass="button-primary" />
+                <Button text="恢复默认预算" onAction="#resetSettings" styleClass="button-secondary" />
             </HBox>
 
             <Separator />
 
-            <Text text="当前预算分析" styleClass="subtitle">
+            <Text text="当前预算概览" styleClass="subtitle">
                 <font>
-                    <Font size="18.0" />
+                    <Font size="16.0" />
                 </font>
             </Text>
 
-            <GridPane hgap="20" vgap="10" alignment="CENTER">
+            <GridPane hgap="20" vgap="8" alignment="CENTER" style="-fx-padding: 5 0;">
                 <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="150" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="100" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="150" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="100" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="160" halignment="RIGHT"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="120" halignment="LEFT"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="160" halignment="RIGHT"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="120" halignment="LEFT"/>
                 </columnConstraints>
 
-                <Label text="本月预算消耗:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="label-info" />
-                <Label fx:id="monthBudgetLabel" text="- -" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="label-value" />
+                <Label text="本月预算/已用:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="label-info" />
+                <Label fx:id="monthBudgetLabel" text="0.00 / 0.00" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="label-value" />
 
-                <Label text="本年预算消耗:" GridPane.rowIndex="0" GridPane.columnIndex="2" styleClass="label-info" />
-                <Label fx:id="yearBudgetLabel" text="- -" GridPane.rowIndex="0" GridPane.columnIndex="3" styleClass="label-value" />
+                <Label text="本年预算/已用:" GridPane.rowIndex="0" GridPane.columnIndex="2" styleClass="label-info" />
+                <Label fx:id="yearBudgetLabel" text="0.00 / 0.00" GridPane.rowIndex="0" GridPane.columnIndex="3" styleClass="label-value" />
 
-                <Label text="节假日预算剩余:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="label-info" />
-                <Label fx:id="festivalBudgetLabel" text="- -" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="label-value" />
+                <Label text="春节预算:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="label-info" />
+                <Label fx:id="springFestivalLabel" text="0.00" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="label-value" />
 
-                <Label text="预算健康状况:" GridPane.rowIndex="1" GridPane.columnIndex="2" styleClass="label-info" />
-                <Label fx:id="budgetHealthLabel" text="- -" GridPane.rowIndex="1" GridPane.columnIndex="3" styleClass="label-value" />
+                <Label text="其他节日预算:" GridPane.rowIndex="1" GridPane.columnIndex="2" styleClass="label-info" />
+                <Label fx:id="otherFestivalLabel" text="0.00" GridPane.rowIndex="1" GridPane.columnIndex="3" styleClass="label-value" />
+
+                <Label text="紧急备用金:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="label-info" />
+                <Label fx:id="emergencyFundLabel" text="0.00" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="label-value" />
             </GridPane>
+
+            <Separator />
+
+            <HBox spacing="15" alignment="CENTER">
+                <Button text="导出财务设置" onAction="#exportSettings" styleClass="button-secondary" />
+                <Button text="导入财务设置" onAction="#importSettings" styleClass="button-secondary" />
+            </HBox>
         </VBox>
     </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="10" styleClass="footer">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20" />
+            </padding>
+            <Label text="© 2025 中国本地财务管理系统 - Group 33" styleClass="footer-text" />
+        </HBox>
+    </bottom>
 </BorderPane>
