@@ -515,3 +515,214 @@
     -fx-border-radius: 4px;
     -fx-padding: 10px;
 }
+
+/* --- PieChart Styles --- */
+.pie-chart .chart-pie-label-line {
+    -fx-stroke: #888888;
+    -fx-stroke-width: 1px;
+}
+
+.pie-chart .chart-pie-label {
+    -fx-fill: #333333;
+    -fx-font-size: 11px; /* Overrides .income-pie-chart's 12px for labels specifically */
+}
+
+.pie-chart .chart-legend {
+    -fx-background-color: #f9f9f9;
+    -fx-padding: 5px;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+}
+
+.chart-pie { /* Affects individual slices of ALL pie charts */
+    -fx-border-color: white;
+    -fx-border-width: 1.5px; /* Slightly thicker for better separation */
+    -fx-cursor: hand;
+}
+
+.chart-pie:hover {
+    -fx-opacity: 0.85; /* Make it slightly more opaque on hover for a highlight */
+}
+
+/* Enhance existing .income-pie-chart (from IncomeAnalysis.fxml) */
+/* .income-pie-chart is already defined, these are additional or overriding styles if needed */
+/* For example, if you want to ensure labels are visible for income pie chart specifically: */
+.income-pie-chart .chart-pie-label {
+    -fx-visible: true;
+}
+.income-pie-chart .chart-legend {
+    -fx-visible: true;
+}
+
+
+/* Styles for .expenditure-pie-chart (from ExpenditureAnalysis.fxml) */
+.expenditure-pie-chart {
+    -fx-font-size: 12px; /* General font size for this chart if needed */
+}
+.expenditure-pie-chart .chart-pie-label {
+    -fx-visible: true; /* Ensure labels are visible */
+}
+/* legendVisible is set to false in FXML for expenditurePieChart */
+
+
+/* Optional: Define a default color sequence for pie charts.
+   JavaFX provides a default sequence. These override it.
+   Applied to all pie charts unless more specific styles are set.
+*/
+.pie-chart .data0.chart-pie { -fx-pie-color: #3498db; } /* Blue */
+.pie-chart .data1.chart-pie { -fx-pie-color: #2ecc71; } /* Green */
+.pie-chart .data2.chart-pie { -fx-pie-color: #e74c3c; } /* Red */
+.pie-chart .data3.chart-pie { -fx-pie-color: #f1c40f; } /* Yellow */
+.pie-chart .data4.chart-pie { -fx-pie-color: #9b59b6; } /* Purple */
+.pie-chart .data5.chart-pie { -fx-pie-color: #1abc9c; } /* Turquoise */
+.pie-chart .data6.chart-pie { -fx-pie-color: #e67e22; } /* Orange */
+.pie-chart .data7.chart-pie { -fx-pie-color: #7f8c8d; } /* Gray */
+
+
+/* --- Revenue Page Styles --- */
+
+/* Page Title & Subtitle in Revenue.fxml */
+.income-title { /* This class is used in Revenue.fxml */
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding-bottom: 5px;
+}
+
+.income-subtitle { /* Used in Revenue.fxml */
+    -fx-font-size: 16px;
+    -fx-text-fill: #555555;
+}
+
+/* Input and Result Cards in Revenue.fxml */
+.income-input-card, .income-result-card, .income-note-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 25px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);
+}
+
+.income-note-card {
+    -fx-background-color: #f9f9f9; /* Slightly different background for the notes section */
+}
+
+/* Section Titles within cards in Revenue.fxml */
+.section-title { /* Used in Revenue.fxml */
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3498db; /* Primary blue color */
+    -fx-padding-bottom: 15px;
+    -fx-border-color: #eeeeee;
+    -fx-border-width: 0 0 1px 0; /* Bottom border for separation */
+}
+
+/* Input Labels and Fields in Revenue.fxml */
+.input-label { /* Used in Revenue.fxml */
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+    -fx-font-weight: normal;
+    -fx-padding-bottom: 5px; /* Space between label and field */
+}
+
+.income-input-field { /* Used for TextFields and ComboBox in Revenue.fxml */
+    -fx-pref-height: 40px; /* Consistent height for input fields */
+    /* It will also inherit styles from .input-field if that's more general */
+}
+.income-input-field .combo-box-popup .list-view .list-cell {
+    -fx-font-size: 14px; /* Ensure ComboBox dropdown items are readable */
+}
+
+
+/* Buttons in Revenue.fxml */
+.calculate-button { /* Used in Revenue.fxml */
+    -fx-background-color: #27ae60; /* Green for primary action */
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 20px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-pref-height: 45px;
+}
+
+.calculate-button:hover {
+    -fx-background-color: #229954; /* Darker green on hover */
+}
+
+.reset-button { /* Used in Revenue.fxml */
+    -fx-background-color: #e74c3c; /* Red for destructive/reset action */
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 20px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-pref-height: 45px;
+}
+
+.reset-button:hover {
+    -fx-background-color: #c0392b; /* Darker red on hover */
+}
+
+/* Result Display Area in Revenue.fxml */
+.result-summary { /* Container for groups of results */
+    -fx-padding: 10px 0;
+}
+
+.result-category { /* Title for a category of results, e.g., "收入汇总" */
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50; /* Dark blue-gray */
+    -fx-padding-bottom: 8px;
+}
+
+.result-label { /* Label for a specific result item, e.g., "年收入（税前）：" */
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555; /* Medium gray */
+}
+
+.result-value { /* Value for a specific result item */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333; /* Dark gray */
+}
+
+.tax-value { /* Specific style for income tax value */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #c0392b; /* Red color for tax amount */
+}
+
+.deduction-value { /* Style for other deduction values */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e67e22; /* Orange color for deductions */
+}
+
+.total-deduction-value { /* Style for total deduction amount */
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d35400; /* Darker orange/brown */
+}
+
+.net-income-value { /* Style for net income values */
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60; /* Green color for net income */
+}
+
+/* Note Section in Revenue.fxml */
+.note-title { /* Title for the calculation notes section */
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e; /* Slate gray */
+    -fx-padding-bottom: 8px;
+}
+
+.income-note-card Label { /* Styles all Labels within the .income-note-card VBox */
+    -fx-font-size: 13px;
+    -fx-text-fill: #555555; /* Medium gray for note text */
+    -fx-line-spacing: 3px; /* Improve readability of notes */
+}
+

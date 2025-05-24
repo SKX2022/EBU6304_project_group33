@@ -13,7 +13,7 @@
             stylesheets="@../css/style.css">
 
     <!-- 复用导航栏 -->
-    <fx:include source="/view/NavigationBar.fxml" AnchorPane.topAnchor="0"/>
+    <fx:include source="NavigationBar.fxml" AnchorPane.topAnchor="0"/>
 
     <!-- 内容区域 -->
     <VBox spacing="20"
@@ -56,9 +56,9 @@
             <VBox spacing="10" styleClass="classification-box" style="-fx-pref-width: 450px;">
                 <PieChart fx:id="expenditurePieChart"
                           title="支出分类占比"
-                          style="-fx-legend-visible: false;">
+                          animated="true"
+                          styleClass="expenditure-pie-chart">
                     <labelLineLength>10</labelLineLength>
-                    <labelsVisible>true</labelsVisible>
                 </PieChart>
             </VBox>
         </HBox>
