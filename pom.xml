@@ -15,7 +15,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- JavaFX SDK settings -->
-        <javafx.version>24.0.1</javafx.version>
+        <javafx.version>22.0.2</javafx.version>
         <javafx.sdk.path>/Users/wangruizhi/Downloads/javafx-sdk-24.0.1</javafx.sdk.path>
         <mainClass>com.finance.MainApplication</mainClass>
     </properties>
@@ -75,12 +75,6 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>${mainClass}</mainClass>
-                    <options>
-                        <option>--module-path</option>
-                        <option>${javafx.sdk.path}/lib</option>
-                        <option>--add-modules</option>
-                        <option>javafx.controls,javafx.fxml</option>
-                    </options>
                 </configuration>
             </plugin>
         </plugins>

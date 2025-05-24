@@ -2,9 +2,11 @@ com/finance/model/DoubaoChatResponse$Usage.class
 com/finance/controller/AddExpenseController.class
 com/finance/model/DoubaoChatResponse$Choice.class
 com/finance/MainApplication.class
+com/finance/controller/FlowController$1.class
 com/finance/controller/NavigationBarController.class
 com/finance/manager/CategoryManager.class
 com/finance/model/Category.class
+com/finance/service/TaxCalculatorService$CityConfig.class
 com/finance/manager/ThresholdManager.class
 com/finance/model/ExcelImporter.class
 com/finance/service/LlmService.class
@@ -22,11 +24,14 @@ com/finance/findByDate/findByDate.class
 com/finance/session/Session.class
 com/finance/model/Register.class
 com/finance/controller/LoginController.class
+com/finance/service/TaxCalculatorService.class
 com/finance/findByDate/findByDateUI.class
+com/finance/service/TaxCalculatorService$TaxCalculationResult.class
 com/finance/model/Transaction.class
 com/finance/controller/IncomeAnalysisController.class
 com/finance/manager/TransactionManager.class
 com/finance/model/UserThreshold.class
+com/finance/controller/FlowController$3.class
 com/finance/controller/ExpenditureAnalysisController.class
 com/finance/service/ThresholdCalculator.class
 com/finance/service/UserfulDataPicker.class
@@ -34,3 +39,4 @@ com/finance/controller/FlowController.class
 com/finance/model/DoubaoChatResponse.class
 com/finance/controller/GraphController.class
 com/finance/model/Summary.class
+com/finance/controller/FlowController$2.class
