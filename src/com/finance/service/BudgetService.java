@@ -15,6 +15,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class BudgetService {
@@ -22,6 +23,7 @@ public class BudgetService {
     private User user;
     private ObjectMapper objectMapper = new ObjectMapper();
     private static final String BUDGET_SETTINGS_FILE_PREFIX = "budget_settings_";
+    private static final String MONTHLY_BUDGET_PREFIX = "monthlyBudget_";
 
     public BudgetService(User user) {
         this.user = user;
@@ -30,7 +32,7 @@ public class BudgetService {
     // 保存预算设置
     public void saveBudgetSettings(Map<String, Double> settings) throws IOException {
         File settingsFile = getSettingsFile();
-        objectMapper.writeValue(settingsFile, settings);
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(settingsFile, settings);
     }
 
     // 加载预算设置
@@ -47,11 +49,35 @@ public class BudgetService {
         return new HashMap<>(); // 如果文件不存在或为空，返回空设置
     }
 
+    // 保存特定月份预算
+    public void saveSpecificMonthlyBudget(String monthName, double budget) throws IOException {
+        Map<String, Double> settings = loadBudgetSettings();
+        settings.put(MONTHLY_BUDGET_PREFIX + monthName, budget);
+        saveBudgetSettings(settings);
+    }
+
+    // 获取所有月份预���
+    public Map<String, Double> getAllMonthlyBudgets() {
+        Map<String, Double> allSettings = loadBudgetSettings();
+        Map<String, Double> monthlyBudgets = new HashMap<>();
+        for (Map.Entry<String, Double> entry : allSettings.entrySet()) {
+            if (entry.getKey().startsWith(MONTHLY_BUDGET_PREFIX)) {
+                String monthName = entry.getKey().substring(MONTHLY_BUDGET_PREFIX.length());
+                monthlyBudgets.put(monthName, entry.getValue());
+            }
+        }
+        return monthlyBudgets;
+    }
+
+    // 获取特定月份预算
+    public Double getSpecificMonthlyBudget(String monthName) {
+        Map<String, Double> settings = loadBudgetSettings();
+        return settings.get(MONTHLY_BUDGET_PREFIX + monthName); // 如果未找到，返回null
+    }
+
     // 获取预算设置文件
     private File getSettingsFile() {
         String fileName = BUDGET_SETTINGS_FILE_PREFIX + user.getUsername() + ".json";
-        // 确保文件路径在项目工作目录下，例如 target/ 或者用户数据目录下
-        // 这里简单起见，放在项目根目录，实际项目中应放在更合适的位置
         return Paths.get(fileName).toFile();
     }
 
@@ -71,9 +97,21 @@ public class BudgetService {
         double yearlyBudget = budgetSettings.getOrDefault("yearlyBudget", 0.0);
         double springFestivalBudgetSet = budgetSettings.getOrDefault("springFestivalBudget", 0.0);
         double otherFestivalBudgetSet = budgetSettings.getOrDefault("otherFestivalBudget", 0.0);
-        // double emergencyFund = budgetSettings.getOrDefault("emergencyFund", 0.0); // 紧急备用金暂不直接参与消耗分析显示
 
-        double monthlyBudget = yearlyBudget > 0 ? yearlyBudget / 12 : 0.0;
+        // 确定当前月份的预算
+        Month currentMonthEnum = LocalDate.now().getMonth();
+        String currentMonthName = currentMonthEnum.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, new Locale("zh", "CN"));
+        Double specificCurrentMonthBudget = getSpecificMonthlyBudget(currentMonthName);
+
+        double monthlyBudget;
+        if (specificCurrentMonthBudget != null) {
+            monthlyBudget = specificCurrentMonthBudget;
+        } else if (yearlyBudget > 0) {
+            monthlyBudget = yearlyBudget / 12;
+        } else {
+            monthlyBudget = 0.0;
+        }
+
         analysisResult.put("monthlyBudget", monthlyBudget);
         analysisResult.put("yearlyBudget", yearlyBudget);
 
@@ -88,7 +126,7 @@ public class BudgetService {
                 .sum();
         analysisResult.put("currentMonthSpending", currentMonthSpending);
 
-        // 计算当年���出
+        // 计算当年支出
         double currentYearSpending = transactions.stream()
                 .filter(t -> "支出".equals(t.getType()) && parseTransactionDate(t.getDate()).getYear() == today.getYear())
                 .mapToDouble(Transaction::getAmount)
@@ -97,15 +135,13 @@ public class BudgetService {
 
         // 节假日预算分析
         double springFestivalSpending = calculateFestivalSpending(transactions, today.getYear(), Month.JANUARY, 15, Month.FEBRUARY, 28, List.of("春节", "年货", "红包", "过年", "拜年"));
-        // 对于其他节日，可以类似地定义周期和关键词，或合并为一个总的“其他节日”支出
-        // 这里简化处理，将 otherFestivalBudgetSet 视为一个总的其他节日预算，不单独计算其具体支出，而是从总节日预算中扣除
 
         double totalFestivalBudgetSet = springFestivalBudgetSet + otherFestivalBudgetSet;
-        double totalFestivalSpending = springFestivalSpending; // 如果有其他节日支出计算，加在这里
+        double totalFestivalSpending = springFestivalSpending;
 
         double remainingFestivalBudget = totalFestivalBudgetSet - totalFestivalSpending;
         analysisResult.put("remainingFestivalBudget", remainingFestivalBudget);
-        analysisResult.put("springFestivalSpending", springFestivalSpending); // 可以选择性地返回具体节日支出
+        analysisResult.put("springFestivalSpending", springFestivalSpending);
 
         // 预算健康状况评估
         String budgetHealthStatus = "健康";
@@ -124,11 +160,10 @@ public class BudgetService {
     // 辅助方法：解析交易日期字符串为LocalDate
     private LocalDate parseTransactionDate(String dateStr) {
         try {
-            // 假设日期格式为 "yyyy-MM-dd HH:mm:ss"
             return LocalDate.parse(dateStr.substring(0, 10), DateTimeFormatter.ISO_LOCAL_DATE);
         } catch (Exception e) {
             System.err.println("无法解析交易日期: " + dateStr + " - " + e.getMessage());
-            return LocalDate.MIN; // 返回一个极小日期以避免NullPointer，并标记错误
+            return LocalDate.MIN;
         }
     }
 

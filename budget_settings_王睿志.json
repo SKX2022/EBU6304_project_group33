@@ -1,1 +1,18 @@
-{"yearlyBudget":100000.0,"springFestivalBudget":15000.0,"otherFestivalBudget":5000.0,"emergencyFund":10000.0}
+{
+  "yearlyBudget" : 888888.0,
+  "monthlyBudget_一月" : 0.0,
+  "monthlyBudget_十月" : 0.0,
+  "monthlyBudget_七月" : 77770.0,
+  "monthlyBudget_十二月" : 0.0,
+  "monthlyBudget_十一月" : 0.0,
+  "otherFestivalBudget" : 5000.0,
+  "monthlyBudget_四月" : 20000.0,
+  "monthlyBudget_九月" : 0.0,
+  "springFestivalBudget" : 10000.0,
+  "monthlyBudget_五月" : 15000.0,
+  "monthlyBudget_三月" : 3330.0,
+  "emergencyFund" : 10000.0,
+  "monthlyBudget_八月" : 0.0,
+  "monthlyBudget_六月" : 6666.0,
+  "monthlyBudget_二月" : 222250.0
+}
