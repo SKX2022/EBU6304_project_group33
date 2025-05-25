@@ -38,9 +38,9 @@
 }
 /* 标题样式 */
 .label-title {
-    -fx-font-size: 28px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2c3e50;
+    -fx-text-fill: #1a365d;
 }
 
 /* 数据标签样式 */
@@ -51,9 +51,9 @@
 
 /* 区段标题样式 */
 .label-section {
-    -fx-font-size: 20px;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2c3e50;
+    -fx-text-fill: #2d3748;
     -fx-padding: 10 0 5 0;
 }
 
@@ -169,17 +169,31 @@
 
 /* 主按钮样式 */
 .button-primary {
-    -fx-background-color: #3498db;
+    -fx-background-color: #4299e1;
     -fx-text-fill: white;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-padding: 10 20;
-    -fx-background-radius: 8;
+    -fx-background-radius: 4;
     -fx-cursor: hand;
 }
 
 .button-primary:hover {
-    -fx-background-color: #2980b9;
+    -fx-background-color: #3182ce;
+}
+
+/* 按钮次要样式 */
+.button-secondary {
+    -fx-background-color: #edf2f7;
+    -fx-text-fill: #2d3748;
+    -fx-font-size: 14px;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.button-secondary:hover {
+    -fx-background-color: #e2e8f0;
 }
 
 /* 链接文本 */
@@ -729,73 +743,121 @@
 
 /* 预算概览卡片样式 */
 .budget-overview-card {
-    -fx-background-color: #ffffff;
-    -fx-padding: 20;
-    -fx-background-radius: 12;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 1);
+    -fx-padding: 12;
     -fx-min-width: 400;
 }
 
 /* 预算信息标签样式 */
 .label-info {
-    -fx-font-size: 15px;
-    -fx-text-fill: #64748b;
+    -fx-font-size: 14px;
+    -fx-text-fill: #4a5568;
     -fx-font-weight: normal;
 }
 
 .label-info-sm {
-    -fx-font-size: 13px;
-    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
+    -fx-text-fill: #4a5568;
 }
 
 .label-value {
-    -fx-font-size: 15px;
-    -fx-text-fill: #334155;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2d3748;
     -fx-font-weight: bold;
 }
 
 .label-value-sm {
-    -fx-font-size: 13px;
-    -fx-text-fill: #334155;
+    -fx-font-size: 12px;
+    -fx-text-fill: #2d3748;
     -fx-font-weight: bold;
 }
 
 /* 预算概览标题样式 */
 .subtitle {
-    -fx-fill: #1e293b;
+    -fx-fill: #2c5282;
     -fx-font-weight: bold;
 }
 
 /* 设置卡片样式 */
 .settings-card {
-    -fx-background-color: #ffffff;
-    -fx-padding: 20;
-    -fx-background-radius: 12;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-padding: 15;
 }
 
-/* 按钮次要样式 */
-.button-secondary {
-    -fx-background-color: #e2e8f0;
-    -fx-text-fill: #475569;
-    -fx-font-size: 14px;
-    -fx-padding: 8 16;
-    -fx-background-radius: 6;
-    -fx-cursor: hand;
+/* 统一的滚动面板样式 */
+.edge-to-edge {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-padding: 0;
 }
 
-.button-secondary:hover {
-    -fx-background-color: #cbd5e1;
+.edge-to-edge > .viewport {
+    -fx-background-color: transparent;
+}
+
+.edge-to-edge:focused {
+    -fx-background-insets: 0;
+}
+
+/* 输入框样式 */
+.text-field {
+    -fx-background-color: #f7fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 6 8;
+}
+
+.text-field:focused {
+    -fx-border-color: #4299e1;
+    -fx-background-color: white;
+}
+
+/* 文本区域样式 */
+.text-area {
+    -fx-background-color: #f7fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.text-area .content {
+    -fx-background-color: #f7fafc;
+}
+
+.text-area:focused .content {
+    -fx-background-color: white;
+}
+
+/* 下拉框样式 */
+.combo-box {
+    -fx-background-color: #f7fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.combo-box:focused {
+    -fx-border-color: #4299e1;
+}
+
+/* 分隔线样式 */
+.separator {
+    -fx-opacity: 0.5;
 }
 
 /* 页脚样式 */
 .footer {
-    -fx-background-color: #f8fafc;
+    -fx-background-color: #f7fafc;
     -fx-border-color: #e2e8f0;
     -fx-border-width: 1 0 0 0;
 }
 
 .footer-text {
-    -fx-text-fill: #64748b;
+    -fx-text-fill: #718096;
     -fx-font-size: 12px;
 }
