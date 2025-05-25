@@ -9,7 +9,7 @@
             stylesheets="@../css/style.css">
 
     <top>
-        <fx:include source="NavigationBar.fxml" AnchorPane.topAnchor="0"/>
+        <fx:include source="NavigationBar.fxml" />
     </top>
 
     <center>
