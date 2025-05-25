@@ -10,11 +10,9 @@
             stylesheets="@../css/style.css">
 
     <top>
-        <fx:include source="NavigationBar.fxml" />
+        <fx:include source="NavigationBar.fxml"/>
     </top>
-
     <center>
-        <ScrollPane fitToWidth="true" style="-fx-background-color: #f8fafc;">
             <VBox spacing="30" style="-fx-padding: 30;">
                 
                 <!-- 页面标题 -->
@@ -136,7 +134,6 @@
                         
                     </VBox>
                 </HBox>
-                
                 <!-- 底部说明 -->
                 <VBox spacing="10" styleClass="income-note-card">
                     <Label text="📋 计算说明" styleClass="note-title"/>
@@ -146,6 +143,5 @@
                     <Label text="• 计算结果仅供参考，实际缴费可能因政策调整而有所差异"/>
                 </VBox>
             </VBox>
-        </ScrollPane>
     </center>
 </BorderPane> 
