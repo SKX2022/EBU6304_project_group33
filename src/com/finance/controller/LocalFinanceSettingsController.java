@@ -80,8 +80,6 @@ public class LocalFinanceSettingsController {
 
     private void disableUIComponents() {
         yearlyBudgetField.setDisable(true);
-        springFestivalBudgetField.setDisable(true);
-        otherFestivalBudgetField.setDisable(true);
         emergencyFundField.setDisable(true);
         aiUserInputArea.setDisable(true);
     }
@@ -96,8 +94,6 @@ public class LocalFinanceSettingsController {
     private void loadUserSettings() {
         Map<String, Double> settings = budgetService.loadBudgetSettings();
         yearlyBudgetField.setText(settings.getOrDefault("yearlyBudget", 0.0).toString());
-        springFestivalBudgetField.setText(settings.getOrDefault("springFestivalBudget", 0.0).toString());
-        otherFestivalBudgetField.setText(settings.getOrDefault("otherFestivalBudget", 0.0).toString());
         emergencyFundField.setText(settings.getOrDefault("emergencyFund", 0.0).toString());
 
         monthlyBudgets.clear();
@@ -196,8 +192,6 @@ public class LocalFinanceSettingsController {
         try {
             Map<String, Double> settings = new HashMap<>();
             settings.put("yearlyBudget", Double.parseDouble(yearlyBudgetField.getText()));
-            settings.put("springFestivalBudget", Double.parseDouble(springFestivalBudgetField.getText()));
-            settings.put("otherFestivalBudget", Double.parseDouble(otherFestivalBudgetField.getText()));
             settings.put("emergencyFund", Double.parseDouble(emergencyFundField.getText()));
 
             for (Map.Entry<String, Double> entry : monthlyBudgets.entrySet()) {
@@ -273,8 +267,6 @@ public class LocalFinanceSettingsController {
         try {
             Map<String, Object> currentSettingsMap = new HashMap<>();
             currentSettingsMap.put("yearlyBudget", yearlyBudgetField.getText().isEmpty() ? 0.0 : Double.parseDouble(yearlyBudgetField.getText()));
-            currentSettingsMap.put("springFestivalBudget", springFestivalBudgetField.getText().isEmpty() ? 0.0 : Double.parseDouble(springFestivalBudgetField.getText()));
-            currentSettingsMap.put("otherFestivalBudget", otherFestivalBudgetField.getText().isEmpty() ? 0.0 : Double.parseDouble(otherFestivalBudgetField.getText()));
             currentSettingsMap.put("emergencyFund", emergencyFundField.getText().isEmpty() ? 0.0 : Double.parseDouble(emergencyFundField.getText()));
 
             Map<String, Double> currentMonthlyBudgets = new HashMap<>();
@@ -365,7 +357,7 @@ public class LocalFinanceSettingsController {
                                         @SuppressWarnings("unchecked")
                                         Map<String, Object> suggestionMap = (Map<String, Object>) item;
                                         if (suggestionMap.containsKey("periodName") && suggestionMap.get("periodName") instanceof String &&
-                                            suggestionMap.containsKey("suggestedBudget") && suggestionMap.get("suggestedBudget") instanceof Number) {
+                                                suggestionMap.containsKey("suggestedBudget") && suggestionMap.get("suggestedBudget") instanceof Number) {
 
                                             Map<String, Object> validatedSuggestion = new HashMap<>();
                                             validatedSuggestion.put("periodName", suggestionMap.get("periodName"));
@@ -428,8 +420,6 @@ public class LocalFinanceSettingsController {
         boolean standardApplied = false;
         if (!aiSuggestedBudgets.isEmpty()) {
             yearlyBudgetField.setText(aiSuggestedBudgets.getOrDefault("yearlyBudget", getCurrentValueOrDefault.apply(yearlyBudgetField)).toString());
-            springFestivalBudgetField.setText(aiSuggestedBudgets.getOrDefault("springFestivalBudget", getCurrentValueOrDefault.apply(springFestivalBudgetField)).toString());
-            otherFestivalBudgetField.setText(aiSuggestedBudgets.getOrDefault("otherFestivalBudget", getCurrentValueOrDefault.apply(otherFestivalBudgetField)).toString());
             emergencyFundField.setText(aiSuggestedBudgets.getOrDefault("emergencyFund", getCurrentValueOrDefault.apply(emergencyFundField)).toString());
             standardApplied = true;
         }
@@ -454,8 +444,6 @@ public class LocalFinanceSettingsController {
         }
 
         yearlyBudgetField.setText("0.0");
-        springFestivalBudgetField.setText("0.0");
-        otherFestivalBudgetField.setText("0.0");
         emergencyFundField.setText("0.0");
 
         monthlyBudgetField.setText("0.0");
@@ -489,7 +477,7 @@ public class LocalFinanceSettingsController {
             defaultSettings.put("otherFestivalBudget", 0.0);
             defaultSettings.put("emergencyFund", 0.0);
             for (Map.Entry<String, Double> entry : monthlyBudgets.entrySet()) {
-                 defaultSettings.put("monthlyBudget_" + entry.getKey(), 0.0);
+                defaultSettings.put("monthlyBudget_" + entry.getKey(), 0.0);
             }
 
             budgetService.saveBudgetSettings(defaultSettings);
@@ -532,8 +520,6 @@ public class LocalFinanceSettingsController {
     }
 
     private void updateOverviewLabels(Map<String, Double> settings) {
-        springFestivalLabel.setText(String.format("%.2f", settings.getOrDefault("springFestivalBudget", 0.0)));
-        otherFestivalLabel.setText(String.format("%.2f", settings.getOrDefault("otherFestivalBudget", 0.0)));
         emergencyFundLabel.setText(String.format("%.2f", settings.getOrDefault("emergencyFund", 0.0)));
     }
 
@@ -549,8 +535,8 @@ public class LocalFinanceSettingsController {
         ObservableList<String> monthNames = monthComboBox.getItems();
         if (monthNames == null || monthNames.isEmpty()) {
             monthNames = IntStream.rangeClosed(1, 12)
-                .mapToObj(monthNum -> Month.of(monthNum).getDisplayName(TextStyle.FULL_STANDALONE, new Locale("zh", "CN")))
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                    .mapToObj(monthNum -> Month.of(monthNum).getDisplayName(TextStyle.FULL_STANDALONE, new Locale("zh", "CN")))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
 
         int col = 0;
