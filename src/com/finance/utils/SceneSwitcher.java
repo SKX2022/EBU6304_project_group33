@@ -60,7 +60,7 @@ public final class SceneSwitcher {
             BASE_W = newRoot.prefWidth(-1)  > 0 ? newRoot.prefWidth(-1)  : newRoot.getLayoutBounds().getWidth();
             BASE_H = newRoot.prefHeight(-1) > 0 ? newRoot.prefHeight(-1) : newRoot.getLayoutBounds().getHeight();
 
-            stage.sizeToScene();  // 让窗口刚好包住新页面
+            //stage.sizeToScene();  // 让窗口刚好包住新页面
             refreshScale();       // 重新缩放、居中
 
         } catch (IOException e) {
