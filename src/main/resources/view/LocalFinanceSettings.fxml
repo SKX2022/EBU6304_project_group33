@@ -99,33 +99,55 @@
 
             <Text text="当前预算概览" styleClass="subtitle">
                 <font>
-                    <Font size="16.0" />
+                    <Font size="18.0" />
                 </font>
             </Text>
 
-            <GridPane hgap="20" vgap="8" alignment="CENTER" style="-fx-padding: 5 0;">
-                <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="160" halignment="RIGHT"/>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="120" halignment="LEFT"/>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="160" halignment="RIGHT"/>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="120" halignment="LEFT"/>
-                </columnConstraints>
+            <HBox spacing="20" alignment="CENTER">
+                <!-- 左侧：基本预算信息 -->
+                <VBox spacing="10" styleClass="budget-overview-card">
+                    <padding>
+                        <Insets top="15" right="20" bottom="15" left="20" />
+                    </padding>
+                    <GridPane hgap="20" vgap="12" alignment="CENTER">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="160" halignment="RIGHT"/>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="120" halignment="LEFT"/>
+                        </columnConstraints>
 
-                <Label text="本月预算/已用:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="label-info" />
-                <Label fx:id="monthBudgetLabel" text="0.00 / 0.00" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="label-value" />
+                        <Label text="本月预算/已用:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="label-info" />
+                        <Label fx:id="monthBudgetLabel" text="0.00 / 0.00" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="label-value" />
 
-                <Label text="本年预算/已用:" GridPane.rowIndex="0" GridPane.columnIndex="2" styleClass="label-info" />
-                <Label fx:id="yearBudgetLabel" text="0.00 / 0.00" GridPane.rowIndex="0" GridPane.columnIndex="3" styleClass="label-value" />
+                        <Label text="本年预算/已用:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="label-info" />
+                        <Label fx:id="yearBudgetLabel" text="0.00 / 0.00" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="label-value" />
 
-                <Label text="春节预算:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="label-info" />
-                <Label fx:id="springFestivalLabel" text="0.00" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="label-value" />
+                        <Label text="春节预算:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="label-info" />
+                        <Label fx:id="springFestivalLabel" text="0.00" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="label-value" />
 
-                <Label text="其他节日预算:" GridPane.rowIndex="1" GridPane.columnIndex="2" styleClass="label-info" />
-                <Label fx:id="otherFestivalLabel" text="0.00" GridPane.rowIndex="1" GridPane.columnIndex="3" styleClass="label-value" />
+                        <Label text="其他节日预算:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="label-info" />
+                        <Label fx:id="otherFestivalLabel" text="0.00" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="label-value" />
 
-                <Label text="紧急备用金:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="label-info" />
-                <Label fx:id="emergencyFundLabel" text="0.00" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="label-value" />
-            </GridPane>
+                        <Label text="紧急备用金:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="label-info" />
+                        <Label fx:id="emergencyFundLabel" text="0.00" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="label-value" />
+                    </GridPane>
+                </VBox>
+
+                <!-- 右侧：月度预算表格 -->
+                <VBox spacing="10" styleClass="budget-overview-card">
+                    <padding>
+                        <Insets top="15" right="20" bottom="15" left="20" />
+                    </padding>
+                    <Label text="月度预算详情" styleClass="label-section" />
+                    <GridPane fx:id="monthlyBudgetGrid" hgap="15" vgap="8" alignment="CENTER">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="100" halignment="RIGHT"/>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="120" halignment="LEFT"/>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="100" halignment="RIGHT"/>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="120" halignment="LEFT"/>
+                        </columnConstraints>
+                    </GridPane>
+                </VBox>
+            </HBox>
 
             <Separator />
 
@@ -145,3 +167,4 @@
         </HBox>
     </bottom>
 </BorderPane>
+

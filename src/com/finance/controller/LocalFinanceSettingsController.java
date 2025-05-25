@@ -47,7 +47,8 @@ public class LocalFinanceSettingsController {
     @FXML private Button applyAiToSelectedMonthButton;
 
     // Added FXML field for the new GridPane
-    @FXML private GridPane monthlyOverviewGridPane;
+    @FXML private GridPane monthlyBudgetGrid;
+    private Map<String, Label> monthBudgetLabels = new HashMap<>();
 
     private User currentUser;
     private BudgetService budgetService;
@@ -113,8 +114,7 @@ public class LocalFinanceSettingsController {
         }
 
         updateOverviewLabels(settings);
-        // After loading all settings, update the monthly overview display
-        updateMonthlyOverviewDisplay();
+        updateMonthlyOverviewDisplay(); // 添加立即刷新显示
     }
 
     private void loadBudgetForSelectedMonth(String monthName) {
@@ -136,6 +136,7 @@ public class LocalFinanceSettingsController {
                 return;
             }
             monthlyBudgets.put(selectedMonth, budgetAmount);
+            updateMonthlyOverviewDisplay(); // 添加立即刷新显示
             showAlert(Alert.AlertType.INFORMATION, "更新成功", selectedMonth + " 的预算已在内存中更新为: " + String.format("%.2f", budgetAmount) + "。\n请记得点击下方的“保存手动设置”以持久化所有更改。");
         } catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "输入错误", "请输入有效的数字金额。");
@@ -175,13 +176,14 @@ public class LocalFinanceSettingsController {
                 Double suggestedBudget = (Double) suggestion.get("suggestedBudget");
                 monthlyBudgetField.setText(String.format("%.2f", suggestedBudget));
                 monthlyBudgets.put(selectedMonth, suggestedBudget);
+                updateMonthlyOverviewDisplay(); // 添加立即刷新显示
                 showAlert(Alert.AlertType.INFORMATION, "AI建议已应用", "AI对 " + selectedMonth + " 的预算建议 " + String.format("%.2f", suggestedBudget) + " 已填充到输入框并更新到内存。\n请记得点击下方的“保存手动设置”以持久化所有更改。");
                 applied = true;
                 break;
             }
         }
         if (!applied) {
-            showAlert(Alert.AlertType.WARNING, "无匹配建议", "未能找到针对 " + selectedMonth + " 的AI预算建���以应用。");
+            showAlert(Alert.AlertType.WARNING, "无匹配建议", "未能找到针对 " + selectedMonth + " 的AI预算建议以应用。");
         }
     }
 
@@ -203,9 +205,13 @@ public class LocalFinanceSettingsController {
             }
 
             budgetService.saveBudgetSettings(settings);
+
+            // 重新加载所有设置并更新显示
+            loadUserSettings();
+            updateBudgetAnalysisDisplay();
+            updateMonthlyOverviewDisplay();
+
             showAlert(Alert.AlertType.INFORMATION, "保存成功", "所有预算设置（包括按月预算）已保存。");
-            updateBudgetAnalysisDisplay(); // This will also call updateMonthlyOverviewDisplay
-            updateMonthlyOverviewDisplay(); // Explicitly call to refresh monthly overview grid
         } catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "输入错误", "请输入有效的数字金额。");
         } catch (Exception e) {
@@ -248,7 +254,7 @@ public class LocalFinanceSettingsController {
 
             } catch (IOException | InterruptedException | LlmService.LlmServiceException e) {
                 Platform.runLater(() -> {
-                    aiResponseArea.setText("��取AI建议失败: " + e.getMessage());
+                    aiResponseArea.setText("获取AI建议失败: " + e.getMessage());
                     showAlert(Alert.AlertType.ERROR, "AI服务错误", "获取AI建议时发生错误。" + e.getMessage());
                     e.printStackTrace();
                 });
@@ -304,7 +310,7 @@ public class LocalFinanceSettingsController {
                 "2.  你的回复应该包含两部分：\n" +
                 "    a.  对用户整体需求的文本分析和建议。\n" +
                 "    b.  一个JSON对象，包含以下内容：\n" +
-                "        -   标准的预算建议，使用键：'yearlyBudget', 'springFestivalBudget', 'otherFestivalBudget', 'emergencyFund'。这些值���该是基于用户请求的整体��度或主要预算。\n" +
+                "        -   标准的预算建议，使用键：'yearlyBudget', 'springFestivalBudget', 'otherFestivalBudget', 'emergencyFund'。这些值应该是基于用户请求的整体年度或主要预算。\n" +
                 "        -   如果识别出特定的时间段或事件，请在JSON中添加一个名为 'customPeriodBudgets' 的数组。数组中的每个对象应有 'periodName' (字符串，例如 “六月”, “双十一购物”, \"一月\") 和 'suggestedBudget' (数字)。\n" +
                 "\n" +
                 "例如，如果用户说：“我想为六月份和双十一购物做预算，并了解下全年的大概开销。”\n" +
@@ -488,7 +494,7 @@ public class LocalFinanceSettingsController {
 
             budgetService.saveBudgetSettings(defaultSettings);
         } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "保存失败", "重置预算设置时发生错���: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "保存失败", "重置预算设置时发生错误: " + e.getMessage());
         }
         updateBudgetAnalysisDisplay();
         updateMonthlyOverviewDisplay(); // Refresh monthly overview after reset
@@ -501,6 +507,16 @@ public class LocalFinanceSettingsController {
         Map<String, Double> currentSettings = budgetService.loadBudgetSettings();
         updateOverviewLabels(currentSettings);
 
+        // 更新月度预算数据
+        monthlyBudgets.clear();
+        ObservableList<String> months = monthComboBox.getItems();
+        if (months != null) {
+            for (String monthName : months) {
+                Double budget = currentSettings.getOrDefault("monthlyBudget_" + monthName, 0.0);
+                monthlyBudgets.put(monthName, budget);
+            }
+        }
+
         TransactionManager transactionManager = new TransactionManager(currentUser);
         Map<String, Object> analysis = budgetService.getBudgetAnalysis(transactionManager);
 
@@ -510,6 +526,9 @@ public class LocalFinanceSettingsController {
         yearBudgetLabel.setText(String.format("%.2f / %.2f",
                 (Double) analysis.getOrDefault("currentYearSpending", 0.0),
                 (Double) analysis.getOrDefault("yearlyBudget", currentSettings.getOrDefault("yearlyBudget", 0.0))));
+
+        // 更新月度预算详情显示
+        updateMonthlyOverviewDisplay();
     }
 
     private void updateOverviewLabels(Map<String, Double> settings) {
@@ -518,17 +537,17 @@ public class LocalFinanceSettingsController {
         emergencyFundLabel.setText(String.format("%.2f", settings.getOrDefault("emergencyFund", 0.0)));
     }
 
-    // New method to populate the monthlyOverviewGridPane
     private void updateMonthlyOverviewDisplay() {
-        if (monthlyOverviewGridPane == null) {
-            System.out.println("monthlyOverviewGridPane is null, cannot update.");
+        if (monthlyBudgetGrid == null) {
+            System.out.println("monthlyBudgetGrid is null, cannot update.");
             return;
         }
-        monthlyOverviewGridPane.getChildren().clear(); // Clear previous entries
 
-        ObservableList<String> monthNames = monthComboBox.getItems(); // Should be populated with "一月", "二月", etc.
+        monthlyBudgetGrid.getChildren().clear();
+        monthBudgetLabels.clear();
+
+        ObservableList<String> monthNames = monthComboBox.getItems();
         if (monthNames == null || monthNames.isEmpty()) {
-            // Fallback if monthComboBox items are not ready (should not happen if populateMonthComboBox is called first)
             monthNames = IntStream.rangeClosed(1, 12)
                 .mapToObj(monthNum -> Month.of(monthNum).getDisplayName(TextStyle.FULL_STANDALONE, new Locale("zh", "CN")))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
@@ -536,27 +555,27 @@ public class LocalFinanceSettingsController {
 
         int col = 0;
         int row = 0;
-        final int MAX_COLS_PER_ROW = 4; // Display 4 months (Label + Value) per row in the GridPane
+        final int MAX_COLS = 2; // 每行显示2组月份（4列，因为每组占2列）
 
-        for (String monthName : monthNames) {
+        for (int i = 0; i < monthNames.size(); i++) {
+            String monthName = monthNames.get(i);
             Double budgetValue = monthlyBudgets.getOrDefault(monthName, 0.0);
 
-            Label monthDisplayLabel = new Label(monthName + ":");
-            monthDisplayLabel.getStyleClass().add("label-info-sm");
-            GridPane.setHalignment(monthDisplayLabel, javafx.geometry.HPos.RIGHT);
+            Label monthLabel = new Label(monthName + "预算:");
+            monthLabel.getStyleClass().add("label-info-sm");
+            GridPane.setHalignment(monthLabel, javafx.geometry.HPos.RIGHT);
 
-            Label budgetDisplayLabel = new Label(String.format("¥%.2f", budgetValue));
-            budgetDisplayLabel.getStyleClass().add("label-value-sm");
-            GridPane.setHalignment(budgetDisplayLabel, javafx.geometry.HPos.LEFT);
+            Label valueLabel = new Label(String.format("¥%.2f", budgetValue));
+            valueLabel.getStyleClass().add("label-value-sm");
+            GridPane.setHalignment(valueLabel, javafx.geometry.HPos.LEFT);
+            monthBudgetLabels.put(monthName, valueLabel);
 
-            monthlyOverviewGridPane.add(monthDisplayLabel, col * 2, row);       // Label in even column
-            monthlyOverviewGridPane.add(budgetDisplayLabel, col * 2 + 1, row); // Value in odd column
+            // 计算在GridPane中的位置
+            int baseCol = (i % MAX_COLS) * 2;  // 每组月份占用2列
+            row = i / MAX_COLS;
 
-            col++;
-            if (col >= MAX_COLS_PER_ROW) {
-                col = 0;
-                row++;
-            }
+            monthlyBudgetGrid.add(monthLabel, baseCol, row);
+            monthlyBudgetGrid.add(valueLabel, baseCol + 1, row);
         }
     }
 

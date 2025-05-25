@@ -727,3 +727,75 @@
     -fx-line-spacing: 3px; /* Improve readability of notes */
 }
 
+/* 预算概览卡片样式 */
+.budget-overview-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+    -fx-min-width: 400;
+}
+
+/* 预算信息标签样式 */
+.label-info {
+    -fx-font-size: 15px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: normal;
+}
+
+.label-info-sm {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+}
+
+.label-value {
+    -fx-font-size: 15px;
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+}
+
+.label-value-sm {
+    -fx-font-size: 13px;
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+}
+
+/* 预算概览标题样式 */
+.subtitle {
+    -fx-fill: #1e293b;
+    -fx-font-weight: bold;
+}
+
+/* 设置卡片样式 */
+.settings-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+
+/* 按钮次要样式 */
+.button-secondary {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #475569;
+    -fx-font-size: 14px;
+    -fx-padding: 8 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.button-secondary:hover {
+    -fx-background-color: #cbd5e1;
+}
+
+/* 页脚样式 */
+.footer {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1 0 0 0;
+}
+
+.footer-text {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
+}
