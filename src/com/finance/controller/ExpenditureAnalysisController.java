@@ -48,7 +48,7 @@ public class ExpenditureAnalysisController {
     private void loadExpenditureData() {
         // calculateAccuratelyWithBigDecimal
         Map<String, BigDecimal> categoryMap = transactions.stream()
-                .filter(t -> "expenditure".equals(t.getType()))
+                .filter(t -> "Expenditure".equals(t.getType()))
                 .collect(Collectors.groupingBy(
                         Transaction::getCategory,
                         Collectors.mapping(Transaction::getAmount,
@@ -129,7 +129,7 @@ public class ExpenditureAnalysisController {
     private void handleAnalyzeButtonClick() {
         try {
             Map<String, Double> categoryAmounts = transactions.stream()
-                    .filter(t -> "expenditure".equals(t.getType()))
+                    .filter(t -> "Expenditure".equals(t.getType()))
                     .collect(Collectors.groupingBy(
                             Transaction::getCategory,
                             Collectors.summingDouble(Transaction::getAmount))

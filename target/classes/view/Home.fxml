@@ -14,10 +14,11 @@
     <center>
         <HBox spacing="40" alignment="TOP_LEFT" style="-fx-padding: 30;">
 
-            <!-- 左侧：图片 + 本月收支 + 总进度条 -->
+            <!-- Left: Picture + Current Month's Income + Total Progress Bar -->
             <VBox spacing="40">
 
-                <!-- 图片和本月收入支出 -->
+
+                <!-- Pictures and the current month's income and expenses -->
                 <StackPane alignment="TOP_LEFT">
                     <ImageView fitHeight="350"  preserveRatio="true">
                         <image>
@@ -32,7 +33,7 @@
                     </VBox>
                 </StackPane>
 
-                <!-- 总收入支出盈余进度条 -->
+                <!-- Total income and expenditure surplus progress bar -->
                 <VBox spacing="15">
                     <Label text="Summary of total income and expenditure" styleClass="label-section"/>
 
@@ -56,7 +57,7 @@
                 </VBox>
             </VBox>
 
-            <!-- 右侧：分类垂直排列 -->
+            <!-- Right: Categories arranged vertically-->
             <VBox spacing="20">
 
                 <VBox spacing="10" styleClass="classification-box">

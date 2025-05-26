@@ -124,9 +124,9 @@ public class HomeController {
         // Get the most up-to-date list of categories
         List<Category> allCategories = categoryManager.getCategories();
         for (Category c : allCategories) {
-            if ("Income".equals(c.getType())) {
+            if ("Income".equals(c.getType())||"收入".equals(c.getType())) {
                 incomeCategoryList.getItems().add(c.getName());
-            } else if ("Expenditure".equals(c.getType())) {
+            } else if ("Expenditure".equals(c.getType())||"支出".equals(c.getType())) {
                 expenseCategoryList.getItems().add(c.getName());
             }
         }
@@ -155,7 +155,7 @@ public class HomeController {
             return;
         }
 
-        // 弹出确认对话框
+        // A confirmation dialog box pops up
         boolean confirmed = showConfirmationDialog("Delete a category",
                 "Decide that you want to remove the expense classification \"" + selectedCategory + "\" \nAfter deletion, the data cannot be recovered.");
 
@@ -178,7 +178,7 @@ public class HomeController {
             return;
         }
 
-        // 弹出确认对话框
+        // A confirmation dialog box pops up
         boolean confirmed = showConfirmationDialog("Delete a category",
 
                 "Decide that you want to delete the revenue classification \"" + selectedCategory + "\"\nAfter deletion, the data cannot be recovered.");
