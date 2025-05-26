@@ -293,32 +293,38 @@ public class LocalFinanceSettingsController {
         }
 
         return String.format("\"\"\"\n" +
-                "你是一个专业的财务顾问。请根据用户的以下需求，为中国用户生成一份年度财务预算建议。\n" +
-                "用户的需求是：“%s”\n" +
-                "用户当前的预算设置大致如下（如果用户是初次设置，这些可能是0或默认值，月度预算键为 monthlyBudget_月份名，例如 monthlyBudget_一月）：%s\n" +
+                "You are a professional financial advisor. Please generate an annual financial budget proposal for the user based on their needs.\n" +
+                "The user's request is: \"%s\"\n" +
+                "The user's current budget settings are approximately as follows (these may be 0 or default values if the user is setting them up for the first time; monthly budget keys are 'monthlyBudget_MonthAbbreviation', e.g., 'monthlyBudget_Jan', 'monthlyBudget_Feb'): %s\n" +
                 "\n" +
-                "请在你的回复中分析用户的需求并给出建议。\n" +
-                "1.  请识别用户输入中提到的任何特定时间段（例如月份如“一月”、“二月”，节假日如“春节”、“国庆节”、“双十一”等、或事件如“夏季旅游”）。请确保月份名称与中文习惯一致（例如 “一月”， “二月”， ... “十二月”）。\n" +
-                "2.  你的回复应该包含两部分：\n" +
-                "    a.  对用户整体需求的文本分析和建议。\n" +
-                "    b.  一个JSON对象，包含以下内容：\n" +
-                "        -   标准的预算建议，使用键：'yearlyBudget', 'springFestivalBudget', 'otherFestivalBudget', 'emergencyFund'。这些值应该是基于用户请求的整体年度或主要预算。\n" +
-                "        -   如果识别出特定的时间段或事件，请在JSON中添加一个名为 'customPeriodBudgets' 的数组。数组中的每个对象应有 'periodName' (字符串，例如 “六月”, “双十一购物”, \"一月\") 和 'suggestedBudget' (数字)。\n" +
+                "Please analyze the user's needs and provide recommendations in your response.\n" +
+                "1. Identify any specific time periods mentioned in the user's input:\n" +
+                "   - Months: If the user mentions a month directly.\n" +
+                "   - Holidays: Such as 'Spring Festival', 'National Day', etc.\n" +
+                "   - Events: Such as 'Summer Travel', 'Double Eleven Shopping Festival' (typically in November), '618 Shopping Festival' (typically in June).\n" +
+                "   For any identified month, holiday, or event that implies a specific month or period, use the full English month name (e.g., 'January', 'February', ..., 'December') as the 'periodName' in the 'customPeriodBudgets' if a budget for it is suggested.\n" +
+                "   For events associated with a specific month (e.g., 'Double Eleven Shopping Festival' occurs in November, '618 Shopping Festival' occurs in June), the 'periodName' in 'customPeriodBudgets' should be the respective full English month name (e.g., 'November' for Double Eleven, 'June' for 618). If an event spans multiple months or is not tied to a single month, use a descriptive name for 'periodName' or break it down if appropriate.\n" +
                 "\n" +
-                "例如，如果用户说：“我想为六月份和双十一购物做预算，并了解下全年的大概开销。”\n" +
-                "你的JSON回复可能像这样：\n" +
+                "2. Your response should include two parts:\n" +
+                "    a. Textual analysis and recommendations for the user's overall needs.\n" +
+                "    b. A JSON object containing the following:\n" +
+                "        - Standard budget recommendations, using keys: 'yearlyBudget', 'springFestivalBudget', 'otherFestivalBudget', 'emergencyFund'. These values should be based on the user's overall annual or major budget requests.\n" +
+                "        - An array named 'customPeriodBudgets'. Each object in this array should have 'periodName' (string, representing a full English month name like \"June\", \"November\", or a descriptive period name if not a single month) and 'suggestedBudget' (number). This array should include budgets for any specifically identified months, holidays, or events from the user's input.\n" +
+                "\n" +
+                "For example, if the user says: \"I want to budget for June and the Double Eleven shopping festival, and get an idea of my overall annual expenses.\"\n" +
+                "Your JSON response might look like this (assuming Double Eleven is in November):\n" +
                 "{\n" +
                 "    \"yearlyBudget\": 150000,\n" +
                 "    \"springFestivalBudget\": 10000,\n" +
                 "    \"otherFestivalBudget\": 5000,\n" +
                 "    \"emergencyFund\": 20000,\n" +
                 "    \"customPeriodBudgets\": [\n" +
-                "        { \"periodName\": \"六月\", \"suggestedBudget\": 12000 },\n" +
-                "        { \"periodName\": \"双十一购物\", \"suggestedBudget\": 8000 }\n" +
+                "        { \"periodName\": \"June\", \"suggestedBudget\": 12000 },\n" +
+                "        { \"periodName\": \"November\", \"suggestedBudget\": 8000 }\n" +
                 "    ]\n" +
                 "}\n" +
-                "如果用户只问年度预算，则 'customPeriodBudgets' 可以省略或是空数组。\n" +
-                "请确保返回的JSON对象是有效的，并且在文本建议之后提供。\n" +
+                "If the user only asks for an annual budget, the 'customPeriodBudgets' array can be omitted or be an empty array.\n" +
+                "Please ensure the returned JSON object is valid and is provided after the textual advice.\n" +
                 "\"\"\"", userInput, currentBudgetsJson);
     }
 
@@ -594,3 +600,4 @@ public class LocalFinanceSettingsController {
         showAlert(Alert.AlertType.INFORMATION, "Functionality to be implemented", "Import financial settings feature is under development.");
     }
 }
+

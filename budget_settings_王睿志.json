@@ -1,16 +1,16 @@
 {
   "yearlyBudget" : 888888.0,
-  "monthlyBudget_一月" : 0.0,
-  "monthlyBudget_十月" : 0.0,
-  "monthlyBudget_七月" : 77770.0,
-  "monthlyBudget_十二月" : 0.0,
-  "monthlyBudget_十一月" : 0.0,
-  "monthlyBudget_四月" : 20000.0,
-  "monthlyBudget_九月" : 0.0,
-  "monthlyBudget_五月" : 15000.0,
-  "monthlyBudget_三月" : 3330.0,
+  "monthlyBudget_Jul" : 0.0,
+  "monthlyBudget_Dec" : 0.0,
+  "monthlyBudget_Feb" : 0.0,
+  "monthlyBudget_Apr" : 0.0,
+  "monthlyBudget_Jun" : 0.0,
+  "monthlyBudget_Mar" : 0.0,
+  "monthlyBudget_Sep" : 0.0,
+  "monthlyBudget_Oct" : 0.0,
+  "monthlyBudget_May" : 0.0,
+  "monthlyBudget_Aug" : 0.0,
+  "monthlyBudget_Nov" : 0.0,
   "emergencyFund" : 10000.0,
-  "monthlyBudget_八月" : 0.0,
-  "monthlyBudget_六月" : 6666.0,
-  "monthlyBudget_二月" : 222250.0
+  "monthlyBudget_Jan" : 0.0
 }
