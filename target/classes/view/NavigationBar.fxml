@@ -1,42 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<!-- Wrap HBox in an AnchorPane-->
-<AnchorPane xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.finance.controller.NavigationBarController">
 
-    <HBox fx:id="navigationBar"
-          alignment="CENTER_LEFT"
-          spacing="20"
-          prefHeight="60"
-          minHeight="60"
-          maxHeight="60"
-          style="-fx-padding: 10 20;"
-          styleClass="navigation-bar"
-          AnchorPane.topAnchor="0"
-          AnchorPane.bottomAnchor="0"
-          AnchorPane.leftAnchor="0"
-          AnchorPane.rightAnchor="0"> <!-- Anchored to the four sides of the parent container -->
+<HBox fx:id="navigationBar"  alignment="CENTER_LEFT" spacing="20"
+      prefHeight="60" minHeight="60" maxHeight="60"
+      style="-fx-padding: 10 20;" styleClass="navigation-bar"
+      xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.finance.controller.NavigationBarController">
+    <ImageView fitHeight="48.0" fitWidth="63.0" preserveRatio="true">
+        <image><Image url="@../images/Money growth.png" /></image>
+    </ImageView>
 
-        <ImageView fitHeight="48.0" fitWidth="63.0" preserveRatio="true">
-            <image>
-                <Image url="@../images/Money growth.png" />
-            </image>
-        </ImageView>
+    <Button fx:id="homeButton" onAction="#goHome" styleClass="nav-button" text="Home" />
+    <Button fx:id="flowButton" onAction="#goFlow" styleClass="nav-button" text="Flow" />
+    <Button fx:id="incomeAnalysisButton" onAction="#goIncomeAnalysis" styleClass="nav-button" text="Income Analysis" />
+    <Button fx:id="revenueButton" onAction="#goRevenue" styleClass="nav-button" text="Revenue" />
+    <Button fx:id="expenditureAnalysisButton" onAction="#goExpenditureAnalysis" styleClass="nav-button" text="Expenditure Analysis" />
+    <Button fx:id="graphButton" onAction="#goGraph" styleClass="nav-button" text="Graph" />
+    <Button fx:id="localFinanceSettingsButton" onAction="#goLocalFinanceSettings" styleClass="nav-button" text="localFinanceSettings" />
+</HBox>
 
-        <!-- All buttons remain at their default width -->
-        <Button fx:id="homeButton" onAction="#goHome" styleClass="nav-button" text="Home" />
-        <Button fx:id="flowButton" onAction="#goFlow" styleClass="nav-button" text="Flow" />
-        <Button fx:id="incomeAnalysisButton" onAction="#goIncomeAnalysis" styleClass="nav-button" text="Income Analysis" />
-        <Button fx:id="revenueButton" onAction="#goRevenue" styleClass="nav-button" text="Revenue" />
-        <Button fx:id="expenditureAnalysisButton" onAction="#goExpenditureAnalysis" styleClass="nav-button" text="Expenditure Analysis" />
-        <Button fx:id="graphButton" onAction="#goGraph" styleClass="nav-button" text="Graph" />
-        <Button fx:id="localFinanceSettingsButton" onAction="#goLocalFinanceSettings" styleClass="nav-button" text="localFinanceSettings" />
-    </HBox>
-</AnchorPane>

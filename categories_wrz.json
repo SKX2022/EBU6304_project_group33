@@ -1,1 +1,1 @@
-[{"type":"支出","name":"food"},{"type":"spending","name":"Food and Diet"},{"type":"支出","name":"餐饮"}]
+[{"type":"Expenditure","name":"utilities"},{"type":"Expenditure","name":"rent"},{"type":"Expenditure","name":"shopping"},{"type":"Income","name":"salary"},{"type":"Income","name":"interest"},{"type":"Expenditure","name":"transport"},{"type":"Expenditure","name":"health"},{"type":"Income","name":"bonus"},{"type":"Expenditure","name":"food"},{"type":"Expenditure","name":"entertainment"}]

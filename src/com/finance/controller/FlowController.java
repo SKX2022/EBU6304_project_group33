@@ -257,8 +257,8 @@ public class FlowController {
 
                     boolean typeMatch = switch (filterComboBox.getValue()) {
                         case "All" -> true;
-                        case "Income" -> "收入".equals(t.getType());
-                        case "Expenditure" -> "支出".equals(t.getType());
+                        case "Income" -> "Income".equals(t.getType());
+                        case "Expenditure" -> "Expenditure".equals(t.getType());
                         default -> false;
                     };
 

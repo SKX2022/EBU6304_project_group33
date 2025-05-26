@@ -35,13 +35,13 @@
                         <padding>
                             <Insets top="10" bottom="10" left="15" right="15"/>
                         </padding>
-                        <ComboBox fx:id="Year0" promptText="Start year" styleClass="input-field"/>
-                        <ComboBox fx:id="Month0" promptText="month" styleClass="input-field"/>
-                        <ComboBox fx:id="Day0" promptText="day" styleClass="input-field"/>
+                        <ComboBox fx:id="Year0" promptText="Start year" styleClass="input-field, date-combo-box" prefWidth="120"/>
+                        <ComboBox fx:id="Month0" promptText="month" styleClass="input-field, date-combo-box" prefWidth="80"/>
+                        <ComboBox fx:id="Day0" promptText="day" styleClass="input-field, date-combo-box" prefWidth="70"/>
                         <Text text="REACH" styleClass="label-data"/>
-                        <ComboBox fx:id="Year1" promptText="endOfYear" styleClass="input-field"/>
-                        <ComboBox fx:id="Month1" promptText="month" styleClass="input-field"/>
-                        <ComboBox fx:id="Day1" promptText="day" styleClass="input-field"/>
+                        <ComboBox fx:id="Year1" promptText="endOfYear" styleClass="input-field, date-combo-box" prefWidth="120"/>
+                        <ComboBox fx:id="Month1" promptText="month" styleClass="input-field, date-combo-box" prefWidth="80"/>
+                        <ComboBox fx:id="Day1" promptText="day" styleClass="input-field, date-combo-box" prefWidth="70"/>
                         <Button fx:id="submit" onAction="#submitDateRange"
                                 styleClass="button-blue"
                                 text="submit"/>

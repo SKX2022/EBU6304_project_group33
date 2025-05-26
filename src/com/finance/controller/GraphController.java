@@ -3,6 +3,7 @@ package com.finance.controller;
 import com.finance.service.LlmService;
 import com.finance.service.UserfulDataPicker;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,7 +30,8 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class GraphController implements Initializable {
+public class
+GraphController implements Initializable {
     // FXML-injected UI elements
     @FXML private ComboBox<Integer> Year0;
     @FXML private ComboBox<Integer> Month0;
@@ -65,6 +67,14 @@ public class GraphController implements Initializable {
         Month0.valueProperty().addListener((obs, oldVal, newVal) -> updateDayComboBox(0));
         Year1.valueProperty().addListener((obs, oldVal, newVal) -> updateDayComboBox(1));
         Month1.valueProperty().addListener((obs, oldVal, newVal) -> updateDayComboBox(1));
+
+        // 添加选择事件监听器，确保选择后文本正确显示
+        configureComboBox(Year0);
+        configureComboBox(Month0);
+        configureComboBox(Day0);
+        configureComboBox(Year1);
+        configureComboBox(Month1);
+        configureComboBox(Day1);
 
             // Set the default setting to Current Date and update the Date for First Time drop-down box
         LocalDate today = LocalDate.now();
@@ -654,5 +664,71 @@ public class GraphController implements Initializable {
         System.out.println("GraphController: Ready to display a pop-up window with the following title: \"" + title + "\", Content Capture: \"" + (message != null ? message.substring(0, Math.min(message.length(), 100)) : "[Content is null or empty]") + "...\"");
         alert.showAndWait(); // Display a pop-up window and wait for the user to close it
         System.out.println("GraphController: The pop-up window has closed。");
+    }
+
+    private void configureComboBox(ComboBox<Integer> comboBox) {
+        // 使用StringConverter来确保正确转换和显示Integer值
+        comboBox.setConverter(new javafx.util.StringConverter<Integer>() {
+            @Override
+            public String toString(Integer object) {
+                return object == null ? "" : object.toString();
+            }
+
+            @Override
+            public Integer fromString(String string) {
+                try {
+                    return string.isEmpty() ? null : Integer.parseInt(string);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+        });
+
+        // 设置按钮单元格
+        comboBox.setButtonCell(new javafx.scene.control.ListCell<Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("");
+                } else {
+                    // 确保完整显示数字（例如：2024）
+                    setText(item.toString());
+                }
+            }
+        });
+
+        // 设置单元格工厂
+        comboBox.setCellFactory(listView -> new javafx.scene.control.ListCell<Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("");
+                } else {
+                    setText(item.toString());
+                }
+            }
+        });
+
+        // 添加选择监听器，确保在选择后更新显示
+        comboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                Platform.runLater(() -> {
+                    // 强制更新ComboBox显示
+                    comboBox.setButtonCell(new javafx.scene.control.ListCell<Integer>() {
+                        @Override
+                        protected void updateItem(Integer item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item == null) {
+                                setText("");
+                            } else {
+                                setText(item.toString());
+                            }
+                        }
+                    });
+                });
+            }
+        });
     }
 }

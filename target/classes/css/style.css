@@ -151,6 +151,8 @@
     -fx-border-radius: 6;
     -fx-border-color: #ccc;
     -fx-background-color: #ffffff;
+    -fx-text-overrun: clip;
+    -fx-text-fill: #333333;
 }
 
 /* The card background is uniform */
@@ -844,10 +846,59 @@
     -fx-border-color: #e2e8f0;
     -fx-border-radius: 4;
     -fx-background-radius: 4;
+    -fx-min-width: 80px;
 }
 
-.combo-box:focused {
-    -fx-border-color: #4299e1;
+.combo-box .list-cell {
+    -fx-padding: 4 8;
+    -fx-text-overrun: ellipsis;
+}
+
+.combo-box .list-view .list-cell {
+    -fx-padding: 6 10;
+}
+
+.combo-box .arrow-button {
+    -fx-padding: 0 4;
+}
+
+/* 确保ComboBox显示区域足够宽 */
+.combo-box-base > .value-container {
+    -fx-padding: 0 6 0 6;
+    -fx-alignment: center-left;
+}
+
+/* 确保文本能完整显示 */
+.text-input {
+    -fx-text-overrun: ellipsis;
+}
+
+/* 特殊样式用于日期选择的ComboBox */
+.date-combo-box {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.date-combo-box .list-cell {
+    -fx-text-overrun: clip;
+    -fx-padding: 4 8;
+    -fx-text-fill: #333333;
+    -fx-min-width: 40px;
+}
+
+.date-combo-box .arrow-button {
+    -fx-padding: 0 6;
+}
+
+/* 重要：修复ComboBox显示文本截断问题 */
+.date-combo-box > .value-container {
+    -fx-padding: 0;
+    -fx-alignment: center;
+    -fx-pref-width: 80px;
 }
 
 /* Divider style */
