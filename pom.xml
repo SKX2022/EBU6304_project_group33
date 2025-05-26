@@ -16,7 +16,7 @@
 
         <!-- JavaFX SDK settings -->
         <javafx.version>22.0.2</javafx.version>
-        <javafx.sdk.path>/Users/wangruizhi/Downloads/javafx-sdk-24.0.1</javafx.sdk.path>
+        
         <mainClass>com.finance.MainApplication</mainClass>
     </properties>
 
