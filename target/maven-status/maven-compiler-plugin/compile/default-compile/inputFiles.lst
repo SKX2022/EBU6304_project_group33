@@ -7,6 +7,7 @@
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/service/TaxCalculatorService.java
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/session/Session.java
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/findByDate/findByDate.java
+/Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/controller/LocalFinanceSettingsController.java
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/controller/FlowController.java
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/model/Transaction.java
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/MainApplication.java
@@ -23,7 +24,9 @@
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/service/ThresholdCalculator.java
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/model/User.java
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/service/LlmService.java
+/Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/controller/RevenueController.java
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/controller/AddExpenseController.java
+/Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/service/BudgetService.java
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/controller/HomeController.java
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/manager/ThresholdManager.java
 /Users/wangruizhi/Documents/GitHub/EBU6304_project_group33/src/com/finance/model/Category.java
