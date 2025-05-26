@@ -671,14 +671,14 @@ public class FlowController {
 
         CompletableFuture.runAsync(() -> {
             try {
-                String prompt = "你是一个财务分析助手。请从用户输入中提取以下信息，格式为JSON：\n" +
-                        "1. 交易类型(type)：'收入'或'支出'\n" +
-                        "2. 分类(category)：例如'餐饮'、'工资'等\n" +
-                        "3. 金额(amount)：数字\n" +
-                        "4. 日期(date)：如果有明确日期，则提取；如果是'昨天'、‘明天’、‘前天’、‘大前天’、‘后天’，转换为具体日期（例如，如果今天是2024-05-24，‘昨天’是2024-05-23，‘前天’是2024-05-22，‘大前天’是2024-05-21，‘明天’是2024-05-25，‘后天’是2024-05-26）；如果没有提及日期，使用当天\n" +
-                        "5. 备注(note)：交易的其他描述信息\n\n" +
-                        "用户输入: \"" + userDescription + "\"\n" +
-                        "只返回JSON格式，不要有其他解释。";
+                String prompt = "You are a financial analysis assistant. Please extract the following information from the user input, in JSON format:\n" +
+                        "1. Transaction type (type): 'Income' or 'Expenditure'\n" +
+                        "2. Category (category): e.g., 'Dining', 'Salary', etc.\n" +
+                        "3. Amount (amount): number\n" +
+                        "4. Date (date): Extract if a specific date is provided. If relative dates like 'yesterday', 'tomorrow', 'the day before yesterday', 'three days ago', 'the day after tomorrow' are used, convert them to a specific date (YYYY-MM-DD format). Assume the current system date is 'today'. For example, if today is " + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ", 'yesterday' is " + LocalDate.now().minusDays(1).format(DateTimeFormatter.ISO_DATE) + ", 'the day before yesterday' is " + LocalDate.now().minusDays(2).format(DateTimeFormatter.ISO_DATE) + ", 'three days ago' is " + LocalDate.now().minusDays(3).format(DateTimeFormatter.ISO_DATE) + ", 'tomorrow' is " + LocalDate.now().plusDays(1).format(DateTimeFormatter.ISO_DATE) + ", and 'the day after tomorrow' is " + LocalDate.now().plusDays(2).format(DateTimeFormatter.ISO_DATE) + ". If no date is mentioned, use the current system date (today's date, ensure the final output for date is in YYYY-MM-DD HH:mm:ss format if time is not specified, otherwise YYYY-MM-DD if only date is mentioned by user).\n" +
+                        "5. Note (note): Other descriptive information about the transaction.\n\n" +
+                        "User input: \"" + userDescription + "\"\n" +
+                        "Return only JSON format, with no other explanations.";
 
                 LlmService llmService = new LlmService(prompt);
                 llmService.callLlmApi();
