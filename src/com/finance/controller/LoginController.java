@@ -32,7 +32,7 @@ public class LoginController {
 
         boolean success = login.loginUser(username, password);
         if (success) {
-            // 查找用户对象并存入 Session
+            // Find the user object and save it in a session
             for (User u : users) {
                 if (u.getUsername().equals(username)) {
                     Session.setCurrentUser(u);
@@ -42,9 +42,9 @@ public class LoginController {
             SceneSwitcher.switchScene("/view/Home.fxml");
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("登录失败");
+            alert.setTitle("Login failed");
             alert.setHeaderText(null);
-            alert.setContentText("用户名或密码错误");
+            alert.setContentText("Wrong username or password");
             alert.showAndWait();
         }
     }

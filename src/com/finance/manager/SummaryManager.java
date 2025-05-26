@@ -15,11 +15,11 @@ public class SummaryManager {
         this.categoryManager = categoryManager;
     }
 
-    // 计算总收入和总支出
+    // Calculate total revenue and total expenses
     public double getTotalIncome() {
         BigDecimal totalIncome = BigDecimal.ZERO;
         for (Transaction transaction : transactionManager.getAllTransactions()) {
-            if (transaction.getType().equals("收入")) {
+            if (transaction.getType().equals("Income")) {
                 totalIncome = totalIncome.add(BigDecimal.valueOf(transaction.getAmount()));
             }
         }
@@ -29,39 +29,39 @@ public class SummaryManager {
     public double getTotalExpenditure() {
         BigDecimal totalExpenditure = BigDecimal.ZERO;
         for (Transaction transaction : transactionManager.getAllTransactions()) {
-            if (transaction.getType().equals("支出")) {
+            if (transaction.getType().equals("Expenditure")) {
                 totalExpenditure = totalExpenditure.add(BigDecimal.valueOf(transaction.getAmount()));
             }
         }
         return totalExpenditure.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
-    // 获取总收支和本月收支汇总
+    // Get a summary of total income and expenditure and income and expenditure for the current month
     public Map<String, Map<String, Double>> getSummary() {
-        // 总收支
+        // Total income and expenditure
         double totalIncome = getTotalIncome();
         double totalExpenditure = getTotalExpenditure();
         double totalSurplus = totalIncome - totalExpenditure;
 
-        // 本月收支
+        //Income and expenditure for the month
         double monthlyIncome = transactionManager.getMonthlyIncome();
         double monthlyExpenditure = transactionManager.getMonthlyExpenditure();
         double monthlySurplus = monthlyIncome - monthlyExpenditure;
 
-        // 构建汇总结果
+        // Build a summary of the results
         Map<String, Double> totalSummary = new HashMap<>();
-        totalSummary.put("总收入", totalIncome);
-        totalSummary.put("总支出", totalExpenditure);
-        totalSummary.put("总剩余", totalSurplus);
+        totalSummary.put("GROSS INCOME", totalIncome);
+        totalSummary.put("Total Expenditure", totalExpenditure);
+        totalSummary.put("Total Remainder", totalSurplus);
 
         Map<String, Double> monthlySummary = new HashMap<>();
-        monthlySummary.put("本月收入", monthlyIncome);
-        monthlySummary.put("本月支出", monthlyExpenditure);
-        monthlySummary.put("本月剩余", monthlySurplus);
+        monthlySummary.put("This month's income", monthlyIncome);
+        monthlySummary.put("Expenditure this month", monthlyExpenditure);
+        monthlySummary.put("Remaining for the month", monthlySurplus);
 
         Map<String, Map<String, Double>> summary = new HashMap<>();
-        summary.put("总收支", totalSummary);
-        summary.put("本月收支", monthlySummary);
+        summary.put("Total income and expenditure", totalSummary);
+        summary.put("Income and expenditure for the month", monthlySummary);
 
         return summary;
     }

@@ -11,30 +11,30 @@ public class DataPersistence {
 
     private static final String USERS_FILE = "users.json";
 
-    // 加载用户数据
+    // Load user data
     public static List<User> loadUsers() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             File file = new File(USERS_FILE);
 
-            // 如果文件不存在或为空，返回一个空的用户列表
+            // If the file does not exist or is empty, an empty list of users is returned
             if (!file.exists() || file.length() == 0) {
                 return new ArrayList<>();
             }
 
-            // 读取文件内容并将其转换为 User 列表
+            // Read the contents of the file and convert it to a list of Users
             return objectMapper.readValue(file, objectMapper.getTypeFactory().constructCollectionType(List.class, User.class));
         } catch (IOException e) {
             e.printStackTrace();
-            return new ArrayList<>();  // 发生异常时返回空的用户列表
+            return new ArrayList<>();  // An empty list of users is returned when an exception occurs
         }
     }
 
-    // 保存用户数据
+    //Save user data
     public static void saveUsers(List<User> users) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(new File(USERS_FILE), users);  // 保存为 JSON 文件
+            objectMapper.writeValue(new File(USERS_FILE), users);  // Save as a JSON file
         } catch (IOException e) {
             e.printStackTrace();
         }

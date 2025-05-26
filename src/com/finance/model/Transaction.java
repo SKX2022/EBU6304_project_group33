@@ -8,10 +8,10 @@ public class Transaction {
     private String category;
     private double amount;
     private String date;
-    private User user;  // 关联的用户对象
-    private String project; // 备注信息
+    private User user;  // Associated user objects
+    private String project; // Remarks information
 
-    // 使用 @JsonCreator 和 @JsonProperty 注解
+    // Use @JsonCreator and @JsonProperty annotations
     @JsonCreator
     public Transaction(@JsonProperty("type") String type,
                        @JsonProperty("category") String category,
@@ -24,15 +24,16 @@ public class Transaction {
         this.amount = amount;
         this.date = date;
         this.user = user;
-        this.project = project != null ? project : ""; // 确保备注不为null
+        this.project = project != null ? project : ""; // Make sure the comment is not null
     }
 
-    // 兼容旧版本的构造函数，不带备注参数
+
+    // Compatible with older versions of constructors, without comment parameters
     public Transaction(String type, String category, double amount, String date, User user) {
         this(type, category, amount, date, user, "");
     }
 
-    // Getter 和 Setter 方法
+    // Getter and Setter methods
     public String getType() {
         return type;
     }
@@ -73,7 +74,7 @@ public class Transaction {
         this.user = user;
     }
 
-    // 新增备注的getter和setter方法
+    // Added getter and setter methods for notes
     public String getProject() {
         return project;
     }

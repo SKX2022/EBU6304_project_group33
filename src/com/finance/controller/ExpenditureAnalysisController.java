@@ -32,7 +32,7 @@ public class ExpenditureAnalysisController {
     @FXML private ListView<String> categoryTypeList;
     @FXML private ListView<String> categoryAmountList;
     @FXML private Label totalExpenseLabel;
-    @FXML private PieChart expenditurePieChart;  // 正确声明（无泛型参数）
+    @FXML private PieChart expenditurePieChart;  // Correctly declared (no generic parameters)
     @FXML private Label analysisResultLabel;
 
     private TransactionManager transactionManager;
@@ -46,9 +46,9 @@ public class ExpenditureAnalysisController {
     }
 
     private void loadExpenditureData() {
-        // 使用BigDecimal精确计算
+        // calculateAccuratelyWithBigDecimal
         Map<String, BigDecimal> categoryMap = transactions.stream()
-                .filter(t -> "支出".equals(t.getType()))
+                .filter(t -> "expenditure".equals(t.getType()))
                 .collect(Collectors.groupingBy(
                         Transaction::getCategory,
                         Collectors.mapping(Transaction::getAmount,
@@ -58,19 +58,19 @@ public class ExpenditureAnalysisController {
                                                 .map(BigDecimal::valueOf)
                                                 .reduce(BigDecimal.ZERO, BigDecimal::add)))));
 
-        // 转换为保留两位小数的Map
+        // convertToAMapWithTwoDecimalPlaces
         Map<String, BigDecimal> formattedMap = categoryMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         e -> e.getValue().setScale(2, RoundingMode.HALF_UP)));
 
-        // 更新总消费标签
+            // updateTheTotalSpendTab
         BigDecimal total = formattedMap.values().stream()
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        totalExpenseLabel.setText(String.format("总支出: ¥%s",
+        totalExpenseLabel.setText(String.format("Total spending: ¥%s",
                 total.stripTrailingZeros().toPlainString()));
 
-        // 配置BigDecimal转换器
+        // configureTheBigDecimalConverter
         StringConverter<BigDecimal> amountConverter = new StringConverter<>() {
             private final DecimalFormat df = new DecimalFormat("#0.00");
 
@@ -85,7 +85,7 @@ public class ExpenditureAnalysisController {
             }
         };
 
-        // 绑定数据到UI控件
+        // bindDataToUIControls
         ObservableList<String> categories = FXCollections.observableArrayList(
                 formattedMap.keySet().stream().sorted().toList());
         ObservableList<String> amounts = FXCollections.observableArrayList(
@@ -96,7 +96,7 @@ public class ExpenditureAnalysisController {
         categoryTypeList.setItems(categories);
         categoryAmountList.setItems(amounts);
 
-        // 更新饼图数据
+        // updateThePieChartData
         updatePieChartData(formattedMap);
     }
 
@@ -108,19 +108,19 @@ public class ExpenditureAnalysisController {
 
 
         categoryMap.forEach((category, amount) -> {
-            // 使用精确的百分比计算
+            // calculateUsingAnExactPercentage
             BigDecimal percentage = amount.divide(total, 4, RoundingMode.HALF_UP)
                     .multiply(BigDecimal.valueOf(100));
 
-            // 强制保留两位小数
+            //enforceTheRetentionOfTwoDecimalPlaces
             String formattedPercentage = percentage.setScale(2, RoundingMode.HALF_UP) + "%";
             String label = String.format("%s\n%s", category, formattedPercentage);
 
-            // 使用double值构造PieChart.Data
+            // constructPieChartDataWithTheDoubleValue
             expenditurePieChart.getData().add(new PieChart.Data(label, amount.doubleValue()));
         });
 
-        // 强制刷新图表布局
+        // Force a refresh of the chart layout
         expenditurePieChart.layout();
     }
 
@@ -129,7 +129,7 @@ public class ExpenditureAnalysisController {
     private void handleAnalyzeButtonClick() {
         try {
             Map<String, Double> categoryAmounts = transactions.stream()
-                    .filter(t -> "支出".equals(t.getType()))
+                    .filter(t -> "expenditure".equals(t.getType()))
                     .collect(Collectors.groupingBy(
                             Transaction::getCategory,
                             Collectors.summingDouble(Transaction::getAmount))
@@ -148,14 +148,14 @@ public class ExpenditureAnalysisController {
                         t.getType(),
                         amount));
             });
-            promptBuilder.append("请分析各类支出情况，并给出详细的支出优化建议：");
+            promptBuilder.append("Analyze your spend and make detailed recommendations for how to optimize your spend：");
 
             LlmService llmService = new LlmService(promptBuilder.toString());
             llmService.callLlmApi();
-            showAlert(Alert.AlertType.INFORMATION, "分析结果", llmService.getAnswer());
+            showAlert(Alert.AlertType.INFORMATION, "Analyze the results", llmService.getAnswer());
 
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "错误", e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "error", e.getMessage());
         }
     }
 
@@ -163,25 +163,25 @@ public class ExpenditureAnalysisController {
         Alert alert = new Alert(type);
         alert.setTitle(title);
 
-        // 创建滚动面板
+        // createAScrollingPanel
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        // 创建文本区域
+        //createATextArea
         TextArea textArea = new TextArea(message);
         textArea.setStyle("-fx-font-size: 14px; -fx-wrap-text: true;");
         textArea.setEditable(false);
         scrollPane.setContent(textArea);
 
-        // 配置对话框
+        // configureTheDialogBox
         alert.getDialogPane().setContent(scrollPane);
         alert.setWidth(600);
         alert.setHeight(400);
         alert.setResizable(false);
 
-        // 显示弹窗
+        // aPopUpWindowAppears
         alert.showAndWait();
     }
 }

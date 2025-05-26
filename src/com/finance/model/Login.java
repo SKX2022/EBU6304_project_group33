@@ -5,18 +5,18 @@ import java.util.List;
 public class Login {
     private List<User> users;
 
-    // 构造器，接受用户列表作为参数
+    // Constructor, which accepts a list of users as a parameter
     public Login(List<User> users) {
         this.users = users;
     }
 
-    // 登录验证方法
+    // Login verification method
     public boolean loginUser(String username, String password) {
         for (User user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                return true; // 登录成功
+                return true; // Login successful
             }
         }
-        return false; // 登录失败
+        return false; // Login failed
     }
 }

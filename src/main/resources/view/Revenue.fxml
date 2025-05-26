@@ -18,115 +18,115 @@
                 <!-- 页面标题 -->
                 <HBox alignment="CENTER">
                     <VBox alignment="CENTER" spacing="10">
-                        <Label text="💰 收入分析与税收计算" styleClass="income-title"/>
-                        <Label text="输入您的年收入，我们将为您计算个人所得税和实际到手收入" styleClass="income-subtitle"/>
+                        <Label text="💰 Income analysis and tax calculations" styleClass="income-title"/>
+                        <Label text="Enter your annual income and we'll calculate your personal income tax and actual income for you" styleClass="income-subtitle"/>
                     </VBox>
                 </HBox>
 
-                <!-- 主要内容区域 -->
+                <!-- The main content area -->
                 <HBox spacing="40" alignment="TOP_CENTER">
                     
-                    <!-- 左侧：输入区域 -->
+                    <!-- Left: Input area -->
                     <VBox spacing="20" styleClass="income-input-card" minWidth="400" alignment="TOP_LEFT">
-                        <Label text="📊 收入信息输入" styleClass="section-title"/>
+                        <Label text="📊 Revenue information entry" styleClass="section-title"/>
                         
-                        <!-- 年收入输入 -->
+                        <!-- Annual income input -->
                         <VBox spacing="8">
-                            <Label text="年收入（税前）" styleClass="input-label"/>
-                            <TextField fx:id="annualIncomeField" promptText="请输入年收入金额（元）" 
+                            <Label text="Annual income (before taxes)" styleClass="input-label"/>
+                            <TextField fx:id="annualIncomeField" promptText="Please enter the amount of annual income (RMB)"
                                       styleClass="income-input-field" prefWidth="350"/>
                         </VBox>
                         
-                        <!-- 工作城市选择 -->
+                        <!-- Work city selection-->
                         <VBox spacing="8">
-                            <Label text="工作城市" styleClass="input-label"/>
-                            <ComboBox fx:id="cityComboBox" promptText="选择工作城市" 
+                            <Label text="City of work" styleClass="input-label"/>
+                            <ComboBox fx:id="cityComboBox" promptText="Select the city of work"
                                      styleClass="income-input-field" prefWidth="350"/>
                         </VBox>
                         
-                        <!-- 社保基数 -->
+                        <!-- Social security base -->
                         <VBox spacing="8">
-                            <Label text="社保缴费基数" styleClass="input-label"/>
-                            <TextField fx:id="socialSecurityBaseField" promptText="默认按工资计算，可手动调整" 
+                            <Label text="Social security contribution base" styleClass="input-label"/>
+                            <TextField fx:id="socialSecurityBaseField" promptText="By default, it is calculated on a payroll basis and can be adjusted manually"
                                       styleClass="income-input-field" prefWidth="350"/>
                         </VBox>
                         
-                        <!-- 公积金基数 -->
+                        <!-- Provident fund base -->
                         <VBox spacing="8">
-                            <Label text="公积金缴费基数" styleClass="input-label"/>
-                            <TextField fx:id="housingFundBaseField" promptText="默认按工资计算，可手动调整" 
+                            <Label text="Provident Fund contribution base" styleClass="input-label"/>
+                            <TextField fx:id="housingFundBaseField" promptText="By default, it is calculated on a payroll basis and can be adjusted manually"
                                       styleClass="income-input-field" prefWidth="350"/>
                         </VBox>
                         
-                        <!-- 计算按钮 -->
-                        <Button fx:id="calculateButton" text="🧮 计算税收" onAction="#calculateTax" 
+                        <!-- Calculate button -->
+                        <Button fx:id="calculateButton" text="🧮 Calculate taxes" onAction="#calculateTax"
                                styleClass="calculate-button" prefWidth="350"/>
                         
-                        <!-- 重置按钮 -->
-                        <Button fx:id="resetButton" text="🔄 重置" onAction="#resetForm" 
+                        <!-- Reset button-->
+                        <Button fx:id="resetButton" text="🔄 RESET" onAction="#resetForm"
                                styleClass="reset-button" prefWidth="350"/>
                     </VBox>
                     
-                    <!-- 右侧：结果显示区域 -->
+                    <!-- Right: The result display area -->
                     <VBox spacing="20" styleClass="income-result-card" minWidth="450" alignment="TOP_LEFT">
-                        <Label text="📈 税收计算结果" styleClass="section-title"/>
+                        <Label text="📈 Tax calculation results" styleClass="section-title"/>
                         
-                        <!-- 收入汇总 -->
+                        <!-- Revenue aggregation -->
                         <VBox spacing="10" styleClass="result-summary">
-                            <Label text="💼 收入汇总" styleClass="result-category"/>
+                            <Label text="💼 Revenue aggregation" styleClass="result-category"/>
                             <HBox alignment="CENTER_LEFT">
-                                <Label text="年收入（税前）：" styleClass="result-label"/>
+                                <Label text="Annual income (before taxes)：" styleClass="result-label"/>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="yearlyIncomeLabel" text="¥ 0.00" styleClass="result-value"/>
                             </HBox>
                             <HBox alignment="CENTER_LEFT">
-                                <Label text="月平均收入：" styleClass="result-label"/>
+                                <Label text="Average Monthly Income:" styleClass="result-label"/>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="monthlyIncomeLabel" text="¥ 0.00" styleClass="result-value"/>
                             </HBox>
                         </VBox>
                         
-                        <!-- 扣除项目 -->
+                        <!--DEDUCTIONS -->
                         <VBox spacing="10" styleClass="result-summary">
-                            <Label text="📋 扣除项目" styleClass="result-category"/>
+                            <Label text="📋 DEDUCTIONS" styleClass="result-category"/>
                             <HBox alignment="CENTER_LEFT">
-                                <Label text="个人所得税：" styleClass="result-label"/>
+                                <Label text="Personal Income Tax:" styleClass="result-label"/>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="incomeTaxLabel" text="¥ 0.00" styleClass="tax-value"/>
                             </HBox>
                             <HBox alignment="CENTER_LEFT">
-                                <Label text="社保个人部分：" styleClass="result-label"/>
+                                <Label text="Social Security Individual Section:" styleClass="result-label"/>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="socialSecurityLabel" text="¥ 0.00" styleClass="deduction-value"/>
                             </HBox>
                             <HBox alignment="CENTER_LEFT">
-                                <Label text="公积金个人部分：" styleClass="result-label"/>
+                                <Label text="CPF Individual Part:" styleClass="result-label"/>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="housingFundLabel" text="¥ 0.00" styleClass="deduction-value"/>
                             </HBox>
                             <Separator/>
                             <HBox alignment="CENTER_LEFT">
-                                <Label text="总扣除金额：" styleClass="result-label" style="-fx-font-weight: bold;"/>
+                                <Label text="Total Deduction Amount:" styleClass="result-label" style="-fx-font-weight: bold;"/>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="totalDeductionLabel" text="¥ 0.00" styleClass="total-deduction-value"/>
                             </HBox>
                         </VBox>
                         
-                        <!-- 实际收入 -->
+                        <!-- Actual income -->
                         <VBox spacing="10" styleClass="result-summary final-result">
-                            <Label text="💰 实际到手" styleClass="result-category"/>
+                            <Label text="💰 Actually get it" styleClass="result-category"/>
                             <HBox alignment="CENTER_LEFT">
-                                <Label text="年实际收入：" styleClass="result-label" style="-fx-font-weight: bold;"/>
+                                <Label text="Annual Actual Income：" styleClass="result-label" style="-fx-font-weight: bold;"/>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="netYearlyIncomeLabel" text="¥ 0.00" styleClass="net-income-value"/>
                             </HBox>
                             <HBox alignment="CENTER_LEFT">
-                                <Label text="月实际收入：" styleClass="result-label" style="-fx-font-weight: bold;"/>
+                                <Label text="Actual Monthly Income:" styleClass="result-label" style="-fx-font-weight: bold;"/>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="netMonthlyIncomeLabel" text="¥ 0.00" styleClass="net-income-value"/>
                             </HBox>
                             <HBox alignment="CENTER_LEFT">
-                                <Label text="税负率：" styleClass="result-label"/>
+                                <Label text="Tax Rate:" styleClass="result-label"/>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="taxRateLabel" text="0.00%" styleClass="result-value"/>
                             </HBox>
@@ -134,13 +134,13 @@
                         
                     </VBox>
                 </HBox>
-                <!-- 底部说明 -->
+                <!-- Instructions at the bottom -->
                 <VBox spacing="10" styleClass="income-note-card">
-                    <Label text="📋 计算说明" styleClass="note-title"/>
-                    <Label text="• 个人所得税按照最新税率计算，包含专项扣除（起征点5000元）"/>
-                    <Label text="• 社保费率：养老保险8%，医疗保险2%，失业保险0.5%"/>
-                    <Label text="• 公积金费率：根据城市政策，一般为5%-12%"/>
-                    <Label text="• 计算结果仅供参考，实际缴费可能因政策调整而有所差异"/>
+                    <Label text="📋 Explanation of the calculation" styleClass="note-title"/>
+                    <Label text="• Individual income tax is calculated according to the latest tax rate, including special deductions (threshold of 5,000 yuan)"/>
+                    <Label text="• Social insurance rate: pension insurance 8%, medical insurance 2%, unemployment insurance 0.5%"/>
+                    <Label text="• Provident fund rate: 5%-12% according to the city's policy"/>
+                    <Label text="• The calculation results are for reference only, and the actual payment may vary due to policy adjustments."/>
                 </VBox>
             </VBox>
     </center>

@@ -61,8 +61,8 @@ public class LocalFinanceSettingsController {
     public void initialize() {
         currentUser = Session.getCurrentUser();
         if (currentUser == null) {
-            System.out.println("用户未登录，无法加载本地财务设置。");
-            showAlert(Alert.AlertType.ERROR, "错误", "用户未登录，无法加载设置。");
+            System.out.println("The user isn't logged in and can't load the local financial settings.");
+            showAlert(Alert.AlertType.ERROR, "Error", "User is not logged in, settings cannot be loaded.");
             disableUIComponents();
             return;
         }
@@ -86,7 +86,7 @@ public class LocalFinanceSettingsController {
 
     private void populateMonthComboBox() {
         ObservableList<String> months = IntStream.rangeClosed(1, 12)
-                .mapToObj(monthNum -> Month.of(monthNum).getDisplayName(TextStyle.FULL_STANDALONE, new Locale("zh", "CN")))
+                .mapToObj(monthNum -> Month.of(monthNum).getDisplayName(TextStyle.SHORT, Locale.ENGLISH))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
         monthComboBox.setItems(months);
     }
@@ -110,7 +110,7 @@ public class LocalFinanceSettingsController {
         }
 
         updateOverviewLabels(settings);
-        updateMonthlyOverviewDisplay(); // 添加立即刷新显示
+        updateMonthlyOverviewDisplay(); // Added an immediate refresh display
     }
 
     private void loadBudgetForSelectedMonth(String monthName) {
@@ -122,20 +122,20 @@ public class LocalFinanceSettingsController {
     private void handleUpdateSelectedMonthBudgetInMemory() {
         String selectedMonth = monthComboBox.getSelectionModel().getSelectedItem();
         if (selectedMonth == null) {
-            showAlert(Alert.AlertType.WARNING, "提示", "请先选择一个月份。");
+            showAlert(Alert.AlertType.WARNING, "tips", "Please select a month first.");
             return;
         }
         try {
             double budgetAmount = Double.parseDouble(monthlyBudgetField.getText());
             if (budgetAmount < 0) {
-                showAlert(Alert.AlertType.ERROR, "输入错误", "预算金额不能为负数。");
+                showAlert(Alert.AlertType.ERROR, "Typing error", "The budget amount can't be negative.");
                 return;
             }
             monthlyBudgets.put(selectedMonth, budgetAmount);
-            updateMonthlyOverviewDisplay(); // 添加立即刷新显示
-            showAlert(Alert.AlertType.INFORMATION, "更新成功", selectedMonth + " 的预算已在内存中更新为: " + String.format("%.2f", budgetAmount) + "。\n请记得点击下方的“保存手动设置”以持久化所有更改。");
+            updateMonthlyOverviewDisplay(); // Added an immediate refresh display
+            showAlert(Alert.AlertType.INFORMATION, "The update was successful", selectedMonth + " The budget has been updated in memory to: " + String.format("%.2f", budgetAmount) + "。\nRemember to click Save Manual Settings below to persistently make all changes.");
         } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "输入错误", "请输入有效的数字金额。");
+            showAlert(Alert.AlertType.ERROR, "Typing error", "Please enter a valid numeric amount");
         }
     }
 
@@ -145,7 +145,7 @@ public class LocalFinanceSettingsController {
             String periodName = (String) suggestion.get("periodName");
             if (periodName.contains(monthName) || monthName.contains(periodName)) {
                 Double suggestedBudget = (Double) suggestion.get("suggestedBudget");
-                aiSuggestionForSelectedMonthLabel.setText(String.format("%.2f 元", suggestedBudget));
+                aiSuggestionForSelectedMonthLabel.setText(String.format("%.2f ", suggestedBudget));
                 applyAiToSelectedMonthButton.setDisable(false);
                 suggestionFound = true;
                 break;
@@ -161,7 +161,7 @@ public class LocalFinanceSettingsController {
     private void handleApplyAiToSelectedMonth() {
         String selectedMonth = monthComboBox.getSelectionModel().getSelectedItem();
         if (selectedMonth == null) {
-            showAlert(Alert.AlertType.WARNING, "提示", "请先选择一个月份。");
+            showAlert(Alert.AlertType.WARNING, "Tip", "Please select a month first.");
             return;
         }
 
@@ -172,21 +172,21 @@ public class LocalFinanceSettingsController {
                 Double suggestedBudget = (Double) suggestion.get("suggestedBudget");
                 monthlyBudgetField.setText(String.format("%.2f", suggestedBudget));
                 monthlyBudgets.put(selectedMonth, suggestedBudget);
-                updateMonthlyOverviewDisplay(); // 添加立即刷新显示
-                showAlert(Alert.AlertType.INFORMATION, "AI建议已应用", "AI对 " + selectedMonth + " 的预算建议 " + String.format("%.2f", suggestedBudget) + " 已填充到输入框并更新到内存。\n请记得点击下方的“保存手动设置”以持久化所有更改。");
+                updateMonthlyOverviewDisplay(); // Added an immediate refresh display
+                showAlert(Alert.AlertType.INFORMATION, "AI recommendations have been applied", "AI对 " + selectedMonth + " BUDGET PROPOSALS" + String.format("%.2f", suggestedBudget) + " Populated into the input box and updated to memory. \nPlease remember to click Save Manual Settings below to persist all changes");
                 applied = true;
                 break;
             }
         }
         if (!applied) {
-            showAlert(Alert.AlertType.WARNING, "无匹配建议", "未能找到针对 " + selectedMonth + " 的AI预算建议以应用。");
+            showAlert(Alert.AlertType.WARNING, "No Match Suggestion", "Failed to find AI budget suggestion for "+selectedMonth+" to apply.");
         }
     }
 
     @FXML
     private void handleManualSave() {
         if (currentUser == null) {
-            showAlert(Alert.AlertType.ERROR, "错误", "用户未登录，无法保存。");
+            showAlert(Alert.AlertType.ERROR, "Error", "User is not logged in, cannot be saved.");
             return;
         }
         try {
@@ -200,32 +200,32 @@ public class LocalFinanceSettingsController {
 
             budgetService.saveBudgetSettings(settings);
 
-            // 重新加载所有设置并更新显示
+            //Reload all settings and update the display
             loadUserSettings();
             updateBudgetAnalysisDisplay();
             updateMonthlyOverviewDisplay();
 
-            showAlert(Alert.AlertType.INFORMATION, "保存成功", "所有预算设置（包括按月预算）已保存。");
+            showAlert(Alert.AlertType.INFORMATION, "The save was successful", "All budget settings, including monthly budgets, are saved.");
         } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "输入错误", "请输入有效的数字金额。");
+            showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter a valid numeric amount.");
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "保存失败", "保存设置时发生错误: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Save failed", "An error occurred while saving settings: "+ e.getMessage());
         }
     }
 
     @FXML
     private void handleAiConversation() {
         if (currentUser == null) {
-            showAlert(Alert.AlertType.ERROR, "错误", "用户未登录，无法使用AI功能。");
+            showAlert(Alert.AlertType.ERROR, "Error", "The user is not logged in and cannot use the AI feature.");
             return;
         }
         String userInput = aiUserInputArea.getText();
         if (userInput == null || userInput.trim().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "输入提示", "请输入您的预算调整需求或咨询。");
+            showAlert(Alert.AlertType.WARNING, "Enter a prompt", "Please enter your budget adjustment needs or inquiries.");
             return;
         }
 
-        aiResponseArea.setText("正在获取AI智能建议，请稍候...");
+        aiResponseArea.setText("Getting AI smart suggestions, please wait...");
         CompletableFuture.runAsync(() -> {
             try {
                 String prompt = buildDynamicAiPrompt(userInput);
@@ -234,7 +234,7 @@ public class LocalFinanceSettingsController {
                 String rawAiResponse = llmService.getAnswer();
 
                 Platform.runLater(() -> {
-                    aiResponseArea.setText(rawAiResponse != null ? rawAiResponse : "AI未能提供回复。");
+                    aiResponseArea.setText(rawAiResponse != null ? rawAiResponse : "The AI failed to provide a response.");
                     if (rawAiResponse != null) {
                         tryToParseAndStoreAiSuggestion(rawAiResponse);
                         String selectedMonth = monthComboBox.getSelectionModel().getSelectedItem();
@@ -248,14 +248,14 @@ public class LocalFinanceSettingsController {
 
             } catch (IOException | InterruptedException | LlmService.LlmServiceException e) {
                 Platform.runLater(() -> {
-                    aiResponseArea.setText("获取AI建议失败: " + e.getMessage());
-                    showAlert(Alert.AlertType.ERROR, "AI服务错误", "获取AI建议时发生错误。" + e.getMessage());
+                    aiResponseArea.setText("Failed to get AI suggestions:" + e.getMessage());
+                    showAlert(Alert.AlertType.ERROR, "AI Service Error", "An error occurred while getting AI recommendations." + e.getMessage());
                     e.printStackTrace();
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    aiResponseArea.setText("调用AI时发生未知错误: " + e.getMessage());
-                    showAlert(Alert.AlertType.ERROR, "AI未知错误", "调用AI时发生未知错误。" + e.getMessage());
+                    aiResponseArea.setText("An unknown error occurred while calling AI: " + e.getMessage());
+                    showAlert(Alert.AlertType.ERROR, "AI Unknown Error", "An Unknown Error Occurred While Invoking AI." + e.getMessage());
                     e.printStackTrace();
                 });
             }
@@ -369,15 +369,15 @@ public class LocalFinanceSettingsController {
                             }
                         }
 
-                        String alertMessage = "已成功解析AI返回的预算建议。";
+                        String alertMessage ="The budget proposal returned by the AI has been successfully resolved.";
                         if (!aiCustomPeriodSuggestions.isEmpty()) {
-                            alertMessage += "\nAI识别并建议了 " + aiCustomPeriodSuggestions.size() + " 个特定时期/事项的预算。";
+                            alertMessage += "\nThe AI recognized and suggested " + aiCustomPeriodSuggestions.size() + " Budgets for specific periods/events.";
                             System.out.println("Parsed AI custom period budgets: " + aiCustomPeriodSuggestions);
                         }
                         if (aiSuggestedBudgets.isEmpty() && aiCustomPeriodSuggestions.isEmpty()){
-                            System.out.println("AI响应中未找到可结构化解析的预算数据。");
+                            System.out.println("No structured budget data was found in the AI response.");
                         } else {
-                            showAlert(Alert.AlertType.INFORMATION, "AI建议解析成功", alertMessage);
+                            showAlert(Alert.AlertType.INFORMATION, "AI Suggestion Resolution Successful", alertMessage);
                         }
 
                     } else {
@@ -387,21 +387,21 @@ public class LocalFinanceSettingsController {
                     System.out.println("Could not find a clear end '}' for the JSON object in: " + potentialJson);
                 }
             } catch (IOException e) {
-                System.err.println("无法从AI响应中解析预算JSON: " + e.getMessage() + " (JSON attempted: " + potentialJson + ")");
+                System.err.println("Unable to parse budget JSON from AI response: " + e.getMessage() + " (JSON attempted: " + potentialJson + ")");
             }
         } else {
-            System.out.println("AI响应中未找到JSON格式的预算建议。");
+            System.out.println("No budget proposal found in JSON format in AI response.");
         }
     }
 
     @FXML
     private void applyAiSuggestion() {
         if (currentUser == null) {
-            showAlert(Alert.AlertType.ERROR, "错误", "用户未登录。");
+            showAlert(Alert.AlertType.ERROR, "Error", "User is not logged in.");
             return;
         }
         if (aiSuggestedBudgets.isEmpty() && aiCustomPeriodSuggestions.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "无建议", "没有可应用的AI智能建议，或者建议未能成功解析。请先获取并成功解析AI建议。");
+            showAlert(Alert.AlertType.WARNING, "No recommendations", "There are no AI intelligent suggestions that can be applied, or the recommendations are not successfully resolved. Obtain and resolve AI suggestions first.");
             return;
         }
 
@@ -428,18 +428,18 @@ public class LocalFinanceSettingsController {
             handleManualSave();
         }
 
-        String applyAlertMessage = standardApplied ? "AI的主要预算建议已应用到对应文本框并已触发保存。" : "AI未提供可应用到主要文本框的预算建议。";
+        String applyAlertMessage = standardApplied ? "The AI's main budget proposal has been applied to the corresponding text box and has triggered a save." : "AI doesn't provide budget recommendations that can be applied to the main text box.";
 
         if (!aiCustomPeriodSuggestions.isEmpty()) {
-            applyAlertMessage += "\nAI还提供了 " + aiCustomPeriodSuggestions.size() + " 条特定时期/事项的建议。请在月份选择器旁查看并单独应用（如果适用）。";
+            applyAlertMessage += "\nAI also provides: " + aiCustomPeriodSuggestions.size() + " for a specific period/event. Look next to the month picker and apply separately, if applicable.";
         }
-        showAlert(Alert.AlertType.INFORMATION, "应用AI建议", applyAlertMessage);
+        showAlert(Alert.AlertType.INFORMATION, "Apply AI recommendations", applyAlertMessage);
     }
 
     @FXML
     private void resetSettings() {
         if (currentUser == null) {
-            showAlert(Alert.AlertType.ERROR, "错误", "用户未登录。");
+            showAlert(Alert.AlertType.ERROR, "Error", "User is not logged in.");
             return;
         }
 
@@ -482,11 +482,11 @@ public class LocalFinanceSettingsController {
 
             budgetService.saveBudgetSettings(defaultSettings);
         } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "保存失败", "重置预算设置时发生错误: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Save failed", "An error occurred while resetting budget settings: "+ e.getMessage());
         }
         updateBudgetAnalysisDisplay();
         updateMonthlyOverviewDisplay(); // Refresh monthly overview after reset
-        showAlert(Alert.AlertType.INFORMATION, "重置成功", "所有预算设置已恢复默认值并已保存。");
+        showAlert(Alert.AlertType.INFORMATION, "Reset successful", "All budget settings have been restored to their defaults and saved.");
     }
 
     private void updateBudgetAnalysisDisplay() {
@@ -495,7 +495,7 @@ public class LocalFinanceSettingsController {
         Map<String, Double> currentSettings = budgetService.loadBudgetSettings();
         updateOverviewLabels(currentSettings);
 
-        // 更新月度预算数据
+        // Update monthly budget data
         monthlyBudgets.clear();
         ObservableList<String> months = monthComboBox.getItems();
         if (months != null) {
@@ -515,7 +515,7 @@ public class LocalFinanceSettingsController {
                 (Double) analysis.getOrDefault("currentYearSpending", 0.0),
                 (Double) analysis.getOrDefault("yearlyBudget", currentSettings.getOrDefault("yearlyBudget", 0.0))));
 
-        // 更新月度预算详情显示
+        // Update the monthly budget details display
         updateMonthlyOverviewDisplay();
     }
 
@@ -535,19 +535,20 @@ public class LocalFinanceSettingsController {
         ObservableList<String> monthNames = monthComboBox.getItems();
         if (monthNames == null || monthNames.isEmpty()) {
             monthNames = IntStream.rangeClosed(1, 12)
-                    .mapToObj(monthNum -> Month.of(monthNum).getDisplayName(TextStyle.FULL_STANDALONE, new Locale("zh", "CN")))
+                    .mapToObj(monthNum -> Month.of(monthNum)
+                            .getDisplayName(TextStyle.FULL_STANDALONE, Locale.ENGLISH))
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
 
         int col = 0;
         int row = 0;
-        final int MAX_COLS = 2; // 每行显示2组月份（4列，因为每组占2列）
+        final int MAX_COLS = 2; // Each row shows 2 groups of months (4 columns, since each group is 2 columns)
 
         for (int i = 0; i < monthNames.size(); i++) {
             String monthName = monthNames.get(i);
             Double budgetValue = monthlyBudgets.getOrDefault(monthName, 0.0);
 
-            Label monthLabel = new Label(monthName + "预算:");
+            Label monthLabel = new Label(monthName + "budget:");
             monthLabel.getStyleClass().add("label-info-sm");
             GridPane.setHalignment(monthLabel, javafx.geometry.HPos.RIGHT);
 
@@ -556,8 +557,8 @@ public class LocalFinanceSettingsController {
             GridPane.setHalignment(valueLabel, javafx.geometry.HPos.LEFT);
             monthBudgetLabels.put(monthName, valueLabel);
 
-            // 计算在GridPane中的位置
-            int baseCol = (i % MAX_COLS) * 2;  // 每组月份占用2列
+            // Calculate the location in the GridPane
+            int baseCol = (i % MAX_COLS) * 2;  // Each set of months occupies 2 columns
             row = i / MAX_COLS;
 
             monthlyBudgetGrid.add(monthLabel, baseCol, row);
@@ -576,20 +577,20 @@ public class LocalFinanceSettingsController {
     @FXML
     private void exportSettings() {
         if (currentUser == null) {
-            showAlert(Alert.AlertType.ERROR, "错误", "用户未登录。");
+            showAlert(Alert.AlertType.ERROR, "Error", "User is not logged in.");
             return;
         }
         System.out.println("Export settings action triggered.");
-        showAlert(Alert.AlertType.INFORMATION, "功能待实现", "导出财务设置功能正在开发中。");
+        showAlert(Alert.AlertType.INFORMATION, "Feature to be implemented", "Export financial settings feature is in development.");
     }
 
     @FXML
     private void importSettings() {
         if (currentUser == null) {
-            showAlert(Alert.AlertType.ERROR, "错误", "用户未登录。");
+            showAlert(Alert.AlertType.ERROR, "Error", "User is not logged in.");
             return;
         }
         System.out.println("Import settings action triggered.");
-        showAlert(Alert.AlertType.INFORMATION, "功能待实现", "导入财务设置功能正在开发中。");
+        showAlert(Alert.AlertType.INFORMATION, "Functionality to be implemented", "Import financial settings feature is under development.");
     }
 }

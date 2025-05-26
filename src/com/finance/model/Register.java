@@ -8,7 +8,7 @@ public class Register {
     private List<User> users;
 
     public Register() {
-        users = DataPersistence.loadUsers();  // 从文件中加载现有的用户
+        users = DataPersistence.loadUsers();  // Load an existing user from a file
     }
 
     public List<User> getUsers() {
@@ -16,17 +16,17 @@ public class Register {
     }
 
     public boolean registerUser(String username, String password) {
-        // 检查用户名是否已存在
+        // Check if the username already exists
         for (User user : users) {
             if (user.getUsername().equals(username)) {
-                return false;  // 用户名已存在
+                return false;  // The username already exists
             }
         }
 
-        // 如果用户名不存在，则创建新的用户并保存
+        // If the username does not exist, create a new user and save it
         User newUser = new User(username, password);
         users.add(newUser);
-        DataPersistence.saveUsers(users);  // 保存用户列表到文件
-        return true;  // 注册成功
+        DataPersistence.saveUsers(users);  // Save the user list to a file
+        return true;  //Registration is successful
     }
 }

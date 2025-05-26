@@ -64,27 +64,27 @@ public class HomeController {
         int year = now.getYear();
         int month = now.getMonthValue();
 
-        // 月收支
+        // Monthly income and expenditure
         double incomeMonth = transactionManager.getMonthlyIncome();
         double expenseMonth = transactionManager.getMonthlyExpenditure();
 
-        // 使用BigDecimal计算盈余，确保精度
+        // Use BigDecimal to calculate the surplus with precision
         BigDecimal surplusMonth = BigDecimal.valueOf(incomeMonth)
                 .subtract(BigDecimal.valueOf(expenseMonth))
                 .setScale(2, RoundingMode.HALF_UP);
 
-        // 格式化显示
+        // Format the display
         DecimalFormat df = new DecimalFormat("#,##0.00");
 
         monthlyIncomeLabel.setText("Month Income：¥ " + df.format(incomeMonth));
         monthlyExpenseLabel.setText("Month Expenditure：¥ " + df.format(expenseMonth));
         monthlySurplusLabel.setText("Month Surplus：¥ " + df.format(surplusMonth));
 
-        // 总收支
+        // Total income and expenditure
         double incomeTotal = summaryManager.getTotalIncome();
         double expenseTotal = summaryManager.getTotalExpenditure();
-
-        // 使用BigDecimal计算盈余
+        
+        // Use BigDecimal to calculate the surplus
         BigDecimal surplusTotal = BigDecimal.valueOf(incomeTotal)
                 .subtract(BigDecimal.valueOf(expenseTotal))
                 .setScale(2, RoundingMode.HALF_UP);
@@ -93,45 +93,46 @@ public class HomeController {
         totalExpenseLabel.setText("Total Expenditure：¥ " + df.format(expenseTotal));
         totalSurplusLabel.setText("Total Surplus：¥ " + df.format(surplusTotal));
 
-        // 分类展示
+        //Categorical display
         updateCategoryLists();
 
-        // 设置进度条（基于最大值）
+        // Set the progress bar (based on the maximum value)
         BigDecimal bdIncomeTotal = BigDecimal.valueOf(incomeTotal);
         BigDecimal bdExpenseTotal = BigDecimal.valueOf(expenseTotal);
         BigDecimal maxValue = bdIncomeTotal.max(bdExpenseTotal).max(BigDecimal.ONE);
 
-        // 计算比例并转换为double用于进度条
+        // Calculate the scale and convert to double for the progress bar
         incomeProgressBar.setProgress(bdIncomeTotal.divide(maxValue, 10, RoundingMode.HALF_UP).doubleValue());
         expenseProgressBar.setProgress(bdExpenseTotal.divide(maxValue, 10, RoundingMode.HALF_UP).doubleValue());
 
-        // 盈余进度条处理，确保不为负
+        // The surplus progress bar is processed to ensure that it is not negative
         BigDecimal surplusRatio = surplusTotal.divide(maxValue, 10, RoundingMode.HALF_UP);
         double surplusProgress = Math.max(surplusRatio.doubleValue(), 0);
         surplusProgressBar.setProgress(surplusProgress);
     }
 
-    // 更新分类列表方法
+    // Update the classification list method
     private void updateCategoryLists() {
-        // 清空现有列表
+        // Clear the existing list
         incomeCategoryList.getItems().clear();
         expenseCategoryList.getItems().clear();
 
-        // 创建新的CategoryManager实例以确保获取最新数据
+        
+        // Create a new CategoryManager instance to ensure the most up-to-date data is available
         categoryManager = new CategoryManager(currentUser);
 
-        // 获取最新的分类列表
+        // Get the most up-to-date list of categories
         List<Category> allCategories = categoryManager.getCategories();
         for (Category c : allCategories) {
-            if ("收入".equals(c.getType())) {
+            if ("Income".equals(c.getType())) {
                 incomeCategoryList.getItems().add(c.getName());
-            } else if ("支出".equals(c.getType())) {
+            } else if ("Expenditure".equals(c.getType())) {
                 expenseCategoryList.getItems().add(c.getName());
             }
         }
     }
 
-    // 创建一个窗口关闭事件监听器，用于在添加分类窗口关闭后刷新分类列表
+    // Create a window close event listener that refreshes the list of categories after the Add Categories window closes
     private EventHandler<WindowEvent> createWindowCloseHandler() {
         return event -> updateCategoryLists();
     }
@@ -150,21 +151,21 @@ public class HomeController {
     private void deleteExpenseCategory() {
         String selectedCategory = expenseCategoryList.getSelectionModel().getSelectedItem();
         if (selectedCategory == null) {
-            showAlert("警告", "请先选择一个要删除的支出分类", Alert.AlertType.WARNING);
+            showAlert("warning", "Start by selecting an expense category that you want to delete", Alert.AlertType.WARNING);
             return;
         }
 
         // 弹出确认对话框
-        boolean confirmed = showConfirmationDialog("删除分类",
-                "确定要删除支出分类 \"" + selectedCategory + "\" 吗？\n删除后相关数据将无法恢复。");
+        boolean confirmed = showConfirmationDialog("Delete a category",
+                "Decide that you want to remove the expense classification \"" + selectedCategory + "\" \nAfter deletion, the data cannot be recovered.");
 
         if (confirmed) {
-            boolean deleted = categoryManager.deleteCategory("支出", selectedCategory);
+            boolean deleted = categoryManager.deleteCategory("Expenditure", selectedCategory);
             if (deleted) {
-                updateCategoryLists(); // 更新列表显示
-                showAlert("成功", "支出分类已删除", Alert.AlertType.INFORMATION);
+                updateCategoryLists(); // Update the list display
+                showAlert("success", "the ExpenseCategory Has Been Removed", Alert.AlertType.INFORMATION);
             } else {
-                showAlert("错误", "删除分类失败", Alert.AlertType.ERROR);
+                showAlert("error", "Failed to delete the classification", Alert.AlertType.ERROR);
             }
         }
     }
@@ -173,26 +174,27 @@ public class HomeController {
     private void deleteIncomeCategory() {
         String selectedCategory = incomeCategoryList.getSelectionModel().getSelectedItem();
         if (selectedCategory == null) {
-            showAlert("警告", "请先选择一个要删除的收入分类", Alert.AlertType.WARNING);
+            showAlert("warning", "Start by selecting a revenue category that you want to delete", Alert.AlertType.WARNING);
             return;
         }
 
         // 弹出确认对话框
-        boolean confirmed = showConfirmationDialog("删除分类",
-                "确定要删除收入分类 \"" + selectedCategory + "\" 吗？\n删除后相关数据将无法恢复。");
+        boolean confirmed = showConfirmationDialog("Delete a category",
+
+                "Decide that you want to delete the revenue classification \"" + selectedCategory + "\"\nAfter deletion, the data cannot be recovered.");
 
         if (confirmed) {
-            boolean deleted = categoryManager.deleteCategory("收入", selectedCategory);
+            boolean deleted = categoryManager.deleteCategory("Income", selectedCategory);
             if (deleted) {
-                updateCategoryLists(); // 更新列表显示
-                showAlert("成功", "收入分类已删除", Alert.AlertType.INFORMATION);
+                updateCategoryLists(); // Update the list display
+                showAlert("Success", "Income classification removed", Alert.AlertType.INFORMATION);
             } else {
-                showAlert("错误", "删除分类失败", Alert.AlertType.ERROR);
+                showAlert("Error", "Failed to delete classification", Alert.AlertType.ERROR);
             }
         }
     }
 
-    // 显示确认对话框
+    // A confirmation dialog box is displayed
     private boolean showConfirmationDialog(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
@@ -203,7 +205,7 @@ public class HomeController {
         return result.isPresent() && result.get() == ButtonType.OK;
     }
 
-    // 显示提示信息
+    // A prompt message is displayed
     private void showAlert(String title, String content, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -232,13 +234,13 @@ public class HomeController {
             dialog.setTitle(title);
             dialog.setScene(new Scene(root));
             dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.initOwner(owner);      // 由调用者传入的主窗口
+            dialog.initOwner(owner);      // The main window passed in by the caller
             dialog.setResizable(false);
 
-            // 添加窗口关闭事件监听器，当窗口关闭时刷新分类列表
+            // Add a window close event listener to refresh the category list when the window closes
             dialog.setOnHidden(createWindowCloseHandler());
 
-            dialog.show();                // 非模态；想阻塞主窗用 showAndWait()
+            dialog.show();                // non-modal; If you want to block the main window, use showAndWait()
 
         } catch (IOException e) {
             e.printStackTrace();

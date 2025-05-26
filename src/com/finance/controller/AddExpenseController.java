@@ -24,16 +24,16 @@ import java.util.concurrent.CompletableFuture;
 
 public class AddExpenseController {
 
-    @FXML private TextField categoryField;
+@FXML private TextField categoryField;
     @FXML private Label errorLabel;
     @FXML private ListView<String> similarCategoriesListView;
     @FXML private HBox confirmationBox;
 
-    private CategoryManager categoryManager;
+private CategoryManager categoryManager;
     private String suggestedCategory;
     private List<String> similarCategories;
 
-    @FXML
+@FXML
     public void initialize() {
         User user = Session.getCurrentUser();
         if (user == null) {
@@ -42,72 +42,72 @@ public class AddExpenseController {
         }
         categoryManager = new CategoryManager(user);
 
-        // 初始化时隐藏相似分类列表和确认框
+// Hide the list of similar categories and the confirmation box during initialization
         similarCategoriesListView.setVisible(false);
         confirmationBox.setVisible(false);
     }
 
-    @FXML
+@FXML
     private void handleSave() {
         String name = categoryField.getText().trim();
         if (name.isEmpty()) {
-            errorLabel.setText("分类名称不能为空");
+            errorLabel.setText("theCategoryNameCannotBeEmpty");
             errorLabel.setVisible(true);
             return;
         }
-        boolean ok = categoryManager.addCategory("支出", name);
+        boolean ok = categoryManager.addCategory("spending", name);
         if (!ok) {
-            errorLabel.setText("该分类已存在");
+            errorLabel.setText("theClassificationAlreadyExists");
             errorLabel.setVisible(true);
             return;
         }
 
-        // 显示保存成功提示
+// aSuccessfulSavePromptIsDisplayed
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("成功");
+        alert.setTitle("success");
         alert.setHeaderText(null);
-        alert.setContentText("支出分类 \"" + name + "\" 已成功添加！");
+        alert.setContentText("expenseClassification \"" + name + "\" successfullyAdded！");
         alert.showAndWait();
 
-        // 关闭当前窗口
+// closeTheCurrentWindow
         Stage stage = (Stage) categoryField.getScene().getWindow();
         stage.close();
     }
 
-    @FXML
+@FXML
     private void handleAiSuggest() {
         String userInput = categoryField.getText().trim();
-        errorLabel.setText("正在使用AI智能生成分类建议，请稍候...");
+        errorLabel.setText("Classification suggestions are being generated using AI intelligence, please wait...");
         errorLabel.setVisible(true);
 
-        CompletableFuture.runAsync(() -> {
+CompletableFuture.runAsync(() -> {
             try {
                 String prompt;
                 if (!userInput.isEmpty()) {
-                    prompt = "用户想创建一个关于 ‘" + userInput + "’ 的支出分类，请基于此内容并结合常见的分类标准，推荐一个合适的标准分类名称。如果用户输入已足够好或无法识别为标准分类，可以直接返回用户输入的内容。请仅回复分类名称，不要有任何其他解释。";
+                    prompt = "The user wants to create an article about ‘" + userInput + "’ , please recommend an appropriate standard classification name based on this content and in combination with common classification criteria. If the user input is good enough or not recognized as a standard classification, you can return the content directly to the user type. Please reply with the category name only, without any other explanation。 ";
                 } else {
-                    prompt = "你是一个财务分类助手，请为用户推荐一个常见的支出分类。请只回复分类名称，不要有任何其他解释。例如：餐饮";
+                    prompt = "You are a financial classification assistant, please recommend a common expense classification for users. Please reply only with the category name without any other explanation. For example: catering, and you shall answer with English.";
                 }
 
-                LlmService llmService = new LlmService(prompt);
+LlmService llmService = new LlmService(prompt);
                 llmService.callLlmApi();
                 suggestedCategory = llmService.getAnswer().trim();
 
-                similarCategories = findSimilarCategories(suggestedCategory);
+similarCategories = findSimilarCategories(suggestedCategory);
 
-                Platform.runLater(() -> {
+Platform.runLater(() -> {
                     if (similarCategories.isEmpty()) {
                         categoryField.setText(suggestedCategory);
-                        errorLabel.setText("AI已生成建议分类: " + suggestedCategory);
+                        errorLabel.setText("The AI has generated a recommendation classification: " + suggestedCategory);
                         errorLabel.setVisible(true);
                         confirmationBox.setVisible(false);
                         similarCategoriesListView.setVisible(false);
                     } else {
                         categoryField.setText(suggestedCategory);
-                        errorLabel.setText("发现类似的分类，请选择使用现有分类或创建新分类:");
+                        errorLabel.setText("If you find a similar taxonomy, choose to use an existing taxonomy or create a new one:");
                         errorLabel.setVisible(true);
 
-                        ObservableList<String> items = FXCollections.observableArrayList(similarCategories);
+ObservableList<String> items = FXCollections.observableArrayList(similarCategories);
                         similarCategoriesListView.setItems(items);
                         similarCategoriesListView.setVisible(true);
                         confirmationBox.setVisible(true);
@@ -115,47 +115,47 @@ public class AddExpenseController {
                 });
             } catch (IOException | InterruptedException | LlmService.LlmServiceException e) {
                 Platform.runLater(() -> {
-                    errorLabel.setText("AI服务调用失败: " + e.getMessage());
+                    errorLabel.setText("AI Service Invocation Failure: " + e.getMessage());
                     errorLabel.setVisible(true);
                 });
             }
         });
     }
 
-    @FXML
+@FXML
     private void useExistingCategory() {
-        // 用户选择使用现有分类
+        // The user chooses to use an existing taxonomy
         String selectedCategory = similarCategoriesListView.getSelectionModel().getSelectedItem();
         if (selectedCategory != null) {
             categoryField.setText(selectedCategory);
             similarCategoriesListView.setVisible(false);
             confirmationBox.setVisible(false);
-            errorLabel.setText("您选择了现有分类: " + selectedCategory);
+            errorLabel.setText("You selected an existing category: " + selectedCategory);
         } else {
-            errorLabel.setText("请先从列表中选择一个分类");
+            errorLabel.setText("Please select a category from the list first");
         }
     }
 
-    @FXML
+@FXML
     private void createNewCategory() {
-        // 用户选择创建新分类
+        // The user chooses to create a new taxonomy
         similarCategoriesListView.setVisible(false);
         confirmationBox.setVisible(false);
-        errorLabel.setText("您将创建新分类: " + suggestedCategory + "，点击保存以确认");
+        errorLabel.setText("You'll create a new taxonomy: " + suggestedCategory + "，clickSaveToConfirm");
     }
 
-    // 查找与建议分类相似的现有分类
+//Find existing classifications that are similar to the suggested classifications
     private List<String> findSimilarCategories(String suggestedName) {
         List<Category> allCategories = categoryManager.getCategories();
         List<String> similar = new ArrayList<>();
 
-        // 筛选支出类型的分类
+// Filter the categorization of expense types
         for (Category category : allCategories) {
-            if ("支出".equals(category.getType())) {
+            if ("expenditure".equals(category.getType())) {
                 String existingName = category.getName().toLowerCase();
                 String suggestedLower = suggestedName.toLowerCase();
 
-                // 简单的相似度判断: 包含关系或编辑距离小
+// Simple similarity judgment: The inclusion relationship or edit distance is small
                 if (existingName.contains(suggestedLower) ||
                     suggestedLower.contains(existingName) ||
                     calculateLevenshteinDistance(existingName, suggestedLower) <= 3) {
@@ -164,22 +164,22 @@ public class AddExpenseController {
             }
         }
 
-        return similar;
+return similar;
     }
 
-    // 计算两个字符串的编辑距离，用于判断相似度
+// Calculate the editing distance between two strings, which is used to determine the similarity
     private int calculateLevenshteinDistance(String s1, String s2) {
         int[][] dp = new int[s1.length() + 1][s2.length() + 1];
 
-        for (int i = 0; i <= s1.length(); i++) {
+for (int i = 0; i <= s1.length(); i++) {
             dp[i][0] = i;
         }
 
-        for (int j = 0; j <= s2.length(); j++) {
+for (int j = 0; j <= s2.length(); j++) {
             dp[0][j] = j;
         }
 
-        for (int i = 1; i <= s1.length(); i++) {
+for (int i = 1; i <= s1.length(); i++) {
             for (int j = 1; j <= s2.length(); j++) {
                 int cost = s1.charAt(i - 1) == s2.charAt(j - 1) ? 0 : 1;
                 dp[i][j] = Math.min(
@@ -189,14 +189,13 @@ public class AddExpenseController {
             }
         }
 
-        return dp[s1.length()][s2.length()];
+return dp[s1.length()][s2.length()];
     }
 
-    @FXML
+@FXML
     private void handleCancel() {
-        // 关闭当前窗口
+        // Close the current window
         Stage stage = (Stage) categoryField.getScene().getWindow();
         stage.close();
     }
 }
-

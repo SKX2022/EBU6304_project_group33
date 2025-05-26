@@ -18,31 +18,31 @@ public class TransactionManager {
     private List<Transaction> transactions = new ArrayList<>();
     private static final String TRANSACTIONS_FILE_PREFIX = "transactions_";
 
-    // 构造函数接收 User 参数
+    // The constructor receives the User parameter
     public TransactionManager(User user) {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
         this.user = user;
-        this.transactions = loadTransactions();  // 加载用户的交易记录
+        this.transactions = loadTransactions();  // Load the user's transaction history
     }
 
-    // 加载用户的交易记录
+    // Load the user's transaction history
     private List<Transaction> loadTransactions() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             File file = new File(TRANSACTIONS_FILE_PREFIX + user.getUsername() + ".json");
             if (!file.exists() || file.length() == 0) {
-                return new ArrayList<>();  // 文件为空，返回空列表
+                return new ArrayList<>();  // If the file is empty, an empty list is returned
             }
             return objectMapper.readValue(file, objectMapper.getTypeFactory().constructCollectionType(List.class, Transaction.class));
         } catch (IOException e) {
             e.printStackTrace();
-            return new ArrayList<>();  // 发生异常时返回空列表
+            return new ArrayList<>();  // An empty list is returned when an exception occurs
         }
     }
 
-    // 保存用户的交易记录
+    //Keep a record of the user's transactions
     private void saveTransactions() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -52,12 +52,12 @@ public class TransactionManager {
         }
     }
 
-    // 添加交易记录（带备注信息）
+    // Add transactions (with remarks)
     public boolean addTransaction(String type, String category, double amount, String date, String project) {
         try {
             Transaction transaction = new Transaction(type, category, amount, date, user, project);
             transactions.add(transaction);
-            saveTransactions();  // 保存交易记录到文件
+            saveTransactions();  // Save the transaction to a file
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,19 +65,19 @@ public class TransactionManager {
         }
     }
 
-    // 保持旧版本的方法兼容性
+    // Maintain method compatibility with older versions
     public boolean addTransaction(String type, String category, double amount, String date) {
         return addTransaction(type, category, amount, date, "");
     }
 
-    // 删除交易记录
+    // Delete the transaction history
     public boolean deleteTransaction(Transaction transaction) {
         if (transaction == null) {
             return false;
         }
 
         try {
-            // 在列表中查找并删除匹配的交易记录
+            // Find and delete matching transactions in the list
             boolean removed = false;
             for (int i = 0; i < transactions.size(); i++) {
                 Transaction t = transactions.get(i);
@@ -89,10 +89,10 @@ public class TransactionManager {
             }
 
             if (removed) {
-                saveTransactions(); // 保存更新后的交易记录到文件
+                saveTransactions(); // Save the updated transactions to a file
                 return true;
             } else {
-                return false; // 未找到匹配的交易记录
+                return false; // No matching transactions found
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,7 +100,7 @@ public class TransactionManager {
         }
     }
 
-    // 比较两个交易记录是否相同
+    // Compare whether the two transactions are the same
     private boolean isSameTransaction(Transaction t1, Transaction t2) {
         return t1.getType().equals(t2.getType()) &&
                t1.getCategory().equals(t2.getCategory()) &&
@@ -108,33 +108,35 @@ public class TransactionManager {
                t1.getDate().equals(t2.getDate());
     }
 
-    // 获取所有交易记录
+    // Get a record of all transactions
     public List<Transaction> getAllTransactions() {
         return transactions;
     }
 
-    // 修改计算本月总收入方法，使用BigDecimal
+
+    // Modified the method of calculating the total revenue for the month to use BigDecimal
     public double getMonthlyIncome() {
         BigDecimal monthlyIncome = BigDecimal.ZERO;
         for (Transaction transaction : transactions) {
-            if (transaction.getType().equals("收入") && isCurrentMonth(transaction.getDate())) {
+            if (transaction.getType().equals("Income") && isCurrentMonth(transaction.getDate())) {
                 monthlyIncome = monthlyIncome.add(BigDecimal.valueOf(transaction.getAmount()));
             }
         }
         return monthlyIncome.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
-    // 修改计算本月总支出方法，使用BigDecimal
+    // Changed the method of calculating the total spend for the month to use BigDecimal
     public double getMonthlyExpenditure() {
         BigDecimal monthlyExpenditure = BigDecimal.ZERO;
         for (Transaction transaction : transactions) {
-            if (transaction.getType().equals("支出") && isCurrentMonth(transaction.getDate())) {
+            if (transaction.getType().equals("Expenditure") && isCurrentMonth(transaction.getDate())) {
                 monthlyExpenditure = monthlyExpenditure.add(BigDecimal.valueOf(transaction.getAmount()));
             }
         }
         return monthlyExpenditure.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
-    // 判断交易日期是否属于当前月份
+
+    // Determine whether the transaction date belongs to the current month
     private boolean isCurrentMonth(String date) {
         LocalDate transactionDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         LocalDate now = LocalDate.now();
