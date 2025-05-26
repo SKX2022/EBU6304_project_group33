@@ -14,12 +14,12 @@ import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 /**
- * 收入分析控制器
- * 处理收入输入、税收计算和结果显示
+* Revenue Analysis Controller
+ * Handle income entry, tax calculations, and result display
  */
 public class RevenueController implements Initializable {
     
-    // 输入控件
+    // Input controls
     @FXML private TextField annualIncomeField;
     @FXML private ComboBox<String> cityComboBox;
     @FXML private TextField socialSecurityBaseField;
@@ -27,7 +27,7 @@ public class RevenueController implements Initializable {
     @FXML private Button calculateButton;
     @FXML private Button resetButton;
     
-    // 结果显示控件
+    // Result display controls
     @FXML private Label yearlyIncomeLabel;
     @FXML private Label monthlyIncomeLabel;
     @FXML private Label incomeTaxLabel;
@@ -38,49 +38,49 @@ public class RevenueController implements Initializable {
     @FXML private Label netMonthlyIncomeLabel;
     @FXML private Label taxRateLabel;
     
-    // 服务类
+    // SERVICES
     private TaxCalculatorService taxCalculatorService;
     private DecimalFormat currencyFormat;
     private DecimalFormat percentFormat;
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // 初始化服务类
+        // Initialize the service class
         taxCalculatorService = new TaxCalculatorService();
         
-        // 初始化格式化器
+        // Initialize the formatter
         currencyFormat = new DecimalFormat("#,##0.00");
         percentFormat = new DecimalFormat("#0.00");
         
-        // 初始化城市下拉框
+        // Initialize the City drop-down box
         initializeCityComboBox();
         
-        // 初始化输入字段
+        // Initialize the input field
         initializeInputFields();
         
-        // 设置默认值
+        // Set the default value
         resetForm(null);
     }
     
     /**
-     * 初始化城市下拉框
+    * Initialize the city drop-down box
      */
     private void initializeCityComboBox() {
         String[] cities = taxCalculatorService.getSupportedCities();
         cityComboBox.setItems(FXCollections.observableArrayList(cities));
-        cityComboBox.setValue("北京"); // 默认选择北京
+        cityComboBox.setValue("BEJING"); // By default, Beijing is selected
     }
     
     /**
-     * 初始化输入字段
+     * Initialize the input field
      */
     private void initializeInputFields() {
-        // 只允许输入数字
+        // Only numbers are allowed
         annualIncomeField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 annualIncomeField.setText(newValue.replaceAll("[^\\d]", ""));
             }
-            // 自动计算社保和公积金基数
+            // Automatic calculation of social security and provident fund bases
             updateDefaultBases();
         });
         
@@ -96,14 +96,14 @@ public class RevenueController implements Initializable {
             }
         });
         
-        // 城市变化时更新基数
+        // The base is updated when the city changes
         cityComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             updateDefaultBases();
         });
     }
     
     /**
-     * 自动更新默认的社保和公积金基数
+    * Automatically update the default social security and provident fund bases
      */
     private void updateDefaultBases() {
         String incomeText = annualIncomeField.getText();
@@ -112,7 +112,7 @@ public class RevenueController implements Initializable {
                 double annualIncome = Double.parseDouble(incomeText);
                 double monthlyIncome = annualIncome / 12.0;
                 
-                // 如果基数字段为空或者用户没有手动修改，则自动设置
+                // If the cardinality field is blank or the user has not manually modified it, it is set automatically
                 if (socialSecurityBaseField.getText().isEmpty()) {
                     socialSecurityBaseField.setText(currencyFormat.format(monthlyIncome));
                 }
@@ -121,31 +121,31 @@ public class RevenueController implements Initializable {
                     housingFundBaseField.setText(currencyFormat.format(monthlyIncome));
                 }
             } catch (NumberFormatException e) {
-                // 忽略格式错误
+                // Ignore formatting errors
             }
         }
     }
     
     /**
-     * 计算税收
+     * Calculate taxes
      */
     @FXML
     private void calculateTax(ActionEvent event) {
         try {
-            // 获取输入值
+            // Get the input values
             String incomeText = annualIncomeField.getText().trim();
             String city = cityComboBox.getValue();
             String socialSecurityText = socialSecurityBaseField.getText().trim().replace(",", "");
             String housingFundText = housingFundBaseField.getText().trim().replace(",", "");
             
-            // 验证输入
+            // Validate the input
             if (incomeText.isEmpty()) {
-                showAlert("输入错误", "请输入年收入金额！", Alert.AlertType.WARNING);
+                showAlert("Input Error", "Please enter the amount of annual income!", Alert.AlertType.WARNING);
                 return;
             }
             
             if (city == null || city.isEmpty()) {
-                showAlert("输入错误", "请选择工作城市！", Alert.AlertType.WARNING);
+                showAlert("Typing error", "Please select a city to work for!", Alert.AlertType.WARNING);
                 return;
             }
             
@@ -155,7 +155,7 @@ public class RevenueController implements Initializable {
             
             // 验证收入范围
             if (annualIncome <= 0 || annualIncome > 10000000) {
-                showAlert("输入错误", "年收入应在1元到1000万元之间！", Alert.AlertType.WARNING);
+                showAlert("Input error", "The annual income should be between 1 yuan and 10 million yuan!", Alert.AlertType.WARNING);
                 return;
             }
             
@@ -167,15 +167,15 @@ public class RevenueController implements Initializable {
             displayResults(result);
             
         } catch (NumberFormatException e) {
-            showAlert("输入错误", "请输入有效的数字！", Alert.AlertType.ERROR);
+            showAlert("Typo Error", "Please enter a valid number!", Alert.AlertType.ERROR);
         } catch (Exception e) {
-            showAlert("计算错误", "税收计算过程中发生错误：" + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Calculation error", "Error occurred during tax calculation:" + e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }
     
     /**
-     * 显示计算结果
+     * Displays the results of the calculation
      */
     private void displayResults(TaxCalculationResult result) {
         yearlyIncomeLabel.setText("¥ " + currencyFormat.format(result.getAnnualIncome()));
@@ -192,17 +192,17 @@ public class RevenueController implements Initializable {
     }
     
     /**
-     * 重置表单
+     * Reset the form
      */
     @FXML
     private void resetForm(ActionEvent event) {
-        // 清空输入字段
+        // Clear the input fields
         annualIncomeField.clear();
         socialSecurityBaseField.clear();
         housingFundBaseField.clear();
-        cityComboBox.setValue("北京");
+        cityComboBox.setValue("BEJING");
         
-        // 重置结果显示
+        //The reset result is displayed
         yearlyIncomeLabel.setText("¥ 0.00");
         monthlyIncomeLabel.setText("¥ 0.00");
         incomeTaxLabel.setText("¥ 0.00");
@@ -213,12 +213,12 @@ public class RevenueController implements Initializable {
         netMonthlyIncomeLabel.setText("¥ 0.00");
         taxRateLabel.setText("0.00%");
         
-        // 聚焦到收入输入框
+        // Focus on the revenue input box
         annualIncomeField.requestFocus();
     }
     
     /**
-     * 显示提示对话框
+     * A prompt dialog box appears
      */
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);

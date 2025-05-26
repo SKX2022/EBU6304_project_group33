@@ -16,13 +16,13 @@
     <center>
         <VBox spacing="20" style="-fx-padding: 20; -fx-background-color: white;">
 
-            <Label text="交易流水记录" styleClass="label-title"
+            <Label text="Transaction records" styleClass="label-title"
                    style="-fx-padding: 0 0 10 0; -fx-font-size: 24px;"/>
 
-            <!-- 筛选条件区域 -->
+            <!-- Filter the criteria area -->
             <HBox spacing="15" styleClass="filter-bar" style="-fx-padding: 15; -fx-background-color: #f8fafc; -fx-background-radius: 8;">
                 <VBox spacing="5" style="-fx-alignment: TOP_LEFT;">
-                    <Label text="交易类型" styleClass="label-section" style="-fx-font-size: 14px; -fx-padding: 0;"/>
+                    <Label text="The type of transaction" styleClass="label-section" style="-fx-font-size: 14px; -fx-padding: 0;"/>
                     <ComboBox fx:id="filterComboBox" promptText="All" styleClass="filter-dropdown"
                               style="-fx-background-radius: 6; -fx-border-radius: 6;">
                         <items>
@@ -33,62 +33,62 @@
                 </VBox>
 
                 <VBox spacing="5">
-                    <Label text="分类" styleClass="label-section" style="-fx-font-size: 14px; -fx-padding: 0;"/>
-                    <ComboBox fx:id="categoryComboBox" promptText="类别" styleClass="filter-dropdown"
+                    <Label text="Type" styleClass="label-section" style="-fx-font-size: 14px; -fx-padding: 0;"/>
+                    <ComboBox fx:id="categoryComboBox" promptText="category" styleClass="filter-dropdown"
                               style="-fx-background-radius: 6; -fx-border-radius: 6;"/>
                 </VBox>
 
                 <VBox spacing="5">
-                    <Label text="日期范围" styleClass="label-section" style="-fx-font-size: 14px; -fx-padding: 0;"/>
+                    <Label text="Date range" styleClass="label-section" style="-fx-font-size: 14px; -fx-padding: 0;"/>
                     <HBox spacing="5" alignment="CENTER_LEFT">
-                        <DatePicker fx:id="startDatePicker" promptText="开始日期"
+                        <DatePicker fx:id="startDatePicker" promptText="Start date"
                                    style="-fx-background-radius: 6; -fx-border-radius: 6;"/>
                         <Label text="~" style="-fx-padding: 5 0 0 0;"/>
-                        <DatePicker fx:id="endDatePicker" promptText="结束日期"
+                        <DatePicker fx:id="endDatePicker" promptText="End date"
                                    style="-fx-background-radius: 6; -fx-border-radius: 6;"/>
                     </HBox>
                 </VBox>
 
-                <Button text="导入Excel" onAction="#importTransactions"
+                <Button text="Import Excel" onAction="#importTransactions"
                         styleClass="button-blue"
                         style="-fx-translate-y: 12;"/>
             </HBox>
 
-            <!-- 数据表格 -->
+            <!-- Data tables -->
             <TableView fx:id="transactionsTable" style="-fx-background-radius: 8; -fx-border-radius: 8;
                                                          -fx-border-color: #e2e8f0; -fx-border-width: 1px;">
                 <columns>
-                    <TableColumn fx:id="typeColumn" text="类型" prefWidth="100"/>
-                    <TableColumn fx:id="projectColumn" text="备注" prefWidth="200"/>
-                    <TableColumn fx:id="timeColumn" text="时间" prefWidth="150"/>
-                    <TableColumn fx:id="categoryColumn" text="收支类型" prefWidth="150"/>
-                    <TableColumn fx:id="amountColumn" text="具体数字" prefWidth="150"/>
+                    <TableColumn fx:id="typeColumn" text="type" prefWidth="100"/>
+                    <TableColumn fx:id="projectColumn" text="remarks" prefWidth="200"/>
+                    <TableColumn fx:id="timeColumn" text="time" prefWidth="150"/>
+                    <TableColumn fx:id="categoryColumn" text="Type of income and expenditure" prefWidth="150"/>
+                    <TableColumn fx:id="amountColumn" text="Specific numbers" prefWidth="150"/>
                 </columns>
                 <items>
 
                 </items>
             </TableView>
 
-            <!-- 分页控制 -->
+            <!-- Paging control -->
             <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="pagination"
                   style="-fx-padding: 10 0 0 0;">
-                <Button text="删除记录"
+                <Button text="Delete the record"
                         fx:id="deleteButton"
                         onAction="#handleDeleteTransaction"
                         styleClass="button-blue"/>
 
-                <Button text="加入记录"
+                <Button text="Join the record"
                         fx:id="addButton"
                         onAction="#handleAddTransaction"
                         styleClass="button-blue"/>
 
-                <Button fx:id="aiSmartAddButton" text="AI智能录入" styleClass="button-blue"/>
+                <Button fx:id="aiSmartAddButton" text="AI Intelligent entry" styleClass="button-blue"/>
                 <Region HBox.hgrow="ALWAYS" />
 
-                <Button fx:id="previousButton" text="上一页" styleClass="pagination-button"
+                <Button fx:id="previousButton" text="PREVIOUS" styleClass="pagination-button"
                         style="-fx-background-color: #f1f5f9; -fx-text-fill: #334155;"/>
-                <Label fx:id="pageInfoLabel" text="第 1 页，共 1 页" styleClass="pagination-label"/>
-                <Button fx:id="nextButton" text="下一页" styleClass="pagination-button"
+                <Label fx:id="pageInfoLabel" text="Page 1 of 1" styleClass="pagination-label"/>
+                <Button fx:id="nextButton" text="NEXT" styleClass="pagination-button"
                         style="-fx-background-color: #f1f5f9; -fx-text-fill: #334155;"/>
             </HBox>
         </VBox>

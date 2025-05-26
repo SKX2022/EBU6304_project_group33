@@ -11,25 +11,25 @@ public class ThresholdCalculator {
         this.transactionManager = transactionManager;
     }
 
-    // 计算总支出
+    // Calculate the total spending
     public double calculateTotalExpenditure() {
         List<Transaction> transactions = transactionManager.getAllTransactions();
         return transactions.stream()
-                .filter(t -> "支出".equals(t.getType()))
+                .filter(t -> "Expenditure".equals(t.getType()))
                 .mapToDouble(Transaction::getAmount)
                 .sum();
     }
 
-    // 计算总收入
+    // Calculate the total revenue
     public double calculateTotalIncome() {
         List<Transaction> transactions = transactionManager.getAllTransactions();
         return transactions.stream()
-                .filter(t -> "收入".equals(t.getType()))
+                .filter(t -> "Income".equals(t.getType()))
                 .mapToDouble(Transaction::getAmount)
                 .sum();
     }
 
-    // 计算剩余金额
+    // Calculate the remaining amount
     public double calculateRemaining() {
         return calculateTotalIncome() - calculateTotalExpenditure();
     }

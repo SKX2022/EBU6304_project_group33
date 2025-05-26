@@ -1,12 +1,12 @@
-// 文件路径: src/com/finance/model/UserThreshold.java
+// File path: src/com/finance/model/UserThreshold.java
 package com.finance.model;
 
 public class UserThreshold {
     private String username;
-    private Double totalExpenseThreshold; // 总支出阈值
-    private Double remainingThreshold;   // 剩余阈值
+    private Double totalExpenseThreshold; //Total spend threshold
+    private Double remainingThreshold;   // Remaining threshold
 
-    public UserThreshold() {} // Jackson 需要无参构造器
+    public UserThreshold() {} // Jackson requires a parameterless constructor
 
     public UserThreshold(String username) {
         this.username = username;

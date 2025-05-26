@@ -12,14 +12,14 @@ public class User {
     private List<Transaction> transactions;
     private List<Category> categories;
 
-    // 无参构造函数，确保 Jackson 能够正确反序列化 User 对象
+    // No parameter constructor to ensure that Jackson can deserialize the User object correctly
     public User() {
-        // 初始化 List 避免空指针异常
+        // Initialize the List to avoid null pointer exceptions
         this.transactions = new ArrayList<>();
         this.categories = new ArrayList<>();
     }
 
-    // 带参数的构造函数
+    // Constructor with parameters
     @JsonCreator
     public User(@JsonProperty("username") String username, @JsonProperty("password") String password) {
         this.username = username;
@@ -28,7 +28,7 @@ public class User {
         this.categories = new ArrayList<>();
     }
 
-    // getter 和 setter 方法
+    // GETTER AND SETTER METHODS
     public String getUsername() {
         return username;
     }

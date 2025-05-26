@@ -1,4 +1,4 @@
-// 文件路径: src/com/finance/controller/ThresholdManager.java
+// File path: src/com/finance/controller/ThresholdManager.java
 package com.finance.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,9 +8,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class ThresholdManager {
-    private static final String THRESHOLD_FILE_PREFIX = "user_threshold_"; // 文件名格式: user_threshold_{username}.json
+    private static final String THRESHOLD_FILE_PREFIX = "user_threshold_"; // File name format: user_threshold_{username}.json
 
-    // 保存用户阈值配置
+    // Save the user threshold configuration
     public static void saveThreshold(UserThreshold threshold) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -21,12 +21,13 @@ public class ThresholdManager {
         }
     }
 
-    // 加载用户阈值配置
+    // Load the user threshold configuration
     public static UserThreshold loadThreshold(String username) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             File file = new File(THRESHOLD_FILE_PREFIX + username + ".json");
-            if (!file.exists()) return new UserThreshold(username); // 文件不存在时返回空配置
+
+            if (!file.exists()) return new UserThreshold(username); // If the file does not exist, an empty configuration is returned
             return mapper.readValue(file, UserThreshold.class);
         } catch (IOException e) {
             e.printStackTrace();

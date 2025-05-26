@@ -15,36 +15,38 @@ public class CategoryManager {
     private List<Category> categories = new ArrayList<>();
     private static final String CATEGORIES_FILE_PREFIX = "categories_";
 
-    // 构造函数接收 User 参数
+    // The constructor receives the User parameter
     public CategoryManager(User user) {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
         this.user = user;
-        this.categories = loadCategoriesFromFile();  // 加载用户的分类数据
+        this.categories = loadCategoriesFromFile();  // Load the user's categorical data
     }
 
-    // 从文件加载用户的分类数据（私有方法）
+
+    // Load the user's categorical data from a file (private method)
     private List<Category> loadCategoriesFromFile() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             File file = new File(CATEGORIES_FILE_PREFIX + user.getUsername() + ".json");
             if (!file.exists() || file.length() == 0) {
-                return new ArrayList<>();  // 文件为空，返回空列表
+                return new ArrayList<>();  // If the file is empty, an empty list is returned
             }
             return objectMapper.readValue(file, objectMapper.getTypeFactory().constructCollectionType(List.class, Category.class));
         } catch (IOException e) {
             e.printStackTrace();
-            return new ArrayList<>();  // 发生异常时返回空列表
+            return new ArrayList<>();  // An empty list is returned when an exception occurs
         }
     }
 
-    // 加载用户的分类数据（公开方法 - 返回内存中的数据）
+
+    // Load the user's categorical data (expose method - return data in memory)
     public List<Category> loadCategories() {
-        return new ArrayList<>(categories);  // 返回副本，防止外部修改
+        return new ArrayList<>(categories);  // Returns a copy to prevent external modifications
     }
 
-    // 保存用户的分类数据到文件
+    // Save the user's classification data to a file
     private void saveCategories() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -54,18 +56,18 @@ public class CategoryManager {
         }
     }
 
-    // 添加新的分类
+    //Add a new taxonomy
     public boolean addCategory(String type, String categoryName) {
         if (categories.stream().anyMatch(c -> c.getName().equals(categoryName) && c.getType().equals(type))) {
-            return false; // 分类已存在
+            return false; // The classification already exists
         }
         Category category = new Category(type, categoryName);
         categories.add(category);
-        saveCategories(); // 保存分类数据到文件
+        saveCategories(); // Save the classification data to a file
         return true;
     }
 
-    // 删除指定分类
+    // Deletes the specified category
     public boolean deleteCategory(String type, String categoryName) {
         boolean removed = false;
         Iterator<Category> iterator = categories.iterator();
@@ -79,18 +81,19 @@ public class CategoryManager {
         }
 
         if (removed) {
-            saveCategories();  // 保存更新后的分类数据
+            saveCategories();  // Save the updated categorical data
             return true;
         }
         return false;
     }
 
-    // 获取用户的所有分类
+    // Get all classifications of users
     public List<Category> getCategories() {
-        return new ArrayList<>(categories);  // 返回副本，防止外部修改
+        return new ArrayList<>(categories);  // Returns a copy to prevent external modifications
     }
 
-    // 重新从文件加载分类（如果需要强制刷新）
+
+    // Reload classification from file (if a forced refresh is required)
     public void reloadCategories() {
         this.categories = loadCategoriesFromFile();
     }

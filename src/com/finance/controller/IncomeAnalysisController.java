@@ -52,7 +52,7 @@ public class IncomeAnalysisController {
 
     private void loadIncomeData(TransactionManager transactionManager) {
         Map<String, Double> incomeByCategory = transactionManager.getAllTransactions().stream()
-                .filter(t -> "收入".equals(t.getType()))
+                .filter(t -> "Income".equals(t.getType()))
                 .collect(Collectors.groupingBy(
                         Transaction::getCategory,
                         Collectors.summingDouble(Transaction::getAmount)
@@ -81,7 +81,7 @@ public class IncomeAnalysisController {
     @FXML
     private void showIncomeAnalysisPopup() {
         try {
-            // 1. 获取所有收入交易数据
+            // 1. Get data on all revenue transactions
             User currentUser = Session.getCurrentUser();
             if (currentUser == null) {
                 showAlert("Error", "No user logged in", Alert.AlertType.ERROR);
@@ -90,7 +90,7 @@ public class IncomeAnalysisController {
 
             TransactionManager transactionManager = new TransactionManager(currentUser);
             List<Transaction> incomeTransactions = transactionManager.getAllTransactions().stream()
-                    .filter(t -> "收入".equals(t.getType()))
+                    .filter(t -> "Income".equals(t.getType()))
                     .collect(Collectors.toList());
 
             if (incomeTransactions.isEmpty()) {
@@ -98,21 +98,21 @@ public class IncomeAnalysisController {
                 return;
             }
 
-            // 2. 拼接交易数据为字符串
-            StringBuilder details = new StringBuilder("以下是用户的收入明细数据：\n\n");
+            // 2. The concatenate transaction data is a string
+            StringBuilder details = new StringBuilder("Here's a breakdown of the user's earnings：\n\n");
             incomeTransactions.forEach(t ->
-                    details.append(String.format("日期: %s, 类别: %s, 金额: ¥%.2f\n",
+                    details.append(String.format("date: %s, category: %s, amount: ¥%.2f\n",
                             t.getDate(), t.getCategory(), t.getAmount()))
             );
 
-            String fullPrompt = details.toString() + "\n请基于以上收入数据，分析收入来源分布、主要收入类别、收入变化趋势，并提供优化建议：";
+            String fullPrompt = details.toString() + "\nBased on the above revenue data, analyze the distribution of revenue sources, main income categories, and revenue trends, and provide optimization suggestions:";
 
-            // 3. 调用AI服务
+            // 3. Invoke the AI service
             LlmService llmService = new LlmService(fullPrompt);
             llmService.callLlmApi();
             String aiResponse = llmService.getAnswer();
 
-            // 4. 显示分析结果
+            // 4. Displays the results of the analysis
             Stage popupStage = new Stage();
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.setTitle("AI Income Analysis");

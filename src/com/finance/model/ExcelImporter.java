@@ -33,7 +33,7 @@ public class ExcelImporter {
             while (rows.hasNext()) {
                 Row currentRow = rows.next();
                 try {
-                    // 解析数据（保持原有逻辑）
+                    // Parsing data (keeping the original logic)
                     String type = getStringCellValue(currentRow, 0);
                     String category = getStringCellValue(currentRow, 1);
                     double amount = getNumericCellValue(currentRow, 2);
@@ -43,7 +43,7 @@ public class ExcelImporter {
                     handleCategory(categoryManager, type, category);
                     transactionManager.addTransaction(type, category, amount, date);
 
-                    // 新增：检查文件是否保存成功
+                    // New: Check whether the file is saved successfully
 
 
                 } catch (Exception e) {
@@ -82,14 +82,14 @@ public class ExcelImporter {
             return cell.getLocalDateTimeCellValue().format(DATE_FORMATTER);
         } else {
             String dateString = cell.getStringCellValue().trim();
-            // 验证日期格式
+            // Verify the date format
             LocalDateTime.parse(dateString, DATE_FORMATTER);
             return dateString;
         }
     }
 
     private static void validateTransactionData(String type, double amount, String date) {
-        if (!"收入".equals(type) && !"支出".equals(type)) {
+        if (!"Income".equals(type) && !"Expenditure".equals(type)) {
             throw new IllegalArgumentException("Invalid transaction type");
         }
         if (amount <= 0) {

@@ -5,19 +5,20 @@ public class Summary {
     private double totalExpenditure;
     private double balance;
 
-    // 默认无参构造函数
+
+    //The default parameter constructor is not parameterized
     public Summary() {
-        // Jackson 需要无参构造函数来进行反序列化
+        // Jackson requires a parameterless constructor for deserialization
     }
 
-    // 带参构造函数
+    // Constructor with parameters
     public Summary(double totalIncome, double totalExpenditure, double balance) {
         this.totalIncome = totalIncome;
         this.totalExpenditure = totalExpenditure;
         this.balance = balance;
     }
 
-    // Getter 和 Setter 方法
+    // Getter and Setter methods
     public double getTotalIncome() {
         return totalIncome;
     }

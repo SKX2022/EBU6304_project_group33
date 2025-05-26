@@ -9,14 +9,14 @@
            fx:controller="com.finance.controller.RegisterController"
            stylesheets="@../css/style.css">
 
-    <!-- 背景图层 -->
+    <!-- Background layer -->
     <ImageView fitHeight="600" fitWidth="900" preserveRatio="false">
         <image>
             <Image url="@../images/blue.jpg" />
         </image>
     </ImageView>
 
-    <!-- 注册卡片层 -->
+    <!-- Register for the card layer -->
     <VBox spacing="20" alignment="CENTER" styleClass="login-card">
         <Label text="Create Your Account" styleClass="login-title"/>
 

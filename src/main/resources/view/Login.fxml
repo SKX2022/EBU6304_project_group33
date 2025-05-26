@@ -10,14 +10,14 @@
            fx:controller="com.finance.controller.LoginController"
            stylesheets="@../css/style.css">
 
-    <!-- 背景图 -->
+    <!--Background image-->
     <ImageView fitHeight="600" fitWidth="900" preserveRatio="false">
         <image>
             <Image url="@../images/blue.jpg" />
         </image>
     </ImageView>
 
-    <!-- 登录卡片 -->
+    <!-- Sign in to the card -->
     <VBox spacing="20" alignment="CENTER" styleClass="login-card">
         <Label text="Finance Tracker Login" styleClass="login-title"/>
 

@@ -25,9 +25,9 @@
             <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
 
             <VBox alignment="TOP_CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="900" spacing="20">
-                <!-- 标题和日期选择区域 -->
+                <!-- Title and date selection area -->
                 <HBox alignment="CENTER_LEFT" spacing="20">
-                    <Label text="收支情况" styleClass="label-title"/>
+                    <Label text="Income and expenditure" styleClass="label-title"/>
                     <Region HBox.hgrow="ALWAYS"/>
                     <HBox alignment="CENTER_RIGHT"
                           styleClass="classification-box"
@@ -35,39 +35,39 @@
                         <padding>
                             <Insets top="10" bottom="10" left="15" right="15"/>
                         </padding>
-                        <ComboBox fx:id="Year0" promptText="开始年" styleClass="input-field"/>
-                        <ComboBox fx:id="Month0" promptText="月" styleClass="input-field"/>
-                        <ComboBox fx:id="Day0" promptText="日" styleClass="input-field"/>
-                        <Text text="至" styleClass="label-data"/>
-                        <ComboBox fx:id="Year1" promptText="结束年" styleClass="input-field"/>
-                        <ComboBox fx:id="Month1" promptText="月" styleClass="input-field"/>
-                        <ComboBox fx:id="Day1" promptText="日" styleClass="input-field"/>
+                        <ComboBox fx:id="Year0" promptText="Start year" styleClass="input-field"/>
+                        <ComboBox fx:id="Month0" promptText="month" styleClass="input-field"/>
+                        <ComboBox fx:id="Day0" promptText="day" styleClass="input-field"/>
+                        <Text text="REACH" styleClass="label-data"/>
+                        <ComboBox fx:id="Year1" promptText="endOfYear" styleClass="input-field"/>
+                        <ComboBox fx:id="Month1" promptText="month" styleClass="input-field"/>
+                        <ComboBox fx:id="Day1" promptText="day" styleClass="input-field"/>
                         <Button fx:id="submit" onAction="#submitDateRange"
                                 styleClass="button-blue"
-                                text="提交"/>
+                                text="submit"/>
                     </HBox>
                 </HBox>
 
-                <!-- 图例标识区域 -->
+                <!-- The legend identifies the area -->
                 <HBox alignment="CENTER_LEFT" spacing="30" styleClass="classification-box">
                     <padding>
                         <Insets top="10" bottom="10" left="20" right="20"/>
                     </padding>
                     <HBox alignment="CENTER_LEFT" spacing="8">
                         <Circle radius="5" fill="#FF6B6B"/>
-                        <Label text="支出" styleClass="label-data"/>
+                        <Label text="Expenditure" styleClass="label-data"/>
                     </HBox>
                     <HBox alignment="CENTER_LEFT" spacing="8">
                         <Circle radius="5" fill="#4CAF50"/>
-                        <Label text="收入" styleClass="label-data"/>
+                        <Label text="Income" styleClass="label-data"/>
                     </HBox>
                     <HBox alignment="CENTER_LEFT" spacing="8">
                         <Circle radius="5" fill="#4A90E2"/>
-                        <Label text="盈余" styleClass="label-data"/>
+                        <Label text="surplus" styleClass="label-data"/>
                     </HBox>
                 </HBox>
 
-                <!-- 优化的图表区域 - 改进线条效果和动画 -->
+                <!-- Optimized chart area - Improved line effects and animations -->
                 <LineChart fx:id="financeLineChart"
                            HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                            styleClass="classification-box, smooth-chart"
@@ -87,7 +87,7 @@
                                       tickLabelRotation="0"
                                       styleClass="axis">
                             <label>
-                                <Label text="日期" styleClass="axis-label"/>
+                                <Label text="DATE" styleClass="axis-label"/>
                             </label>
                             <tickLabelFont>
                                 <javafx.scene.text.Font size="12"/>
@@ -105,7 +105,7 @@
                                     forceZeroInRange="true"
                                     styleClass="axis">
                             <label>
-                                <Label text="金额 (元)" styleClass="axis-label"/>
+                                <Label text="amount " styleClass="axis-label"/>
                             </label>
                             <tickLabelFont>
                                 <javafx.scene.text.Font size="12"/>
@@ -114,10 +114,10 @@
                     </yAxis>
                 </LineChart>
 
-                <!-- AI分析按钮 -->
+                <!--AI analysis button-->
                 <Button onAction="#analyzeAndSuggest"
                         styleClass="button-primary"
-                        text="AI 分析收支情况并给出储蓄建议">
+                        text="AI Analyze income and expenditure and give savings advice">
                     <graphic>
                         <ImageView fitHeight="24" fitWidth="24">
                             <image>

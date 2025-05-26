@@ -24,16 +24,16 @@ public class RegisterController {
         String password = passwordField.getText();
 
         if (username.isEmpty() || password.isEmpty()) {
-            showAlert("请输入用户名和密码。", Alert.AlertType.WARNING);
+            showAlert("Please enter your username and password.", Alert.AlertType.WARNING);
             return;
         }
 
         boolean success = registerService.registerUser(username, password);
         if (success) {
-            showAlert("注册成功，请登录。", Alert.AlertType.INFORMATION);
+            showAlert("Registration is successful, please log in.", Alert.AlertType.INFORMATION);
             SceneSwitcher.switchScene("/view/Login.fxml");
         } else {
-            showAlert("用户名已存在。", Alert.AlertType.ERROR);
+            showAlert("The username already exists.", Alert.AlertType.ERROR);
         }
     }
 
@@ -44,7 +44,7 @@ public class RegisterController {
 
     private void showAlert(String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
-        alert.setTitle("注册提示");
+        alert.setTitle("Enrollment Prompt");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

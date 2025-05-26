@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DoubaoChatResponse {
-    // 移除 code 和 msg 字段，因为实际响应体中没有它们
+    // Remove the code and msg fields, as they are not present in the actual response body
 
-    private java.util.List<Choice> choices; // 直接从最外层开始解析 choices
+    private java.util.List<Choice> choices; // Resolve choices directly from the outermost layer
 
     private long created;
     private String id;
@@ -76,7 +76,7 @@ public class DoubaoChatResponse {
         this.usage = usage;
     }
 
-    // --- 内部类保持不变 ---
+    // --- Inner classes remain unchanged ---
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Usage {
@@ -87,8 +87,8 @@ public class DoubaoChatResponse {
         @JsonProperty("total_tokens")
         private int totalTokens;
 
-        // 如果需要，可以添加更多来自 usage 的字段
-        // 例如：
+        // If you want, you can add more fields from usage
+        // For example:
         // @JsonProperty("prompt_tokens_details")
         // private PromptTokensDetails promptTokensDetails;
         // @JsonProperty("completion_tokens_details")
@@ -144,8 +144,8 @@ public class DoubaoChatResponse {
         private Message message;
         @JsonProperty("finish_reason")
         private String finishReason;
-        private int index; // 添加 index 字段
-        private Object logprobs; // logprobs 可以是null，或者一个对象，使用Object或JsonNode
+        private int index; //Add an index field
+        private Object logprobs; // logprobs can be null, or an object, using Object or JsonNode
 
         // Getters and Setters
         public Message getMessage() {

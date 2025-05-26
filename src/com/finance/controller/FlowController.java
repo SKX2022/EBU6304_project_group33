@@ -6,7 +6,7 @@ import com.finance.model.Category;
 import com.finance.model.ExcelImporter;
 import com.finance.model.Transaction;
 import com.finance.model.User;
-import com.finance.service.LlmService; // 添加LlmService的导入
+import com.finance.service.LlmService; // addTheImportOfLlmService
 import com.finance.session.Session;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -191,9 +191,9 @@ public class FlowController {
     @FXML
     private void importTransactions(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("导入Excel交易记录");
+        fileChooser.setTitle("Import Excel transactions");
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Excel 文件", "*.xlsx")
+                new FileChooser.ExtensionFilter("Excel file", "*.xlsx")
         );
 
         File selectedFile = fileChooser.showOpenDialog(null);
@@ -205,13 +205,13 @@ public class FlowController {
                 );
 
                 if (!errorLogs.isEmpty()) {
-                    showErrorDialog("导入错误", String.join("\n", errorLogs));
+                    showErrorDialog("Import error", String.join("\n", errorLogs));
                 } else {
-                    showInfoDialog("导入成功", "成功导入 " + selectedFile.getName());
+                    showInfoDialog("The import was successful", "Successfully imported " + selectedFile.getName());
                     refreshTransactions();
                 }
             } catch (Exception e) {
-                showErrorDialog("系统错误", "导入过程中发生未预期异常:\n" + e);
+                showErrorDialog("System error", "An unexpected exception occurred during the import process:\n" + e);
             }
         }
     }
@@ -228,10 +228,10 @@ public class FlowController {
             );
             alert.getDialogPane().getStyleClass().add("login-card");
         } catch (NullPointerException e) {
-            System.err.println("无法加载CSS样式: " + e.getMessage());
+            System.err.println("Unable to load CSS styles: " + e.getMessage());
         }
 
-        ButtonType okButton = new ButtonType("确定", ButtonBar.ButtonData.OK_DONE);
+        ButtonType okButton = new ButtonType("determine", ButtonBar.ButtonData.OK_DONE);
         alert.getButtonTypes().setAll(okButton);
 
         Button okButtonNode = (Button) alert.getDialogPane().lookupButton(okButton);
@@ -284,7 +284,7 @@ public class FlowController {
         try {
             return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         } catch (DateTimeParseException e) {
-            System.err.println("日期解析错误: " + dateStr + " - " + e.getMessage());
+            System.err.println("Date parsing error: " + dateStr + " - " + e.getMessage());
             return null;
         }
     }
@@ -300,11 +300,11 @@ public class FlowController {
             );
             alert.getDialogPane().getStyleClass().add("login-card");
         } catch (NullPointerException e) {
-            System.err.println("无法加载CSS样式: " + e.getMessage());
+            System.err.println("Unable to load CSS styles: " + e.getMessage());
         }
 
-        ButtonType yesButton = new ButtonType("确定", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButton = new ButtonType("取消", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType yesButton = new ButtonType("determine", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(yesButton, cancelButton);
 
         Button yesButtonNode = (Button) alert.getDialogPane().lookupButton(yesButton);
@@ -324,13 +324,13 @@ public class FlowController {
             configureDialogContent(dialog);
             dialog.showAndWait();
         } catch (Exception e) {
-            showErrorDialog("系统错误", "弹窗初始化失败：" + e.getMessage());
+            showErrorDialog("System error", "The pop-up window failed to initialize：" + e.getMessage());
         }
     }
 
     private TextInputDialog createNewDialog() {
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("新增交易记录");
+        dialog.setTitle("Add transaction records");
         dialog.setHeaderText(null);
         dialog.getDialogPane().setContent(createDialogContent());
 
@@ -340,7 +340,7 @@ public class FlowController {
             );
             dialog.getDialogPane().getStyleClass().add("login-card");
         } catch (NullPointerException e) {
-            System.err.println("无法加载CSS样式: " + e.getMessage());
+            System.err.println("Unable to load CSS styles: " + e.getMessage());
         }
         return dialog;
     }
@@ -353,8 +353,8 @@ public class FlowController {
         grid.getStyleClass().add("classification-box");
 
         ComboBox<String> typeComboBoxLocal = new ComboBox<>();
-        typeComboBoxLocal.getItems().addAll("收入", "支出");
-        typeComboBoxLocal.setPromptText("选择类型");
+        typeComboBoxLocal.getItems().addAll("Income", "Expenditure");
+        typeComboBoxLocal.setPromptText("selectAType");
         typeComboBoxLocal.setId("comboBox_type");
         typeComboBoxLocal.getStyleClass().add("input-field");
         typeComboBoxLocal.setPrefWidth(250);
@@ -368,7 +368,7 @@ public class FlowController {
                         .collect(Collectors.toList())
         );
         dialogCategoryField.setItems(categoryList);
-        dialogCategoryField.setPromptText("选择分类");
+        dialogCategoryField.setPromptText("Select a category");
         dialogCategoryField.getStyleClass().add("input-field");
         dialogCategoryField.setPrefWidth(250);
         dialogCategoryField.setConverter(new StringConverter<>() {
@@ -387,13 +387,13 @@ public class FlowController {
         });
 
         TextField amountField = new TextField();
-        amountField.setPromptText("请输入金额");
+        amountField.setPromptText("Please enter an amount");
         amountField.setId("textField_amount");
         amountField.getStyleClass().add("input-field");
         amountField.setPrefWidth(250);
 
         dialogDatePickerField = new DatePicker(LocalDate.now());
-        dialogDatePickerField.setPromptText("选择日期");
+        dialogDatePickerField.setPromptText("Select a date");
         dialogDatePickerField.setId("datePicker_date");
         dialogDatePickerField.getStyleClass().add("input-field");
         dialogDatePickerField.setPrefWidth(250);
@@ -414,16 +414,16 @@ public class FlowController {
         });
 
         TextField descriptionField = new TextField();
-        descriptionField.setPromptText("请输入备注说明");
+        descriptionField.setPromptText("Please enter a note description");
         descriptionField.setId("textField_description");
         descriptionField.getStyleClass().add("input-field");
         descriptionField.setPrefWidth(250);
 
-        Label typeLabel = new Label("交易类型:");
-        Label categoryLabel = new Label("分类:");
-        Label amountLabel = new Label("金额:");
-        Label dateLabel = new Label("日期:");
-        Label descriptionLabel = new Label("备注:");
+        Label typeLabel = new Label("The type of transaction:");
+        Label categoryLabel = new Label("classification:");
+        Label amountLabel = new Label("amount:");
+        Label dateLabel = new Label("date:");
+        Label descriptionLabel = new Label("Remarks:");
 
         typeLabel.getStyleClass().add("label-section");
         categoryLabel.getStyleClass().add("label-section");
@@ -456,8 +456,8 @@ public class FlowController {
     }
 
     private void configureDialogContent(TextInputDialog dialog) {
-        ButtonType confirmButtonType = createButtonType("确定", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = createButtonType("取消", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType confirmButtonType = createButtonType("determine", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = createButtonType("cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().setAll(confirmButtonType, cancelButtonType);
 
         Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
@@ -473,7 +473,7 @@ public class FlowController {
                 try {
                     return processValidInput(dialog).toString();
                 } catch (Exception e) {
-                    showErrorDialog("输入错误", e.getMessage());
+                    showErrorDialog("Typing error", e.getMessage());
                     return null;
                 }
             }
@@ -495,13 +495,13 @@ public class FlowController {
         DatePicker datePicker = dialogDatePickerField;
 
         String type = typeComboBoxLocal.getValue();
-        if (type == null || !List.of("收入", "支出").contains(type)) {
-            throw new IllegalArgumentException("请选择有效的交易类型（收入/支出）");
+        if (type == null || !List.of("Income", "Expenditure").contains(type)) {
+            throw new IllegalArgumentException("Please select a valid transaction type (Income/Expense)");
         }
 
         Category selectedCategory = categoryField.getSelectionModel().getSelectedItem();
         if (selectedCategory == null) {
-            throw new IllegalArgumentException("请选择有效分类");
+            throw new IllegalArgumentException("Please select a valid category");
         }
         String category = selectedCategory.getName();
 
@@ -510,10 +510,10 @@ public class FlowController {
             amount = new BigDecimal(amountField.getText().trim())
                     .setScale(2, RoundingMode.HALF_UP);
             if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                throw new IllegalArgumentException("金额必须大于零");
+                throw new IllegalArgumentException("The amount must be greater than zero");
             }
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("请输入有效的金额数字");
+            throw new IllegalArgumentException("Please enter a valid amount figure");
         }
 
         LocalDate selectedDate = datePicker.getValue();
@@ -536,7 +536,7 @@ public class FlowController {
                 description);
 
         if (!success) {
-            throw new IllegalStateException("添加交易记录失败");
+            throw new IllegalStateException("Failed to add transactions");
         }
 
         Transaction newTransaction = new Transaction(
@@ -549,7 +549,7 @@ public class FlowController {
 
         updateTransactionList(newTransaction);
 
-        Platform.runLater(() -> showInfoDialog("操作成功", "交易记录已成功添加"));
+        Platform.runLater(() -> showInfoDialog("THE OPERATION WAS SUCCESSFUL", "The transaction was added successfully"));
 
         return newTransaction;
     }
@@ -563,7 +563,7 @@ public class FlowController {
     }
 
     private void clearFormFields() {
-        // 清空字段逻辑
+        // Clear the field logic
     }
 
     private void showErrorDialog(String title, String message) {
@@ -578,10 +578,10 @@ public class FlowController {
             );
             alert.getDialogPane().getStyleClass().add("login-card");
         } catch (NullPointerException e) {
-            System.err.println("无法加载CSS样式: " + e.getMessage());
+            System.err.println("Unable to load CSS styles: " + e.getMessage());
         }
 
-        ButtonType okButton = new ButtonType("确定", ButtonBar.ButtonData.OK_DONE);
+        ButtonType okButton = new ButtonType("determine", ButtonBar.ButtonData.OK_DONE);
         alert.getButtonTypes().setAll(okButton);
 
         Button okButtonNode = (Button) alert.getDialogPane().lookupButton(okButton);
@@ -596,11 +596,11 @@ public class FlowController {
     private void handleDeleteTransaction(ActionEvent event) {
         Transaction selectedTransaction = transactionsTable.getSelectionModel().getSelectedItem();
         if (selectedTransaction == null) {
-            showErrorDialog("提示", "请先选择要删除的交易记录");
+            showErrorDialog("tips", "Start by selecting the transactions that you want to delete");
             return;
         }
 
-        boolean confirmed = showConfirmDialog("确认删除", "确定要删除所选交易记录吗？此操作无法撤销。");
+        boolean confirmed = showConfirmDialog("Confirm the deletion", "Are you sure you want to delete the selected transactions? This action cannot be undone.");
         if (confirmed) {
             TransactionManager transactionManager = new TransactionManager(Session.getCurrentUser());
             boolean success = transactionManager.deleteTransaction(selectedTransaction);
@@ -608,9 +608,9 @@ public class FlowController {
             if (success) {
                 transactionsData.remove(selectedTransaction);
                 transactionsTable.refresh();
-                showInfoDialog("操作成功", "交易记录已成功删除");
+                showInfoDialog("The operation was successful", "The transaction was successfully deleted");
             } else {
-                showErrorDialog("操作失败", "删除交易记录时发生错误");
+                showErrorDialog("The operation failed", "An error occurred while deleting the transaction");
             }
         }
     }
@@ -620,15 +620,15 @@ public class FlowController {
             TextInputDialog dialog = createAiInputDialog();
             dialog.showAndWait();
         } catch (Exception e) {
-            showErrorDialog("系统错误", "AI智能录入初始化失败：" + e.getMessage());
+            showErrorDialog("System error", "The initialization of AI intelligent input failed：" + e.getMessage());
         }
     }
 
     private TextInputDialog createAiInputDialog() {
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("AI智能录入交易");
+        dialog.setTitle("AI intelligently enters transactions");
         dialog.setHeaderText(null);
-        dialog.setContentText("请描述您的交易（例如：昨天在餐厅吃饭花了88元）：");
+        dialog.setContentText("Please describe your transaction (e.g. $88 spent on a restaurant yesterday)：");
 
         try {
             dialog.getDialogPane().getStylesheets().add(
@@ -636,11 +636,11 @@ public class FlowController {
             );
             dialog.getDialogPane().getStyleClass().add("login-card");
         } catch (NullPointerException e) {
-            System.err.println("无法加载CSS样式: " + e.getMessage());
+            System.err.println("Unable to load CSS styles:" + e.getMessage());
         }
 
-        ButtonType confirmButtonType = new ButtonType("识别并添加", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("取消", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType confirmButtonType = new ButtonType("Identify and add", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().setAll(confirmButtonType, cancelButtonType);
 
         Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
@@ -654,7 +654,7 @@ public class FlowController {
             if (dialogButton.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
                 String userInput = dialog.getEditor().getText().trim();
                 if (userInput.isEmpty()) {
-                    showErrorDialog("输入错误", "请输入交易描述");
+                    showErrorDialog("Typing error", "Please enter a description of the transaction");
                     return null;
                 }
                 processAiTransaction(userInput);
@@ -667,7 +667,7 @@ public class FlowController {
     }
 
     private void processAiTransaction(String userDescription) {
-        showInfoDialog("处理中", "正在使用AI分析您的交易，请稍候...");
+        showInfoDialog("Processing", "AI is being used to analyze your trades, please wait...");
 
         CompletableFuture.runAsync(() -> {
             try {
@@ -714,13 +714,13 @@ public class FlowController {
 
                         if (!categoryExists) {
                             boolean createCategory = showConfirmDialog(
-                                "创建新分类",
-                                "系统未找到分类 \"" + category + "\"，是否创建此分类？"
+                                "Create a new taxonomy",
+                                "No classification found \"" + category + "\"，Whether to create this taxonomy？"
                             );
 
                             if (createCategory) {
                                 categoryManager.addCategory(type, category);
-                                showInfoDialog("分类创建成功", "已创建新分类：" + category);
+                                showInfoDialog("THE CATEGORY IS CREATED SUCCESSFULLY", "A NEW TAXONOMY HAS BEEN CREATED：" + category);
                             } else {
                                 showCategorySelectionDialog(type, category, amount, formattedDate, note);
                                 return;
@@ -735,31 +735,31 @@ public class FlowController {
                                 type, category, amount, formattedDate, Session.getCurrentUser(), note
                             );
                             updateTransactionList(newTransaction);
-                            showInfoDialog("交易添加成功",
-                                          "已添加" + type + "记录：\n" +
-                                          "分类: " + category + "\n" +
-                                          "金额: " + amount + "\n" +
-                                          "日期: " + formattedDate.substring(0, 10) + "\n" +
-                                          "备注: " + note);
+                            showInfoDialog("THE TRANSACTION WAS ADDED SUCCESSFULLY",
+                                          "ADDED" + type + "record:\n" +
+                                          "classification: " + category + "\n" +
+                                          "amount: " + amount + "\n" +
+                                          "date: " + formattedDate.substring(0, 10) + "\n" +
+                                          "remarks: " + note);
                             refreshTransactions();
                         } else {
-                            showErrorDialog("交易添加失败", "无法添加交易记录，请重试");
+                            showErrorDialog("Transaction added failed", "Transactions can't be added, try again");
                         }
 
                     } catch (Exception e) {
-                        showErrorDialog("解析错误", "无法解析AI返回的结果: " + e.getMessage() + "\n原始返回: " + result);
+                        showErrorDialog("Parsing error", "The results returned by the AI cannot be parsed: " + e.getMessage() + "\nOriginal return: " + result);
                     }
                 });
             } catch (IOException | InterruptedException | LlmService.LlmServiceException e) {
-                Platform.runLater(() -> showErrorDialog("AI服务错误", "调用AI服务失败: " + e.getMessage()));
+                Platform.runLater(() -> showErrorDialog("AI service error", "Failed to call the AI service: " + e.getMessage()));
             }
         });
     }
 
     private void showCategorySelectionDialog(String type, String suggestedCategory, double amount, String date, String note) {
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("选择分类");
-        dialog.setHeaderText("请为您的" + type + "交易选择一个分类");
+        dialog.setTitle("Select a category");
+        dialog.setHeaderText("Please for you" + type + "Trade by selecting a category");
 
         CategoryManager categoryManager = new CategoryManager(Session.getCurrentUser());
         List<Category> categories = categoryManager.getCategories().stream()
@@ -780,12 +780,12 @@ public class FlowController {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        grid.add(new Label("选择分类:"), 0, 0);
+        grid.add(new Label("Select a category:"), 0, 0);
         grid.add(categoryCombo, 1, 0);
 
         dialog.getDialogPane().setContent(grid);
 
-        ButtonType confirmButtonType = new ButtonType("确认", ButtonBar.ButtonData.OK_DONE);
+        ButtonType confirmButtonType = new ButtonType("confirm", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
 
         dialog.setResultConverter(dialogButton -> {
@@ -805,15 +805,15 @@ public class FlowController {
                     type, selectedCategory, amount, date, Session.getCurrentUser(), note
                 );
                 updateTransactionList(newTransaction);
-                showInfoDialog("交易添加成功",
-                              "已添加" + type + "记录：\n" +
-                              "分类: " + selectedCategory + "\n" +
-                              "金额: " + amount + "\n" +
-                              "日期: " + date.substring(0, 10) + "\n" +
-                              "备注: " + note);
+                showInfoDialog("The transaction was added successfully",
+                              "added" + type + "record：\n" +
+                              "classification: " + selectedCategory + "\n" +
+                              "amount: " + amount + "\n" +
+                              "date: " + date.substring(0, 10) + "\n" +
+                              "remarks: " + note);
                 refreshTransactions();
             } else {
-                showErrorDialog("交易添加失败", "无法添加交易记录，请重试");
+                showErrorDialog("Transaction added failed", "Transactions can't be added, try again");
             }
         });
     }

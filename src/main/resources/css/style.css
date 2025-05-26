@@ -1,16 +1,16 @@
-/* 全局字体和背景 */
+/* Global Fonts and Backgrounds */
 .root {
     -fx-font-family: ".SF NS Display", ".SF NS Text", "Helvetica Neue", sans-serif;
-    /* 其余属性保持不变 */
+    /* The rest of the properties remain the same */
     -fx-background-color: #f8fafc;
     -fx-text-fill: #334155;
 }
 
-/* 顶部导航栏 */
+/* Top Navigation Bar */
 .navigation-bar {
     -fx-background-color: #ffffff;
-    -fx-padding: 10 20; /* 减小上下内边距 */
-    -fx-spacing: 10;    /* 进一步减小按钮之间的间距 */
+    -fx-padding: 10 20; /* Reduce the padding between the top and bottom */
+    -fx-spacing: 10;    /* Further reduce the spacing between buttons */
     -fx-alignment: CENTER_LEFT;
     -fx-border-color: #e0e0e0;
     -fx-border-width: 0 0 1 0;
@@ -23,13 +23,13 @@
     -fx-font-weight: bold;
     -fx-padding: 0 10;
 }
-/* 如果你使用的是 Button 导航栏（如切换页面） */
+/* If you're using the Button navigation bar (e.g. switch pages) */
 .navigation-bar .button {
     -fx-background-color: transparent;
     -fx-text-fill: #2c3e50;
-    -fx-font-size: 13px; /* 进一步减小导航按钮字体大小 */
-    -fx-font-weight: normal; /* 确保字体不是粗体以节省空间 */
-    -fx-padding: 4 8; /* 减小按钮自身的内边距 */
+    -fx-font-size: 13px;/* Further reduce the font size of the navigation button */
+    -fx-font-weight: normal; /* Make sure the font is not bold to save space */
+    -fx-padding: 4 8; /* Reduce the padding of the button itself */
     -fx-cursor: hand;
 }
 
@@ -37,20 +37,20 @@
     -fx-text-fill: #3498db;
     -fx-underline: true;
 }
-/* 标题样式 */
+/* Header Style */
 .label-title {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-text-fill: #1a365d;
 }
 
-/* 数据标签样式 */
+/* Data Label Style */
 .label-data {
     -fx-font-size: 18px;
     -fx-text-fill: #34495e;
 }
 
-/* 区段标题样式 */
+/* Segment Header Style */
 .label-section {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
@@ -58,7 +58,7 @@
     -fx-padding: 10 0 5 0;
 }
 
-/* 分类框样式 */
+/* Category Box Style */
 .classification-box {
     -fx-background-color: #ffffff;
     -fx-padding: 15;
@@ -69,7 +69,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
 }
 
-/* 按钮样式 */
+/* Button Style */
 .button-blue {
     -fx-background-color: #3498db;
     -fx-text-fill: white;
@@ -84,7 +84,7 @@
     -fx-background-color: #2980b9;
 }
 
-/* 进度条样式 */
+/* Progress bar style */
 .progress-bar {
     -fx-accent: #27ae60;
     -fx-control-inner-background: #ecf0f1;
@@ -93,22 +93,22 @@
     -fx-padding: 5;
 }
 
-/* 收入进度条颜色 */
+/* Revenue progress bar color */
 #incomeProgressBar .bar {
     -fx-background-color: #87CEFA;
 }
 
-/* 支出进度条颜色 */
+/* Spend progress bar color */
 #expenseProgressBar .bar {
     -fx-background-color: #87CEFA;
 }
 
-/* 盈余进度条颜色 */
+/* Surplus progress bar color*/
 #surplusProgressBar .bar {
     -fx-background-color: #87CEFA;
 }
 
-/* ListView 样式 */
+/* ListView style */
 .list-view {
     -fx-background-color: #ffffff;
     -fx-background-insets: 0;
@@ -128,7 +128,8 @@
     -fx-background-color: #ecf0f1;
     -fx-text-fill: #2c3e50;
 }
-/* 登录卡片居中卡片风格 */
+
+/* Login card centering card style */
 .login-card {
     -fx-padding: 40;
     -fx-background-color: rgba(255, 255, 255, 0.85);
@@ -136,13 +137,13 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 4);
 }
 
-/* 登录标题 */
+/* Login title*/
 .login-title {
     -fx-font-size: 50px;
     -fx-text-fill: #2c3e50;
     -fx-font-weight: bold;
 }
-/* 输入框统一美化 */
+/* The input box is uniformly beautified */
 .input-field {
     -fx-font-size: 14px;
     -fx-padding: 8 12;
@@ -152,7 +153,7 @@
     -fx-background-color: #ffffff;
 }
 
-/* 卡片背景统一 */
+/* The card background is uniform */
 .login-card {
     -fx-padding: 40;
     -fx-spacing: 20;
@@ -161,14 +162,14 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 3);
 }
 
-/* 页面标题 */
+/* Page title */
 .login-title {
     -fx-font-size: 22px;
     -fx-text-fill: #2c3e50;
     -fx-font-weight: bold;
 }
 
-/* 主按钮样式 */
+/* Main button style */
 .button-primary {
     -fx-background-color: #4299e1;
     -fx-text-fill: white;
@@ -183,7 +184,7 @@
     -fx-background-color: #3182ce;
 }
 
-/* 按钮次要样式 */
+/* Button secondary style */
 .button-secondary {
     -fx-background-color: #edf2f7;
     -fx-text-fill: #2d3748;
@@ -197,7 +198,7 @@
     -fx-background-color: #e2e8f0;
 }
 
-/* 链接文本 */
+/* Link text */
 .link-text {
     -fx-text-fill: #2c3e50;
     -fx-underline: true;
@@ -207,7 +208,7 @@
 .link-text:hover {
     -fx-text-fill: #3498db;
 }
-/* ScrollBar 通用美化 */
+/* ScrollBar Universal beautification */
 .scroll-bar:vertical, .scroll-bar:horizontal {
     -fx-background-color: transparent;
 }
@@ -226,23 +227,25 @@
     -fx-background-color: #0ea5e9;       /* sky‑500 */
 }
 
-/* --- LineChart 折线图系列颜色设置 --- */
+/* --- LineChart Line chart series color settings --- */
 
-/* 支出系列 (第一个添加的系列，对应 index 0) */
+/* Payout series (the first series added, corresponding to index 0)*/
 .chart-series-line.chart-series-0 {
-    -fx-stroke: #FF6B6B; /* 设置折线颜色为支出红色 */
-    -fx-stroke-width: 2.5px; /* 可选：增加折线宽度，使其更明显 */
+    -fx-stroke: #FF6B6B; /* Set the polyline color to Expenditure Red */
+
+    -fx-stroke-width: 2.5px; /* Optional: Increase the width of the polyline to make it more visible */
 }
 
 .chart-line-symbol.chart-series-0 {
-    -fx-background-color: #FF6B6B, white; /* 设置数据点符号的背景色（内圈颜色）和外圈颜色 */
-    -fx-background-radius: 5px; /* 数据点圆角大小 */
-    -fx-padding: 5px; /* 数据点大小 */
+    -fx-background-color: #FF6B6B, white; /* Sets the background color (inner circle color) and outer ring color of the data point symbol */
+    -fx-background-radius: 5px; /* The size of the fillet of the data point */
+    -fx-padding: 5px; /* Data point size*/
 }
 
-/* 收入系列 (第二个添加的系列，对应 index 1) */
+
+/* Revenue series (second added series, corresponding to index 1)*/
 .chart-series-line.chart-series-1 {
-    -fx-stroke: #4CAF50; /* 设置折线颜色为收入绿色 */
+    -fx-stroke: #4CAF50; /* Set the polyline color to revenue green*/
     -fx-stroke-width: 2.5px;
 }
 
@@ -252,9 +255,9 @@
     -fx-padding: 5px;
 }
 
-/* 盈余系列 (第三个添加的系列，对应 index 2) */
+/* Surplus series (the third added series, corresponding to index 2)*/
 .chart-series-line.chart-series-2 {
-    -fx-stroke: #4A90E2; /* 设置折线颜色为盈余蓝色 */
+    -fx-stroke: #4A90E2; /* Sets the polyline color to surplus blue */
     -fx-stroke-width: 2.5px;
 }
 
@@ -264,35 +267,36 @@
     -fx-padding: 5px;
 }
 
-/* --- 可选：调整图表背景和网格线 --- */
+
+/* --- Optional: Adjust the chart background and gridlines --- */
 .chart-content {
-    -fx-background-color: #ffffff; /* 图表绘图区域的背景颜色 */
+    -fx-background-color: #ffffff; /* The background color of the chart's drawing area */
 }
 
 .chart-plot-background {
-    -fx-background-color: transparent; /* 移除默认的图表背景色，使其透明 */
+    -fx-background-color: transparent; /* Removes the default chart background color to make it transparent*/
 }
 
 .chart-vertical-grid-lines {
-    -fx-stroke: #f0f0f0; /* 垂直网格线颜色 */
+    -fx-stroke: #f0f0f0; /* Vertical grid line color */
 }
 
 .chart-horizontal-grid-lines {
-    -fx-stroke: #f0f0f0; /* 水平网格线颜色 */
+    -fx-stroke: #f0f0f0; /* Horizontal grid line color */
 }
 
 .chart-vertical-zero-line, .chart-horizontal-zero-line {
-    -fx-stroke: #cccccc; /* 零线颜色 */
+    -fx-stroke: #cccccc; /* Zero line color */
     -fx-stroke-width: 1px;
 }
 
-/* 轴标签颜色 */
+/* Axis label color */
 .axis-label {
     -fx-text-fill: #555555;
     -fx-font-size: 14px;
 }
 
-/* 刻度标签颜色 */
+/* Scale label color */
 .axis-tick-mark {
     -fx-stroke: #cccccc;
 }
@@ -301,7 +305,7 @@
     -fx-font-size: 12px;
 }
 
-/* 图例样式 */
+/* Legend style */
 .chart-legend {
     -fx-background-color: #ffffff;
     -fx-padding: 10px;
@@ -313,21 +317,21 @@
     -fx-text-fill: #333333;
     -fx-font-size: 14px;
 }
-/* 支出系列 (第一个添加的系列，对应 index 0) */
+/* Payout series (the first series added, corresponding to index 0) */
 .chart-series-line.chart-series-0 {
-    -fx-stroke: #FF6B6B; /* 支出红色 */
-    -fx-stroke-width: 3px; /* 增加折线宽度 */
+    -fx-stroke: #FF6B6B; /* Spending red */
+    -fx-stroke-width: 3px; /* Increase the polyline width */
 }
 
 .chart-line-symbol.chart-series-0 {
-    -fx-background-color: #FF6B6B, white; /* 数据点颜色 */
-    -fx-background-radius: 6px; /* 数据点圆角大小 */
-    -fx-padding: 6px; /* 数据点大小 */
+    -fx-background-color: #FF6B6B, white; /*Data point color */
+    -fx-background-radius: 6px; /*The size of the fillet of the data point */
+    -fx-padding: 6px; /* Data point size */
 }
 
-/* 收入系列 (第二个添加的系列，对应 index 1) */
+/* Revenue series (second added series, corresponding to index 1) */
 .chart-series-line.chart-series-1 {
-    -fx-stroke: #4CAF50; /* 收入绿色 */
+    -fx-stroke: #4CAF50; /* Income green */
     -fx-stroke-width: 3px;
 }
 
@@ -337,9 +341,9 @@
     -fx-padding: 6px;
 }
 
-/* 盈余系列 (第三个添加的系列，对应 index 2) */
+/* Surplus series (the third added series, corresponding to index 2)*/
 .chart-series-line.chart-series-2 {
-    -fx-stroke: #4A90E2; /* 盈余蓝色 */
+    -fx-stroke: #4A90E2; /* Surplus blue */
     -fx-stroke-width: 3px;
 }
 
@@ -349,24 +353,24 @@
     -fx-padding: 6px;
 }
 
-/* 网格线和背景 */
+/* Grid lines and backgrounds */
 .chart-content {
-    -fx-background-color: #ffffff; /* 绘图区域背景 */
+    -fx-background-color: #ffffff; /*Background of the drawing area*/
 }
 
 .chart-plot-background {
-    -fx-background-color: transparent; /* 移除默认背景色 */
+    -fx-background-color: transparent; /* Removes the default background color */
 }
 
 .chart-vertical-grid-lines, .chart-horizontal-grid-lines {
-    -fx-stroke: #f0f0f0; /* 网格线颜色 */
+    -fx-stroke: #f0f0f0; /* Grid line color */
 }
 
 .chart-vertical-zero-line, .chart-horizontal-zero-line {
-    -fx-stroke: #cccccc; /* 零线颜色 */
+    -fx-stroke: #cccccc; /* Zero line color */
     -fx-stroke-width: 1px;
 }
-/* 平滑曲线样式 */
+/* Smooth curve style */
 .smooth-chart .chart-series-line {
     -fx-stroke-width: 3px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 1);
@@ -374,37 +378,37 @@
     -fx-stroke-line-cap: round;
 }
 
-/* 支出系列 (第一个添加的系列，对应 index 0) */
+/* Payout series (the first series added, corresponding to index 0)*/
 .smooth-chart .chart-series-line.chart-series-0 {
     -fx-stroke: #FF6B6B;
     -fx-stroke-width: 3px;
 }
 
-/* 收入系列 (第二个添加的系列，对应 index 1) */
+/* Revenue series (second added series, corresponding to index 1)*/
 .smooth-chart .chart-series-line.chart-series-1 {
     -fx-stroke: #4CAF50;
     -fx-stroke-width: 3px;
 }
 
-/* 盈余系列 (第三个添加的系列，对应 index 2) */
+/* Surplus series (the third added series, corresponding to index 2) */
 .smooth-chart .chart-series-line.chart-series-2 {
     -fx-stroke: #4A90E2;
     -fx-stroke-width: 3px;
 }
 
-/* 数据点样式优化 */
+/* Data point style optimization */
 .smooth-chart .chart-line-symbol {
     -fx-background-insets: 0, 2;
     -fx-background-radius: 6px;
     -fx-padding: 6px;
 }
-/* 为图表添加交互动画效果 */
+/* Add interactive animations to your charts */
 .smooth-chart {
     -fx-animated: true;
     -fx-transition-duration: 0.5s;
 }
 
-/* 鼠标悬停时高亮当前系列 */
+/* Highlight the current series on mouse hover*/
 .chart-series-line:hover {
     -fx-stroke-width: 4px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0, 0, 0);
@@ -412,13 +416,13 @@
     -fx-opacity: 1;
 }
 
-/* 其他系列淡出效果 */
+/* Other series fade out effect */
 .chart-series-line.dimmed {
     -fx-opacity: 0.3;
     -fx-effect: null;
 }
 
-/* 数据点悬停动画 */
+/*Data point hover animation */
 .chart-line-symbol:hover {
     -fx-scale-x: 1.5;
     -fx-scale-y: 1.5;
@@ -427,21 +431,21 @@
     -fx-transition: all 0.15s ease-out;
 }
 
-/* 图表区域悬停效果 */
+/* Hover effect in the chart area */
 .chart-plot-background:hover {
     -fx-background-color: rgba(245,245,250,0.3);
     -fx-transition: all 0.2s ease-out;
 }
 
-/* 1. 导航栏文字简化 */
+/* 1.The navigation bar text is simplified */
 .navigation-bar .button {
-    -fx-font-size: 18px; /* 适当放大导航文字 */
-    -fx-padding: 0 15px; /* 增加间距 */
+    -fx-font-size: 18px; /* Zoom in on the navigation text as appropriate */
+    -fx-padding: 0 15px; /* Increase the spacing */
 }
 
-/* 2. 总收入显示样式 */
+/* 2. Gross revenue display style */
 .total-income-container {
-    -fx-padding: 5px 0 15px 30px; /* 上 右 下 左 */
+    -fx-padding: 5px 0 15px 30px;
     -fx-alignment: center-left;
 }
 
@@ -453,13 +457,13 @@
 .total-income-amount {
     -fx-font-size: 32px !important;
     -fx-font-weight: bold;
-    -fx-text-fill: #27ae60; /* 绿色强调 */
+    -fx-text-fill: #27ae60; /* Green emphasis */
     -fx-padding: 0 0 0 10px;
 }
 
-/* 3. 表格布局优化 */
+/* 3. Table layout optimization*/
 .income-table-container {
-    -fx-padding: 0 0 0 30px; /* 只保留左间距 */
+    -fx-padding: 0 0 0 30px; /* Only the left spacing is preserved */
     -fx-alignment: top-left;
 }
 
@@ -469,7 +473,7 @@
     -fx-table-cell-border-color: transparent;
 }
 
-/* 4. 底部标题样式 */
+/* 4. Bottom header style */
 .bottom-title {
     -fx-font-size: 20px;
     -fx-text-fill: #7f8c8d;
@@ -477,7 +481,7 @@
     -fx-alignment: bottom-left;
 }
 
-/* 收入分析页面特定样式 */
+/* Revenue analysis page specific styles */
 .income-analysis-container {
     -fx-padding: 20px;
 }
@@ -519,7 +523,7 @@
     -fx-background-color: #2980b9;
 }
 
-/* AI分析弹窗样式 */
+/* AI analyzes pop-up window styles */
 .analysis-popup {
     -fx-background-color: #f9f9f9;
 }
@@ -742,7 +746,7 @@
     -fx-line-spacing: 3px; /* Improve readability of notes */
 }
 
-/* 预算概览卡片样式 */
+/* Budget overview card style */
 .budget-overview-card {
     -fx-background-color: white;
     -fx-background-radius: 8;
@@ -751,7 +755,7 @@
     -fx-min-width: 400;
 }
 
-/* 预算信息标签样式 */
+/* Budget information label style */
 .label-info {
     -fx-font-size: 14px;
     -fx-text-fill: #4a5568;
@@ -775,13 +779,13 @@
     -fx-font-weight: bold;
 }
 
-/* 预算概览标题样式 */
+/* Budget overview header style */
 .subtitle {
     -fx-fill: #2c5282;
     -fx-font-weight: bold;
 }
 
-/* 设置卡片样式 */
+/* Style your card */
 .settings-card {
     -fx-background-color: white;
     -fx-background-radius: 10;
@@ -789,7 +793,7 @@
     -fx-padding: 15;
 }
 
-/* 统一的滚动面板样式 */
+/* Uniform scrolling panel style */
 .edge-to-edge {
     -fx-background-color: transparent;
     -fx-background: transparent;
@@ -804,7 +808,7 @@
     -fx-background-insets: 0;
 }
 
-/* 输入框样式 */
+/* Enter the box style */
 .text-field {
     -fx-background-color: #f7fafc;
     -fx-border-color: #e2e8f0;
@@ -818,7 +822,7 @@
     -fx-background-color: white;
 }
 
-/* 文本区域样式 */
+/* Text area style*/
 .text-area {
     -fx-background-color: #f7fafc;
     -fx-border-color: #e2e8f0;
@@ -834,7 +838,7 @@
     -fx-background-color: white;
 }
 
-/* 下拉框样式 */
+/* Drop-down box style */
 .combo-box {
     -fx-background-color: #f7fafc;
     -fx-border-color: #e2e8f0;
@@ -846,12 +850,12 @@
     -fx-border-color: #4299e1;
 }
 
-/* 分隔线样式 */
+/* Divider style */
 .separator {
     -fx-opacity: 0.5;
 }
 
-/* 页脚样式 */
+/* Footer style */
 .footer {
     -fx-background-color: #f7fafc;
     -fx-border-color: #e2e8f0;
